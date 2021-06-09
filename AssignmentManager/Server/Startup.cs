@@ -1,6 +1,8 @@
 using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Models;
-
+using AssignmentManager.Server.Persistence.Contexts;
+using AssignmentManager.Server.Repositories;
+using AssignmentManager.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,21 +26,24 @@ namespace AssignmentManager.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+                .AddApiAuthorization<ApplicationUser, AppDbContext>();
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-
+            
+            services.AddScoped<ISpecialityRepository, SpecialityRepository>();
+            services.AddScoped<ISpecialityService, SpecialityService>();
+            services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
