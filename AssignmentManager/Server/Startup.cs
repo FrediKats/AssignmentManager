@@ -3,6 +3,7 @@ using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Mapping;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
+using AssignmentManager.Server.Persistence.Repositories;
 using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Services;
 using AutoMapper;
@@ -50,6 +51,7 @@ namespace AssignmentManager.Server
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
