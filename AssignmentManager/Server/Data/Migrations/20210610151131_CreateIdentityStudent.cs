@@ -2,7 +2,7 @@
 
 namespace AssignmentManager.Server.Data.Migrations
 {
-    public partial class StudentsModule : Migration
+    public partial class CreateIdentityStudent : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,8 +44,7 @@ namespace AssignmentManager.Server.Data.Migrations
                 name: "Students",
                 columns: table => new
                 {
-                    IsuId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    IsuId = table.Column<int>(type: "int", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: false),
