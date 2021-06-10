@@ -8,7 +8,8 @@ namespace AssignmentManager.Server.Persistence.Contexts
 {
         public class AppDbContext : ApiAuthorizationDbContext<ApplicationUser> 
         { 
-            public DbSet<Speciality> Specialities { get; set; } 
+            public DbSet<Speciality> Specialities { get; set; }
+            public DbSet<Group> Groups {get;set;}
             public AppDbContext(
                 DbContextOptions options, 
                 IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) 
@@ -32,7 +33,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
             
                 
             builder.Entity<Speciality>()
-                .HasMany(p => p.Groups)
+                .HasMany<Group>(p => p.Groups)
                 .WithOne(p => p.Speciality)
                 .HasForeignKey(p => p.SpecialityId);
 
@@ -54,7 +55,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Student>().HasKey(p => p.IsuId);
             builder.Entity<Student>().Property(p => p.IsuId)
                 .IsRequired()
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
             builder.Entity<Student>().Property(p => p.Email)
                 .IsRequired();
             builder.Entity<Student>().Property(p => p.Lastname)

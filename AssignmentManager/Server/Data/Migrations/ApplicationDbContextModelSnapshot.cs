@@ -128,9 +128,7 @@ namespace AssignmentManager.Server.Data.Migrations
             modelBuilder.Entity("AssignmentManager.Server.Models.Student", b =>
                 {
                     b.Property<int>("IsuId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .IsRequired()

@@ -8,6 +8,6 @@ namespace AssignmentManager.Server.Models
         public string Code { get; set; }
         public EStudyType StudyType { get; set; }
 
-        public IList<Group> Groups { get; set; }
+        public virtual IList<Group> Groups { get; set; }
     }
 }

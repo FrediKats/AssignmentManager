@@ -10,6 +10,6 @@ namespace AssignmentManager.Server.Models
         public int SpecialityId { get; set; }
         public Speciality Speciality { get; set; }
 
-        public IList<Student> Students { get; set; }
+        public virtual IList<Student> Students { get; set; }
     }
 }
