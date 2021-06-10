@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Resources;
@@ -28,6 +29,23 @@ namespace AssignmentManager.Server.Controllers
             var specialities = await _service.ListAsync();
             var resources = _mapper.Map<IEnumerable<Speciality>, IEnumerable<SpecialityResource>>(specialities);
             return resources;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAsync([FromBody] SaveSpecialityResource resource)
+        {
+            System.Diagnostics.Debug.WriteLine(resource);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+
+            var speciality = _mapper.Map<SaveSpecialityResource, Speciality>(resource);
+            var result = await _service.SaveAsync(speciality);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result.Speciality);
+            return Ok(specialityRecourse);
         }
     }
 }
