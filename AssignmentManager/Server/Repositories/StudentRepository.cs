@@ -7,16 +7,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Repositories
 {
-    public class SpecialityRepository : BaseRepository, ISpecialityRepository
+    public class StudentRepository : BaseRepository, IStudentRepository
     {
-        public SpecialityRepository(AppDbContext context) : base(context)
+        public StudentRepository(AppDbContext context) : base(context)
         {
         }
 
-        public async Task<IEnumerable<Speciality>> ListAsync()
+        public async Task<IEnumerable<Student>> ListAsync()
         {
-            return await _context.Specialities.ToListAsync();
+            return await _context.Students.ToListAsync();
         }
-        
     }
 }
