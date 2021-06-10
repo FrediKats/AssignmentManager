@@ -7,26 +7,25 @@ using AssignmentManager.Server.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class SpecialitiesController : Controller
+    public class StudentsController : Controller
     {
-        private readonly ISpecialityService _service;
+        private readonly IStudentService _service;
         private readonly IMapper _mapper;
 
-        public SpecialitiesController(ISpecialityService studentService, IMapper mapper)
+        public StudentsController(IStudentService studentService, IMapper mapper)
         {
             _service = studentService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SpecialityResource>> ListAsync()
+        public async Task<IEnumerable<StudentResource>> ListAsync()
         {
-            var specialities = await _service.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Speciality>, IEnumerable<SpecialityResource>>(specialities);
+            var students = await _service.ListAsync();
+            var resources = _mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
             return resources;
         }
     }

@@ -1,8 +1,11 @@
+using System;
 using AssignmentManager.Server.Data;
+using AssignmentManager.Server.Mapping;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Services;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -43,9 +46,14 @@ namespace AssignmentManager.Server
             
             services.AddScoped<ISpecialityRepository, SpecialityRepository>();
             services.AddScoped<ISpecialityService, SpecialityService>();
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IStudentService, StudentService>();
             services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +88,7 @@ namespace AssignmentManager.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
+            
         }
     }
 }

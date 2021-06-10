@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class SpecialitiesController : Controller
+    public class GroupsController : Controller
     {
-        private readonly ISpecialityService _service;
+        private readonly IGroupService _service;
         private readonly IMapper _mapper;
 
-        public SpecialitiesController(ISpecialityService studentService, IMapper mapper)
+        public GroupsController(IGroupService studentService, IMapper mapper)
         {
             _service = studentService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SpecialityResource>> ListAsync()
+        public async Task<IEnumerable<GroupResource>> ListAsync()
         {
-            var specialities = await _service.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Speciality>, IEnumerable<SpecialityResource>>(specialities);
+            var groups = await _service.ListAsync();
+            var resources = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);
             return resources;
         }
     }

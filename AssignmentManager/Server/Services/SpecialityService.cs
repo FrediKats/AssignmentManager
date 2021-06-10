@@ -17,10 +17,5 @@ namespace AssignmentManager.Server.Services
         {
             return await _specialityRepository.ListAsync();
         }
-        
-        public void AddAsync(Speciality speciality)
-        {
-            _specialityRepository.AddAsync(speciality);
-        }
     }
 }

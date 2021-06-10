@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssignmentManager.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210610151131_CreateIdentityStudent")]
+    [Migration("20210610161436_CreateIdentityStudent")]
     partial class CreateIdentityStudent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,7 @@ namespace AssignmentManager.Server.Data.Migrations
                         .HasMaxLength(10)
                         .HasColumnType("nvarchar(10)");
 
-                    b.Property<int>("SpecialityId")
+                    b.Property<int?>("SpecialityId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -136,7 +136,7 @@ namespace AssignmentManager.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("GroupId")
+                    b.Property<int?>("GroupId")
                         .HasColumnType("int");
 
                     b.Property<string>("Lastname")
@@ -402,9 +402,7 @@ namespace AssignmentManager.Server.Data.Migrations
                 {
                     b.HasOne("AssignmentManager.Server.Models.Speciality", "Speciality")
                         .WithMany("Groups")
-                        .HasForeignKey("SpecialityId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SpecialityId");
 
                     b.Navigation("Speciality");
                 });
@@ -413,9 +411,7 @@ namespace AssignmentManager.Server.Data.Migrations
                 {
                     b.HasOne("AssignmentManager.Server.Models.Group", "Group")
                         .WithMany("Students")
-                        .HasForeignKey("GroupId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("GroupId");
 
                     b.Navigation("Group");
                 });

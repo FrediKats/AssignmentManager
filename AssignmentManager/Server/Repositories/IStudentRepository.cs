@@ -4,8 +4,8 @@ using AssignmentManager.Server.Models;
 
 namespace AssignmentManager.Server.Repositories
 {
-    public interface ISpecialityRepository
+    public interface IStudentRepository
     {
-        Task<IEnumerable<Speciality>> ListAsync();
+        Task<IEnumerable<Student>> ListAsync();
     }
 }

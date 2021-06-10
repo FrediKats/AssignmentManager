@@ -4,8 +4,8 @@ using AssignmentManager.Server.Models;
 
 namespace AssignmentManager.Server.Services
 {
-    public interface ISpecialityService
+    public interface IGroupService
     {
-        Task<IEnumerable<Speciality>> ListAsync();
+        Task<IEnumerable<Group>> ListAsync();
     }
 }

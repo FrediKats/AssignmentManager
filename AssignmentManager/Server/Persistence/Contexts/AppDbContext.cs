@@ -1,4 +1,5 @@
-﻿using AssignmentManager.Server.Models;
+﻿using System.Collections.Generic;
+using AssignmentManager.Server.Models;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -10,13 +11,14 @@ namespace AssignmentManager.Server.Persistence.Contexts
         { 
             public DbSet<Speciality> Specialities { get; set; }
             public DbSet<Group> Groups {get;set;}
+            public DbSet<Student> Students { get; set; }
             public AppDbContext(
                 DbContextOptions options, 
                 IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions) 
             {
                 
             }
-            
+
             protected override void OnModelCreating(ModelBuilder builder) 
             { 
                 base.OnModelCreating(builder);
@@ -62,6 +64,6 @@ namespace AssignmentManager.Server.Persistence.Contexts
                 .IsRequired();
             builder.Entity<Student>().Property(p => p.Name)
                 .IsRequired();
-        }
+            }
     }
 }
