@@ -1,0 +1,18 @@
+﻿@page "/Specialities"
+
+@using AssignmentManager.Shared
+
+@inject HttpClient _httpClient
+
+<h1>Specialities</h1>
+
+<p>This controller demonstrates fetching data from the server's SpecialitiesController.</p>
+
+
+@code {
+    private SpecialityForecast[] _specialities;
+    protected override async Task OnInitializedAsync()
+    {
+        _specialities = await _httpClient.GetFromJsonAsync<SpecialityForecast[]>("api/specialities");
+    }
+}
