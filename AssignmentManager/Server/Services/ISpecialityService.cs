@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services.Communication;
 
 namespace AssignmentManager.Server.Services
 {
     public interface ISpecialityService
     {
-        Task<IEnumerable<Speciality>> ListAsync();
-        Task<SaveSpecialityResponse> SaveAsync(Speciality speciality);
+        Task<List<Speciality>> GetAllAsync();
+        Task<Speciality> GetByIdAsync(int id);
+        Task<SaveSpecialityResponse> CreateAsync(Speciality item);
+        void UpdateAsync(Speciality item);
+        Speciality DeleteByIdAsync(int id);
     }
 }

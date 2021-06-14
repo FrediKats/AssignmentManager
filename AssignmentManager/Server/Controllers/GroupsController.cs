@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Resources;
@@ -12,8 +11,8 @@ namespace AssignmentManager.Server.Controllers
     [Route("/api/[controller]")]
     public class GroupsController : Controller
     {
-        private readonly IGroupService _service;
         private readonly IMapper _mapper;
+        private readonly IGroupService _service;
 
         public GroupsController(IGroupService studentService, IMapper mapper)
         {
@@ -24,7 +23,7 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<GroupResource>> ListAsync()
         {
-            var groups = await _service.ListAsync();
+            var groups = await _service.GetAllAsync();
             var resources = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);
             return resources;
         }
