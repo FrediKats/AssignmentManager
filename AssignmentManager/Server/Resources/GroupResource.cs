@@ -1,6 +1,4 @@
-﻿using AssignmentManager.Server.Models;
-
-namespace AssignmentManager.Server.Resources
+﻿namespace AssignmentManager.Server.Resources
 {
     public class GroupResource
     {

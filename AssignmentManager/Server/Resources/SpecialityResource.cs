@@ -8,6 +8,5 @@ namespace AssignmentManager.Server.Resources
         public string StudyTypeName { get; set; }
         public EStudyType StudyType { get; set; }
         public string Code { get; set; }
-        
     }
 }

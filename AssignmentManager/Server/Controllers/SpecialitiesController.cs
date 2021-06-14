@@ -2,20 +2,18 @@
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class SpecialitiesController : Controller
+    public class SpecialitiesController : ControllerBase
     {
-        private readonly ISpecialityService _service;
         private readonly IMapper _mapper;
+        private readonly ISpecialityService _service;
 
         public SpecialitiesController(ISpecialityService studentService, IMapper mapper)
         {
@@ -24,22 +22,21 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SpecialityResource>> ListAsync()
+        public IActionResult GetAllAsync()
         {
-            var specialities = await _service.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Speciality>, IEnumerable<SpecialityResource>>(specialities);
-            return resources;
+            var specialities = _service.GetAllAsync().Result;
+            var resources = _mapper.Map<List<Speciality>, List<SpecialityResource>>(specialities);
+            return Ok(resources);
         }
 
         [HttpPost]
         public async Task<IActionResult> PostAsync([FromBody] SaveSpecialityResource resource)
         {
-            System.Diagnostics.Debug.WriteLine(resource);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
             var speciality = _mapper.Map<SaveSpecialityResource, Speciality>(resource);
-            var result = await _service.SaveAsync(speciality);
+            var result = await _service.CreateAsync(speciality);
 
             if (!result.Success)
                 return BadRequest(result.Message);
