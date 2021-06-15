@@ -1,21 +1,52 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Repositories;
+using AssignmentManager.Server.Persistence;
+using AssignmentManager.Server.Persistence.Contexts;
+using AssignmentManager.Server.Services.Communication;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
 {
-    public class StudentService : IStudentService
+    public class StudentService : BaseService, IStudentService
     {
-        private readonly IStudentRepository _studentRepository;
-
-        public StudentService(IStudentRepository studentRepository)
+        public StudentService(AppDbContext context) : base(context)
         {
-            _studentRepository = studentRepository;
         }
-        public async Task<IEnumerable<Student>> ListAsync()
+
+        public async Task<List<Student>> GetAll()
         {
-            return await _studentRepository.ListAsync();
+            return await _context.Students.ToListAsync();
+        }
+
+        public async Task<Student> GetById(int id)
+        {
+            return await _context.Students.FindAsync(id);
+        }
+
+        public async Task<SaveStudentResponse> Create(Student item)
+        {
+            try
+            {
+                await _context.Students.AddAsync(item);
+                await _context.SaveChangesAsync();
+                return new SaveStudentResponse(item);
+            }
+            catch (Exception er)
+            {
+                return new SaveStudentResponse(er.Message);
+            }
+        }
+
+        public void Update(Student item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Student DeleteById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

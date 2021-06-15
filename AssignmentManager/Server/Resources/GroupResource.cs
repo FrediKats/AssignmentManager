@@ -6,5 +6,6 @@ namespace AssignmentManager.Server.Resources
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public SpecialityResource Speciality { get; set; }
     }
 }

@@ -1,40 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AssignmentManager.Server.Mapping;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Repositories;
+using AssignmentManager.Server.Persistence;
+using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services.Communication;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
 {
-    public class SpecialityService : ISpecialityService
+    public class SpecialityService : BaseService, ISpecialityService
     {
-        private readonly ISpecialityRepository _specialityRepository;
-        private readonly IUnitOfWork _unitOfWork;
-
-        public SpecialityService(ISpecialityRepository specialityRepository, IUnitOfWork unitOfWork)
+        public SpecialityService(AppDbContext context) : base(context)
         {
-            _specialityRepository = specialityRepository;
-            _unitOfWork = unitOfWork;
-        }
-        public async Task<IEnumerable<Speciality>> ListAsync()
-        {
-            return await _specialityRepository.ListAsync();
         }
 
-        public async Task<SaveSpecialityResponse> SaveAsync(Speciality speciality)
+        public async Task<List<Speciality>> GetAll()
+        {
+            return await _context.Specialities.ToListAsync();
+        }
+
+        public async Task<Speciality> GetById(int id)
+        {
+            return await _context.Specialities.FindAsync(id);
+        }
+
+        public async Task<SaveSpecialityResponse> Create(Speciality item)
         {
             try
             {
-                await _specialityRepository.AddAsync(speciality);
-                await _unitOfWork.CompleteAsync();
-
-                return new SaveSpecialityResponse(speciality);
+                //check input value of EStudyType
+                MappingHelper.EnumDescriptionToString(item.StudyType);
+                await _context.Specialities.AddAsync(item);
+                await _context.SaveChangesAsync();
+                return new SaveSpecialityResponse(item);
             }
-            catch (Exception ex)
+            catch (Exception er)
             {
-                return new SaveSpecialityResponse($"Error with saving the speciality: {ex.Message}");
+                return new SaveSpecialityResponse(er.Message);
             }
+        }
+
+        public void Update(Speciality item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Speciality DeleteById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

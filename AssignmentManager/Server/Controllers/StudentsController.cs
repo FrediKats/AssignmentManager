@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
@@ -10,10 +9,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class StudentsController : Controller
+    public class StudentsController : ControllerBase
     {
-        private readonly IStudentService _service;
         private readonly IMapper _mapper;
+        private readonly IStudentService _service;
 
         public StudentsController(IStudentService studentService, IMapper mapper)
         {
@@ -22,10 +21,10 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<StudentResource>> ListAsync()
+        public IReadOnlyCollection<StudentResource> GetAll()
         {
-            var students = await _service.ListAsync();
-            var resources = _mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
+            var students = _service.GetAll().Result;
+            var resources = _mapper.Map<List<Student>, List<StudentResource>>(students);
             return resources;
         }
     }

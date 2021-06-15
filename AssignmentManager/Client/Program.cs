@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AssignmentManager.Client
 {
@@ -15,11 +14,13 @@ namespace AssignmentManager.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddHttpClient("AssignmentManager.ServerAPI", client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+            builder.Services.AddHttpClient("AssignmentManager.ServerAPI",
+                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                 .AddHttpMessageHandler<BaseAddressAuthorizationMessageHandler>();
 
             // Supply HttpClient instances that include access tokens when making requests to the server project
-            builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("AssignmentManager.ServerAPI"));
+            builder.Services.AddScoped(sp =>
+                sp.GetRequiredService<IHttpClientFactory>().CreateClient("AssignmentManager.ServerAPI"));
 
             builder.Services.AddApiAuthorization();
 
