@@ -31,7 +31,7 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
-                //check input value of EStudyType
+                //validate input value of EStudyType
                 item.StudyType.ToDescriptionString();
                 await _context.Specialities.AddAsync(item);
                 await _context.SaveChangesAsync();

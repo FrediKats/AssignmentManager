@@ -21,7 +21,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<StudentResource> GetAll()
+        public IReadOnlyCollection<StudentResource> GetStudents()
         {
             var students = _service.GetAll().Result;
             var resources = _mapper.Map<List<Student>, List<StudentResource>>(students);
