@@ -1,7 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Reflection;
-using AssignmentManager.Server.Models;
+﻿using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Resources;
 using AutoMapper;
 
@@ -16,9 +13,8 @@ namespace AssignmentManager.Server.Mapping
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
-                        src => MappingHelper.StringValueOf(src.StudyType))
-                        );
+                        src => MappingHelper.EnumDescriptionToString(src.StudyType))
+                );
         }
     }
-    
 }

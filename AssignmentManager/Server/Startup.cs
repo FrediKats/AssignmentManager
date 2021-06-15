@@ -1,12 +1,8 @@
 using System;
-using AssignmentManager.Server.Data;
-using AssignmentManager.Server.Mapping;
+using System.Text.Json.Serialization;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
-using AssignmentManager.Server.Persistence.Repositories;
-using AssignmentManager.Server.Repositories;
 using AssignmentManager.Server.Services;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +26,10 @@ namespace AssignmentManager.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllersWithViews().AddJsonOptions(options => {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });
+            
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -44,23 +44,22 @@ namespace AssignmentManager.Server
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-            
-            services.AddScoped<ISpecialityRepository, SpecialityRepository>();
+
+
             services.AddScoped<ISpecialityService, SpecialityService>();
-            services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupService, GroupService>();
-            services.AddScoped<IStudentRepository, StudentRepository>();
             services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
         {
+            context.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -90,7 +89,6 @@ namespace AssignmentManager.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
-            
         }
     }
 }
