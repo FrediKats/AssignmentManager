@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Mapping;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -31,7 +32,7 @@ namespace AssignmentManager.Server.Services
             try
             {
                 //check input value of EStudyType
-                MappingHelper.EnumDescriptionToString(item.StudyType);
+                item.StudyType.ToDescriptionString();
                 await _context.Specialities.AddAsync(item);
                 await _context.SaveChangesAsync();
                 return new SaveSpecialityResponse(item);
