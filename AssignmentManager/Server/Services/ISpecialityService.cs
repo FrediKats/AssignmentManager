@@ -7,10 +7,10 @@ namespace AssignmentManager.Server.Services
 {
     public interface ISpecialityService
     {
-        Task<List<Speciality>> GetAllAsync();
-        Task<Speciality> GetByIdAsync(int id);
-        Task<SaveSpecialityResponse> CreateAsync(Speciality item);
-        void UpdateAsync(Speciality item);
-        Speciality DeleteByIdAsync(int id);
+        Task<List<Speciality>> GetAll();
+        Task<Speciality> GetById(int id);
+        Task<SaveSpecialityResponse> Create(Speciality item);
+        void Update(Speciality item);
+        Speciality DeleteById(int id);
     }
 }

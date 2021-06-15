@@ -15,17 +15,17 @@ namespace AssignmentManager.Server.Services
         {
         }
 
-        public async Task<List<Student>> GetAllAsync()
+        public async Task<List<Student>> GetAll()
         {
             return await _context.Students.ToListAsync();
         }
 
-        public async Task<Student> GetByIdAsync(int id)
+        public async Task<Student> GetById(int id)
         {
             return await _context.Students.FindAsync(id);
         }
 
-        public async Task<SaveStudentResponse> CreateAsync(Student item)
+        public async Task<SaveStudentResponse> Create(Student item)
         {
             try
             {
@@ -39,12 +39,12 @@ namespace AssignmentManager.Server.Services
             }
         }
 
-        public void UpdateAsync(Student item)
+        public void Update(Student item)
         {
             throw new NotImplementedException();
         }
 
-        public Student DeleteByIdAsync(int id)
+        public Student DeleteById(int id)
         {
             throw new NotImplementedException();
         }

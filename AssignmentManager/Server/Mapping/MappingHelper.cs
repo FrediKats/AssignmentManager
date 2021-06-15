@@ -5,7 +5,7 @@ namespace AssignmentManager.Server.Mapping
 {
     public static class MappingHelper
     {
-        public static string StringValueOf(Enum value)
+        public static string EnumDescriptionToString(Enum value)
         {
             var fi = value.GetType().GetField(value.ToString());
             var attributes = (DescriptionAttribute[]) fi?.GetCustomAttributes(typeof(DescriptionAttribute), false);

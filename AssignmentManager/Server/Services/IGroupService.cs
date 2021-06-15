@@ -7,10 +7,10 @@ namespace AssignmentManager.Server.Services
 {
     public interface IGroupService
     {
-        Task<List<Group>> GetAllAsync();
-        Task<Group> GetByIdAsync(int id);
-        Task<SaveGroupResponse> CreateAsync(Group item);
-        Task<Group> UpdateAsync(Group item);
-        Group DeleteByIdAsync(int id);
+        Task<List<Group>> GetAll();
+        Task<Group> GetById(int id);
+        Task<SaveGroupResponse> Create(Group item);
+        Task<Group> Update(Group item);
+        Group DeleteById(int id);
     }
 }

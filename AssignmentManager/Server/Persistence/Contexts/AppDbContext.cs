@@ -31,6 +31,10 @@ namespace AssignmentManager.Server.Persistence.Contexts
                 .IsRequired();
             builder.Entity<Speciality>().Property(p => p.Code)
                 .IsRequired();
+            builder.Entity<Speciality>()
+                            .HasMany(p => p.Groups)
+                            .WithOne(p => p.Speciality)
+                            .HasForeignKey(p => p.SpecialityId);
 
 
             builder.Entity<Group>().ToTable("Groups");

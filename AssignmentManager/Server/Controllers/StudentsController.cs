@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class StudentsController : Controller
+    public class StudentsController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IStudentService _service;
@@ -21,10 +21,10 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<StudentResource>> ListAsync()
+        public IReadOnlyCollection<StudentResource> GetAll()
         {
-            var students = await _service.GetAllAsync();
-            var resources = _mapper.Map<IEnumerable<Student>, IEnumerable<StudentResource>>(students);
+            var students = _service.GetAll().Result;
+            var resources = _mapper.Map<List<Student>, List<StudentResource>>(students);
             return resources;
         }
     }

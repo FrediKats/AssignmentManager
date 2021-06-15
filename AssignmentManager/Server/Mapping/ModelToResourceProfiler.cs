@@ -13,7 +13,7 @@ namespace AssignmentManager.Server.Mapping
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
-                        src => MappingHelper.StringValueOf(src.StudyType))
+                        src => MappingHelper.EnumDescriptionToString(src.StudyType))
                 );
         }
     }

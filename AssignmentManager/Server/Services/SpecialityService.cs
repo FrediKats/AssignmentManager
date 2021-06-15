@@ -16,21 +16,22 @@ namespace AssignmentManager.Server.Services
         {
         }
 
-        public async Task<List<Speciality>> GetAllAsync()
+        public async Task<List<Speciality>> GetAll()
         {
             return await _context.Specialities.ToListAsync();
         }
 
-        public async Task<Speciality> GetByIdAsync(int id)
+        public async Task<Speciality> GetById(int id)
         {
             return await _context.Specialities.FindAsync(id);
         }
 
-        public async Task<SaveSpecialityResponse> CreateAsync(Speciality item)
+        public async Task<SaveSpecialityResponse> Create(Speciality item)
         {
             try
             {
-                MappingHelper.StringValueOf(item.StudyType);
+                //check input value of EStudyType
+                MappingHelper.EnumDescriptionToString(item.StudyType);
                 await _context.Specialities.AddAsync(item);
                 await _context.SaveChangesAsync();
                 return new SaveSpecialityResponse(item);
@@ -41,12 +42,12 @@ namespace AssignmentManager.Server.Services
             }
         }
 
-        public void UpdateAsync(Speciality item)
+        public void Update(Speciality item)
         {
             throw new NotImplementedException();
         }
 
-        public Speciality DeleteByIdAsync(int id)
+        public Speciality DeleteById(int id)
         {
             throw new NotImplementedException();
         }
