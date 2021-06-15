@@ -6,7 +6,7 @@ namespace AssignmentManager.Server.Resources
     {
         public int Id { get; set; }
         public string StudyTypeName { get; set; }
-        public EStudyType StudyType { get; set; }
+        public EStudyType EnumStudyType { get; set; }
         public string Code { get; set; }
     }
 }
