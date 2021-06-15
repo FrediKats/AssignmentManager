@@ -22,21 +22,21 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAsync()
+        public IReadOnlyCollection<SpecialityResource> GetAll()
         {
-            var specialities = _service.GetAllAsync().Result;
+            var specialities = _service.GetAll().Result;
             var resources = _mapper.Map<List<Speciality>, List<SpecialityResource>>(specialities);
-            return Ok(resources);
+            return resources;
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveSpecialityResource resource)
+        public async Task<IActionResult> Post([FromBody] SaveSpecialityResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
             var speciality = _mapper.Map<SaveSpecialityResource, Speciality>(resource);
-            var result = await _service.CreateAsync(speciality);
+            var result = await _service.Create(speciality);
 
             if (!result.Success)
                 return BadRequest(result.Message);

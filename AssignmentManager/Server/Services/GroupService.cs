@@ -15,17 +15,19 @@ namespace AssignmentManager.Server.Services
         {
         }
 
-        public async Task<List<Group>> GetAllAsync()
+        public async Task<List<Group>> GetAll()
         {
-            return await _context.Groups.ToListAsync();
+            //TODO: fix $id, $values
+            return await _context.Groups
+                .Include(p => p.Speciality).ToListAsync();
         }
 
-        public async Task<Group> GetByIdAsync(int id)
+        public async Task<Group> GetById(int id)
         {
             return await _context.Groups.FindAsync(id);
         }
 
-        public async Task<SaveGroupResponse> CreateAsync(Group item)
+        public async Task<SaveGroupResponse> Create(Group item)
         {
             try
             {
@@ -39,12 +41,12 @@ namespace AssignmentManager.Server.Services
             }
         }
 
-        public Task<Group> UpdateAsync(Group item)
+        public Task<Group> Update(Group item)
         {
             throw new NotImplementedException();
         }
 
-        public Group DeleteByIdAsync(int id)
+        public Group DeleteById(int id)
         {
             throw new NotImplementedException();
         }

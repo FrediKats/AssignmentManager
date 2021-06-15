@@ -7,10 +7,10 @@ namespace AssignmentManager.Server.Services
 {
     public interface IStudentService
     {
-        Task<List<Student>> GetAllAsync();
-        Task<Student> GetByIdAsync(int id);
-        Task<SaveStudentResponse> CreateAsync(Student item);
-        void UpdateAsync(Student item);
-        Student DeleteByIdAsync(int id);
+        Task<List<Student>> GetAll();
+        Task<Student> GetById(int id);
+        Task<SaveStudentResponse> Create(Student item);
+        void Update(Student item);
+        Student DeleteById(int id);
     }
 }

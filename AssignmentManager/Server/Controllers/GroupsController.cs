@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class GroupsController : Controller
+    public class GroupsController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IGroupService _service;
@@ -21,10 +21,10 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<GroupResource>> ListAsync()
+        public IReadOnlyCollection<GroupResource> GetAll()
         {
-            var groups = await _service.GetAllAsync();
-            var resources = _mapper.Map<IEnumerable<Group>, IEnumerable<GroupResource>>(groups);
+            var groups = _service.GetAll().Result;
+            var resources = _mapper.Map<List<Group>, List<GroupResource>>(groups);
             return resources;
         }
     }

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssignmentManager.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210614211212_CreateIdentityStudent")]
+    [Migration("20210615094650_CreateIdentityStudent")]
     partial class CreateIdentityStudent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
