@@ -5,6 +5,7 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
@@ -30,11 +31,11 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] SaveSpecialityResource resource)
+        public async Task<ActionResult<SpecialityResource>> Post([FromBody] SaveSpecialityResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-
+            
             var speciality = _mapper.Map<SaveSpecialityResource, Speciality>(resource);
             var result = await _service.Create(speciality);
 
