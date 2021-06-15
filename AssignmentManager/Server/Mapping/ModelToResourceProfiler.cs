@@ -16,7 +16,13 @@ namespace AssignmentManager.Server.Mapping
                     opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
                         src => src.StudyType.ToDescriptionString())
-                );
+                )
+                .ForMember(
+                    dist=> dist.EnumStudyType,
+                    opt => opt.MapFrom(
+                        src => src.StudyType
+                        )
+                    );
         }
     }
 }
