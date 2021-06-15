@@ -21,7 +21,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<GroupResource> GetAll()
+        public IReadOnlyCollection<GroupResource> GetAllGroups()
         {
             var groups = _service.GetAll().Result;
             var resources = _mapper.Map<List<Group>, List<GroupResource>>(groups);
