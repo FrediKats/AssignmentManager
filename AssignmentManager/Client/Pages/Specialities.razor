@@ -2,6 +2,8 @@
 
 @using AssignmentManager.Shared
 
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
 @inject HttpClient _httpClient
 
 <h1>Specialities</h1>
@@ -13,6 +15,12 @@
     private SpecialityForecast[] _specialities;
     protected override async Task OnInitializedAsync()
     {
-        _specialities = await _httpClient.GetFromJsonAsync<SpecialityForecast[]>("api/specialities");
+        try
+        {
+            _specialities = await _httpClient.GetFromJsonAsync<SpecialityForecast[]>("api/specialities");
+        } catch (AccessTokenNotAvailableException exception)
+        {
+            exception.Redirect();
+        }
     }
 }
