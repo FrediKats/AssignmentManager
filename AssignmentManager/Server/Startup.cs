@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore.InMemory;
 
 namespace AssignmentManager.Server
 {
@@ -27,8 +28,7 @@ namespace AssignmentManager.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseInMemoryDatabase("in-memory"));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -55,7 +55,7 @@ namespace AssignmentManager.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
         {
-            context.Database.Migrate();
+            //context.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
