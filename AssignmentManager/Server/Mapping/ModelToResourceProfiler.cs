@@ -20,7 +20,7 @@ namespace AssignmentManager.Server.Mapping
                     opt => opt.MapFrom(
                         src => src.EnumStudyType.ToDescriptionString())
                 );
-            CreateMap<Speciality, SpecialityResourceShort>()
+            CreateMap<Speciality, SpecialityResourceBriefly>()
                 .ForMember(
                     opt => opt.StudyTypeName,
                     opt => opt.MapFrom(

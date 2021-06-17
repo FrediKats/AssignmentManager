@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
@@ -64,7 +63,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<ActionResult<GroupResource>> UpdateGroup(int id,
+        public async Task<ActionResult<GroupResourceBriefly>> UpdateGroup(int id,
             [FromBody] SaveGroupResource resource)
         {
             if (!ModelState.IsValid)
@@ -78,12 +77,12 @@ namespace AssignmentManager.Server.Controllers
                 return BadRequest(result.Message);
             }
 
-            var specialityResource = _mapper.Map<Group, GroupResource>(result.Group);
+            var specialityResource = _mapper.Map<Group, GroupResourceBriefly>(result.Group);
             return Ok(specialityResource);
         }
         
         [HttpDelete("{id}")]
-        public async Task<ActionResult<GroupResourceBriefly>> DeleteGroup(int id)
+        public async Task<ActionResult<GroupResource>> DeleteGroup(int id)
         {
             var result = await _service.DeleteCascadeById(id);
 
@@ -92,7 +91,7 @@ namespace AssignmentManager.Server.Controllers
                 return BadRequest(result.Message);
             }
 
-            var specialityResource = _mapper.Map<Group, GroupResourceBriefly>(result.Group);
+            var specialityResource = _mapper.Map<Group, GroupResource>(result.Group);
             return  specialityResource;
         }
     }

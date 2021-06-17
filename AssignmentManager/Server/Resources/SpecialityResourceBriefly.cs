@@ -2,7 +2,7 @@
 
 namespace AssignmentManager.Server.Resources
 {
-    public class SpecialityResourceShort
+    public class SpecialityResourceBriefly
     {
         public int Id { get; set; }
         public string StudyTypeName { get; set; }
