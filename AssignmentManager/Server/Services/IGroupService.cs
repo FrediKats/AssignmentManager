@@ -10,6 +10,7 @@ namespace AssignmentManager.Server.Services
         Task<List<Group>> GetAll();
         Task<Group> GetById(int id);
         Task<SaveGroupResponse> Create(Group item);
+        Task<List<Group>> GetBySpecialityId(int? id);
         Task<Group> Update(Group item);
         Group DeleteById(int id);
     }
