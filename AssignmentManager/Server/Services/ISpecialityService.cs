@@ -8,9 +8,10 @@ namespace AssignmentManager.Server.Services
     public interface ISpecialityService
     {
         Task<List<Speciality>> GetAll();
-        Task<SaveSpecialityResponse> GetById(int id);
-        Task<SaveSpecialityResponse> Create(Speciality item);
-        void Update(Speciality item);
-        Speciality DeleteById(int id);
+        Task<SpecialityResponse> GetById(int id);
+        Task<SpecialityResponse> Create(Speciality item);
+        Task<SpecialityResponse> Update(int id, Speciality item);
+        Task<SpecialityResponse> DeleteById(int id);
+        Task<SpecialityResponse> DeleteCascadeById(int id);
     }
 }

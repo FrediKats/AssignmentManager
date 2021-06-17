@@ -9,6 +9,6 @@ namespace AssignmentManager.Server.Resources
         public string StudyTypeName { get; set; }
         public EStudyType EnumStudyType { get; set; }
         public string Code { get; set; }
-        public IList<GroupResourceShort> Groups { get; set; }
+        public IList<GroupResourceBriefly> Groups { get; set; }
     }
 }

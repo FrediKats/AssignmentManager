@@ -8,10 +8,11 @@ namespace AssignmentManager.Server.Services
     public interface IGroupService
     {
         Task<List<Group>> GetAll();
-        Task<Group> GetById(int id);
-        Task<SaveGroupResponse> Create(Group item);
-        Task<List<Group>> GetBySpecialityId(int? id);
-        Task<Group> Update(Group item);
-        Group DeleteById(int id);
+        Task<GroupResponse> GetById(int id);
+        Task<GroupResponse> Create(Group item);
+        Task<List<Group>> GetById(int? id);
+        Task<GroupResponse> Update(int id, Group item);
+        Task<GroupResponse> DeleteById(int id);
+        Task<GroupResponse> DeleteCascadeById(int id);
     }
 }

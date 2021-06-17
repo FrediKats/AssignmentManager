@@ -27,7 +27,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Speciality>().Property(p => p.Id)
                 .IsRequired()
                 .ValueGeneratedOnAdd();
-            builder.Entity<Speciality>().Property(p => p.StudyType)
+            builder.Entity<Speciality>().Property(p => p.EnumStudyType)
                 .IsRequired();
             builder.Entity<Speciality>().Property(p => p.Code)
                 .IsRequired();

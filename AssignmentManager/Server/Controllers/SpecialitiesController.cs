@@ -16,17 +16,15 @@ namespace AssignmentManager.Server.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ISpecialityService _service;
-        private readonly IGroupService _groupService;
 
         public SpecialitiesController(ISpecialityService studentService, IGroupService groupService, IMapper mapper)
         {
-            _groupService = groupService;
             _service = studentService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IReadOnlyCollection<SpecialityResourceShort> GetAllSpeciality()
+        public IReadOnlyCollection<SpecialityResourceShort> GetAllSpecialitiesBriefly()
         {
             var specialities = _service.GetAll().Result;
             var resources = _mapper.Map<List<Speciality>, List<SpecialityResourceShort>>(specialities);
@@ -34,7 +32,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetGroupsForSpeciality(int id)
+        public ActionResult<Speciality> GetSpecialityByIdCompletely(int id)
         {
             var speciality = _service.GetById(id).Result;
             if (!speciality.Success)
@@ -42,17 +40,18 @@ namespace AssignmentManager.Server.Controllers
             var resources = _mapper
                 .Map<Speciality, SpecialityResource>(
                     speciality.Speciality
-                    );
+                );
             return Ok(resources);
         }
-        
+
         [HttpPost]
-        public async Task<ActionResult<SpecialityResourceShort>> CreateSpeciality([FromBody] SaveSpecialityResource resource)
+        public async Task<ActionResult<SpecialityResourceShort>> CreateSpeciality(
+            [FromBody] SaveSpecialityBriefly briefly)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            
-            var speciality = _mapper.Map<SaveSpecialityResource, Speciality>(resource);
+
+            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
             var result = await _service.Create(speciality);
 
             if (!result.Success)
@@ -61,5 +60,38 @@ namespace AssignmentManager.Server.Controllers
             var specialityRecourse = _mapper.Map<Speciality, SpecialityResourceShort>(result.Speciality);
             return Ok(specialityRecourse);
         }
-    }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<SpecialityResourceShort>> UpdateSpeciality(int id,
+            [FromBody] SaveSpecialityBriefly briefly)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+
+            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
+            var result = await _service.Update(id, speciality);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var specialityResource = _mapper.Map<Speciality, SpecialityResourceShort>(result.Speciality);
+            return Ok(specialityResource);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<SpecialityResource>> DeleteSpeciality(int id)
+        {
+            var result = await _service.DeleteCascadeById(id);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+
+            var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result.Speciality);
+            return  specialityResource;
+        }
+}
 }
