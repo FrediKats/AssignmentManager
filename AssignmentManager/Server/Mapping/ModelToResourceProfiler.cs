@@ -2,6 +2,7 @@
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Resources;
 using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 
 namespace AssignmentManager.Server.Mapping
 {
@@ -11,6 +12,7 @@ namespace AssignmentManager.Server.Mapping
         {
             CreateMap<Student, StudentResource>();
             CreateMap<Group, GroupResource>();
+            CreateMap<Group, GroupResourceShort>();
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(
                     opt => opt.StudyTypeName,
@@ -18,11 +20,24 @@ namespace AssignmentManager.Server.Mapping
                         src => src.StudyType.ToDescriptionString())
                 )
                 .ForMember(
-                    dist=> dist.EnumStudyType,
+                    dist => dist.EnumStudyType,
                     opt => opt.MapFrom(
                         src => src.StudyType
-                        )
-                    );
+                    )
+                );
+            CreateMap<Speciality, SpecialityResourceShort>()
+                .ForMember(
+                    opt => opt.StudyTypeName,
+                    opt => opt.MapFrom(
+                        src => src.StudyType.ToDescriptionString())
+                )
+                .ForMember(
+                    dist => dist.EnumStudyType,
+                    opt => opt.MapFrom(
+                        src => src.StudyType
+                    )
+                );
+
         }
     }
 }

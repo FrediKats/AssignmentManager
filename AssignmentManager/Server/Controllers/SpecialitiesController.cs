@@ -10,28 +10,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
 {
+    [ApiController]
     [Route("/api/[controller]")]
     public class SpecialitiesController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ISpecialityService _service;
+        private readonly IGroupService _groupService;
 
-        public SpecialitiesController(ISpecialityService studentService, IMapper mapper)
+        public SpecialitiesController(ISpecialityService studentService, IGroupService groupService, IMapper mapper)
         {
+            _groupService = groupService;
             _service = studentService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public IReadOnlyCollection<SpecialityResource> GetAllSpeciality()
+        public IReadOnlyCollection<SpecialityResourceShort> GetAllSpeciality()
         {
             var specialities = _service.GetAll().Result;
-            var resources = _mapper.Map<List<Speciality>, List<SpecialityResource>>(specialities);
+            var resources = _mapper.Map<List<Speciality>, List<SpecialityResourceShort>>(specialities);
             return resources;
         }
 
+        [HttpGet("{id}")]
+        public IActionResult GetGroupsForSpeciality(int id)
+        {
+            var speciality = _service.GetById(id).Result;
+            if (!speciality.Success)
+                return BadRequest(speciality.Message);
+            var resources = _mapper
+                .Map<Speciality, SpecialityResource>(
+                    speciality.Speciality
+                    );
+            return Ok(resources);
+        }
+        
         [HttpPost]
-        public async Task<ActionResult<SpecialityResource>> CreateSpeciality([FromBody] SaveSpecialityResource resource)
+        public async Task<ActionResult<SpecialityResourceShort>> CreateSpeciality([FromBody] SaveSpecialityResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -42,7 +58,7 @@ namespace AssignmentManager.Server.Controllers
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result.Speciality);
+            var specialityRecourse = _mapper.Map<Speciality, SpecialityResourceShort>(result.Speciality);
             return Ok(specialityRecourse);
         }
     }

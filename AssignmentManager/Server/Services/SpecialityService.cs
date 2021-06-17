@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Mapping;
@@ -22,11 +23,21 @@ namespace AssignmentManager.Server.Services
             return await _context.Specialities.ToListAsync();
         }
 
-        public async Task<Speciality> GetById(int id)
+        public async Task<SaveSpecialityResponse> GetById(int id)
         {
-            return await _context.Specialities.FindAsync(id);
+            try
+            {
+                var currentSpeciality = await _context.Specialities.FindAsync(id);
+                currentSpeciality.Groups = await _context.Groups
+                    .Where(g => g.SpecialityId == id).ToListAsync();
+                return new SaveSpecialityResponse(currentSpeciality);
+            }
+            catch (Exception ex)
+            {
+                return new SaveSpecialityResponse(ex.Message);
+            }
+            
         }
-
         public async Task<SaveSpecialityResponse> Create(Speciality item)
         {
             try
