@@ -9,7 +9,7 @@ namespace AssignmentManager.Server.Services
     {
         Task<List<Student>> GetAll();
         Task<Student> GetById(int id);
-        Task<SaveStudentResponse> Create(Student item);
+        Task<StudentResponse> Create(Student item);
         void Update(Student item);
         Student DeleteById(int id);
     }

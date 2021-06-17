@@ -3,10 +3,10 @@ using AssignmentManager.Server.Models;
 
 namespace AssignmentManager.Server.Resources
 {
-    public class SaveSpecialityResource
+    public class SaveSpecialityBriefly
     {
         [Required] [MaxLength(8)] public string Code { get; set; }
 
-        [Required] public EStudyType StudyType { get; set; }
+        [Required] public EStudyType EnumStudyType { get; set; }
     }
 }

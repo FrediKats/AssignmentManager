@@ -21,10 +21,10 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<StudentResource> GetStudents()
+        public IReadOnlyCollection<StudentResourceBriefly> GetAllStudents()
         {
             var students = _service.GetAll().Result;
-            var resources = _mapper.Map<List<Student>, List<StudentResource>>(students);
+            var resources = _mapper.Map<List<Student>, List<StudentResourceBriefly>>(students);
             return resources;
         }
     }

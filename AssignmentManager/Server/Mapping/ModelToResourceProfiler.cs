@@ -11,33 +11,21 @@ namespace AssignmentManager.Server.Mapping
         public ModelToResourceProfile()
         {
             CreateMap<Student, StudentResource>();
+            CreateMap<Student, StudentResourceBriefly>();
             CreateMap<Group, GroupResource>();
-            CreateMap<Group, GroupResourceShort>();
+            CreateMap<Group, GroupResourceBriefly>();
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(
                     opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
-                        src => src.StudyType.ToDescriptionString())
-                )
-                .ForMember(
-                    dist => dist.EnumStudyType,
-                    opt => opt.MapFrom(
-                        src => src.StudyType
-                    )
+                        src => src.EnumStudyType.ToDescriptionString())
                 );
             CreateMap<Speciality, SpecialityResourceShort>()
                 .ForMember(
                     opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
-                        src => src.StudyType.ToDescriptionString())
-                )
-                .ForMember(
-                    dist => dist.EnumStudyType,
-                    opt => opt.MapFrom(
-                        src => src.StudyType
-                    )
+                        src => src.EnumStudyType.ToDescriptionString())
                 );
-
         }
     }
 }
