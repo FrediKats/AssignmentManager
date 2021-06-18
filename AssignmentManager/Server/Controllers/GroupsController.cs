@@ -2,8 +2,8 @@
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
+using AssignmentManager.Shared;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 

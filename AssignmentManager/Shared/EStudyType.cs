@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace AssignmentManager.Server.Models
+namespace AssignmentManager.Shared
 {
     public enum EStudyType : byte
     {

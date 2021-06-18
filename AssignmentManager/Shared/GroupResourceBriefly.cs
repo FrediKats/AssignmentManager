@@ -1,4 +1,4 @@
-﻿namespace AssignmentManager.Server.Resources
+﻿namespace AssignmentManager.Shared
 {
     public class GroupResourceBriefly
     {

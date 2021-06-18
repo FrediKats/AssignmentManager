@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AssignmentManager.Server.Models;
 
-namespace AssignmentManager.Server.Resources
+namespace AssignmentManager.Shared
 {
     public class SaveSpecialityBriefly
     {

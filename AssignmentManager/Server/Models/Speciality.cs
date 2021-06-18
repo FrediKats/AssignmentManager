@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Models
 {
