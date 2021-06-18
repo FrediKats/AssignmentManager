@@ -1,4 +1,5 @@
-﻿using AssignmentManager.Server.Models;
+﻿using System.Collections.Generic;
+using AssignmentManager.Server.Models;
 
 namespace AssignmentManager.Server.Resources
 {
@@ -6,6 +7,7 @@ namespace AssignmentManager.Server.Resources
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public SpecialityResource Speciality { get; set; }
+        public IList<StudentResourceBriefly> Students { get; set; }
+        public SpecialityResourceBriefly Speciality { get; set; }
     }
 }
