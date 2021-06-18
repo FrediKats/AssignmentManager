@@ -13,7 +13,7 @@ namespace AssignmentManager.Server.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StudyType = table.Column<byte>(type: "tinyint", nullable: false)
+                    EnumStudyType = table.Column<byte>(type: "tinyint", nullable: false)
                 },
                 constraints: table =>
                 {

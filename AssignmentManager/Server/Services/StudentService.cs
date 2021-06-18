@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -25,17 +26,17 @@ namespace AssignmentManager.Server.Services
             return await _context.Students.FindAsync(id);
         }
 
-        public async Task<SaveStudentResponse> Create(Student item)
+        public async Task<StudentResponse> Create(Student item)
         {
             try
             {
                 await _context.Students.AddAsync(item);
                 await _context.SaveChangesAsync();
-                return new SaveStudentResponse(item);
+                return new StudentResponse(item);
             }
             catch (Exception er)
             {
-                return new SaveStudentResponse(er.Message);
+                return new StudentResponse(er.Message);
             }
         }
 

@@ -27,7 +27,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Speciality>().Property(p => p.Id)
                 .IsRequired()
                 .ValueGeneratedOnAdd();
-            builder.Entity<Speciality>().Property(p => p.StudyType)
+            builder.Entity<Speciality>().Property(p => p.EnumStudyType)
                 .IsRequired();
             builder.Entity<Speciality>().Property(p => p.Code)
                 .IsRequired();
@@ -41,10 +41,6 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Group>().Property(p => p.Name)
                 .IsRequired()
                 .HasMaxLength(10);
-            builder.Entity<Group>()
-                .HasMany(p => p.Students)
-                .WithOne(p => p.Group)
-                .HasForeignKey(p => p.GroupId);
 
             builder.Entity<Student>().ToTable("Students");
             builder.Entity<Student>().HasKey(p => p.IsuId);

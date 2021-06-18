@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AssignmentManager.Server.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20210615120050_CreateIdentityStudent")]
+    [Migration("20210617131625_CreateIdentityStudent")]
     partial class CreateIdentityStudent
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -119,7 +119,7 @@ namespace AssignmentManager.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("StudyType")
+                    b.Property<byte>("EnumStudyType")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");
