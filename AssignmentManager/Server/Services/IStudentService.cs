@@ -8,9 +8,9 @@ namespace AssignmentManager.Server.Services
     public interface IStudentService
     {
         Task<List<Student>> GetAll();
-        Task<Student> GetById(int id);
+        StudentResponse GetById(int id);
         Task<StudentResponse> Create(Student item);
-        void Update(Student item);
-        Student DeleteById(int id);
+        Task<StudentResponse> Update(int id, Student item);
+        Task<StudentResponse> DeleteById(int id);
     }
 }

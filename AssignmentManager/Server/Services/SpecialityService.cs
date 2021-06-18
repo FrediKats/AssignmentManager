@@ -30,6 +30,14 @@ namespace AssignmentManager.Server.Services
                 var currentSpeciality = await _context.Specialities.FindAsync(id);
                 currentSpeciality.Groups = await _context.Groups
                     .Where(g => g.SpecialityId == id).ToListAsync();
+                foreach (var gr in currentSpeciality.Groups)
+                {
+                    var studentsInGroup = await _context.Students
+                        .Include(student => student.Group)
+                        .Where(student => student.GroupId == gr.Id)
+                        .ToListAsync();
+                    gr.Students = studentsInGroup;
+                }
                 return new SpecialityResponse(currentSpeciality);
             }
             catch (Exception ex)
