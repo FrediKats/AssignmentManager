@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31313.381
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentManager.Server", "AssignmentManager\Server\AssignmentManager.Server.csproj", "{31943187-438C-4982-BD6C-F0E968C8A5A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentManager.Server", "AssignmentManager\Server\AssignmentManager.Server.csproj", "{31943187-438C-4982-BD6C-F0E968C8A5A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentManager.Client", "AssignmentManager\Client\AssignmentManager.Client.csproj", "{F32F8E68-39B5-4BCC-9D51-42437E49AF71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentManager.Client", "AssignmentManager\Client\AssignmentManager.Client.csproj", "{F32F8E68-39B5-4BCC-9D51-42437E49AF71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssignmentManager.Shared", "AssignmentManager\Shared\AssignmentManager.Shared.csproj", "{FAA20448-A515-45DA-873B-88D6AB816F80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssignmentManager.Shared", "AssignmentManager\Shared\AssignmentManager.Shared.csproj", "{FAA20448-A515-45DA-873B-88D6AB816F80}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
