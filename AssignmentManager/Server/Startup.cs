@@ -26,8 +26,7 @@ namespace AssignmentManager.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                options.UseInMemoryDatabase("in-memory-db"));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -56,7 +55,7 @@ namespace AssignmentManager.Server
             IWebHostEnvironment env,
             AppDbContext context)
         {
-            context.Database.Migrate();
+            //context.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

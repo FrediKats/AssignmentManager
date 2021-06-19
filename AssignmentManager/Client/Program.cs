@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor.Services;
 
 namespace AssignmentManager.Client
 {
@@ -21,7 +22,7 @@ namespace AssignmentManager.Client
             // Supply HttpClient instances that include access tokens when making requests to the server project
             builder.Services.AddScoped(sp =>
                 sp.GetRequiredService<IHttpClientFactory>().CreateClient("AssignmentManager.ServerAPI"));
-
+            builder.Services.AddMudServices();
             builder.Services.AddApiAuthorization();
 
             await builder.Build().RunAsync();
