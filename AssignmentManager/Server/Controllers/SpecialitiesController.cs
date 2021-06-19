@@ -45,13 +45,12 @@ namespace AssignmentManager.Server.Controllers
 
         [HttpPost]
         public async Task<ActionResult<SpecialityResourceBriefly>> CreateSpeciality(
-            [FromBody] SaveSpeciality briefly)
+            [FromBody] SaveSpeciality speciality)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-
-            var speciality = _mapper.Map<SaveSpeciality, Speciality>(briefly);
-            var result = await _service.Create(speciality);
+            var tmp = _mapper.Map<SaveSpeciality, Speciality>(speciality);
+            var result = await _service.Create(tmp);
 
             if (!result.Success)
                 return BadRequest(result.Message);

@@ -27,7 +27,7 @@ namespace AssignmentManager.Server.Services
             {
                 var currentStudent = _context.Students
                     .Include(s => s.Group)
-                    .Include(s => s.Group.Speciality)
+                    /*.Include(s => s.Group.Speciality)*/
                     .First(g => g.IsuId == id);
                 return new StudentResponse(currentStudent);
             }
@@ -69,11 +69,11 @@ namespace AssignmentManager.Server.Services
             existedStudent.MiddleName = item.MiddleName;
             try
             {
-                var existedGroup = await _context.Groups
-                    .FirstOrDefaultAsync(g => g.Id == existedStudent.GroupId);
+                /*var existedGroup = await _context.Groups
+                    .FirstOrDefaultAsync(g => g.Id == existedStudent.GroupId);*/
                 _context.Students.Update(existedStudent);
                 await _context.SaveChangesAsync();
-                existedStudent.Group = existedGroup;
+                /*existedStudent.Group = existedGroup;*/
                 return new StudentResponse(existedStudent);
             }
             catch (Exception ex)

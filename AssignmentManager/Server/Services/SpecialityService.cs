@@ -1,13 +1,14 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
-using AssignmentManager.Server.Mapping;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services.Communication;
+using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
@@ -18,6 +19,27 @@ namespace AssignmentManager.Server.Services
         {
         }
 
+        private async Task<Speciality> GetSpecialityWithGroups(int id)
+        {
+            return await _context.Specialities
+                .Include(s=> s.Groups)
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        private string GetAllEnumValues<T>(T enumType) where T : Type
+        {
+            var vars = new List<byte>();
+            foreach (var en in Enum.GetValues(enumType))
+            {
+                vars.Add((byte)en);
+            }
+            var enumStudyTypeValues = string
+                .Join(
+                    ',',
+                    vars
+                );
+            return enumStudyTypeValues;
+        }
         public async Task<List<Speciality>> GetAll()
         {
             return await _context.Specialities.ToListAsync();
@@ -27,17 +49,15 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
-                var currentSpeciality = await _context.Specialities.FindAsync(id);
-                currentSpeciality.Groups = await _context.Groups
-                    .Where(g => g.SpecialityId == id).ToListAsync();
-                foreach (var gr in currentSpeciality.Groups)
+                var currentSpeciality = await GetSpecialityWithGroups(id);
+                /*foreach (var gr in currentSpeciality.Groups)
                 {
                     var studentsInGroup = await _context.Students
                         .Include(student => student.Group)
                         .Where(student => student.GroupId == gr.Id)
                         .ToListAsync();
                     gr.Students = studentsInGroup;
-                }
+                }*/
                 return new SpecialityResponse(currentSpeciality);
             }
             catch (Exception ex)
@@ -50,8 +70,16 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
-                //validate input value of EStudyType
                 item.EnumStudyType.ToDescriptionString();
+            }
+            catch (Exception)
+            {
+                return new SpecialityResponse($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
+            }
+            try
+            {
+                //validate input value of EStudyType
+                
                 await _context.Specialities.AddAsync(item);
                 await _context.SaveChangesAsync();
                 return new SpecialityResponse(item);
@@ -64,7 +92,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<SpecialityResponse> Update(int id, Speciality item)
         {
-            var existedSpec = await _context.Specialities.FindAsync(id);
+            var existedSpec = await GetSpecialityWithGroups(id);
             if (existedSpec == null)
             {
                 return new SpecialityResponse("Speciality not found");
@@ -85,7 +113,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<SpecialityResponse> DeleteById(int id)
         {
-            var existedSpec = _context.Specialities.Include(s=> s.Groups).FirstOrDefault(p => p.Id == id);
+            var existedSpec = await GetSpecialityWithGroups(id);
             if (existedSpec == null)
             {
                 return new SpecialityResponse("Speciality not found");
@@ -105,15 +133,13 @@ namespace AssignmentManager.Server.Services
 
         public async Task<SpecialityResponse> DeleteCascadeById(int id)
         {
-            var existedSpec = _context.Specialities
-                .Include(s => s.Groups)
-                .FirstOrDefault(p => p.Id == id);
+            var existedSpec = await GetSpecialityWithGroups(id);
             if (existedSpec == null)
             {
                 return new SpecialityResponse("Speciality not found");
             }
 
-            var groups = _context.Groups.Where(g => g.Speciality == existedSpec);
+            var groups = existedSpec.Groups;
             List<int?> groupsIds = new List<int?>();
             foreach (var g in groups)
             {
