@@ -117,7 +117,7 @@ namespace AssignmentManager.Server.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<byte>("StudyType")
+                    b.Property<byte>("EnumStudyType")
                         .HasColumnType("tinyint");
 
                     b.HasKey("Id");

@@ -8,7 +8,8 @@ namespace AssignmentManager.Server.Mapping
     {
         public ResourceToModelProfiler()
         {
-            CreateMap<SaveSpecialityResource, Speciality>();
+            CreateMap<SaveSpecialityBriefly, Speciality>();
+            CreateMap<SaveGroupResource, Group>();
         }
     }
 }

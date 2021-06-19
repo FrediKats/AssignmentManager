@@ -1,5 +1,4 @@
 using System;
-using System.Text.Json.Serialization;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
@@ -52,7 +51,9 @@ namespace AssignmentManager.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, AppDbContext context)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env,
+            AppDbContext context)
         {
             //context.Database.Migrate();
             if (env.IsDevelopment())
