@@ -7,6 +7,6 @@ namespace AssignmentManager.Shared
         [Description("бакалавриат")] Bach = 1,
         [Description("магистратура")] Mast = 2,
         [Description("аспирантура")] Asp = 3,
-        [Description("докторантура")] Doc = 5
+        [Description("докторантура")] Doc = 4
     }
 }

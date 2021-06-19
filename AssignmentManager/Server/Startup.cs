@@ -27,6 +27,9 @@ namespace AssignmentManager.Server
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase("in-memory-db"));
+            /*services.AddDbContext<AppDbContext>(options => 
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));*/
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

@@ -2,7 +2,7 @@
 
 namespace AssignmentManager.Shared
 {
-    public class SaveSpecialityBriefly
+    public class SaveSpeciality
     {
         [Required] [MaxLength(8)] public string Code { get; set; }
 

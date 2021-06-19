@@ -45,12 +45,12 @@ namespace AssignmentManager.Server.Controllers
 
         [HttpPost]
         public async Task<ActionResult<SpecialityResourceBriefly>> CreateSpeciality(
-            [FromBody] SaveSpecialityBriefly briefly)
+            [FromBody] SaveSpeciality briefly)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
+            var speciality = _mapper.Map<SaveSpeciality, Speciality>(briefly);
             var result = await _service.Create(speciality);
 
             if (!result.Success)
@@ -62,12 +62,12 @@ namespace AssignmentManager.Server.Controllers
 
         [HttpPut("{id}")]
         public async Task<ActionResult<SpecialityResourceBriefly>> UpdateSpeciality(int id,
-            [FromBody] SaveSpecialityBriefly briefly)
+            [FromBody] SaveSpeciality briefly)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
+            var speciality = _mapper.Map<SaveSpeciality, Speciality>(briefly);
             var result = await _service.Update(id, speciality);
 
             if (!result.Success)
