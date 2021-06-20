@@ -27,7 +27,7 @@ namespace AssignmentManager.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase("in-memory"));
+                options.UseInMemoryDatabase("in-memory-db"))
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
