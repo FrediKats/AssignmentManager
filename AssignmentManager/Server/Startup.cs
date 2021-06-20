@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore.InMemory;
 
 namespace AssignmentManager.Server
 {
@@ -26,7 +27,7 @@ namespace AssignmentManager.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDbContext>(options =>
-                options.UseInMemoryDatabase("in-memory-db"));
+                options.UseInMemoryDatabase("in-memory-db"))
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 

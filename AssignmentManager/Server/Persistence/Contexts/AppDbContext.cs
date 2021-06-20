@@ -17,6 +17,9 @@ namespace AssignmentManager.Server.Persistence.Contexts
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
+        
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -52,6 +55,28 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Student>().Property(p => p.Lastname)
                 .IsRequired();
             builder.Entity<Student>().Property(p => p.Name)
+                .IsRequired();
+
+            builder.Entity<Instructor>().ToTable("Instructors");
+            builder.Entity<Instructor>().HasKey(p => p.IsuId);
+            builder.Entity<Instructor>().Property(p => p.IsuId)
+                .IsRequired()
+                .HasMaxLength(6);
+            builder.Entity<Instructor>().Property(p => p.LastName)
+                .IsRequired();
+            builder.Entity<Instructor>().Property(p => p.FirstName)
+                .IsRequired();
+            builder.Entity<Instructor>().Property(p => p.PatronymicName)
+                .IsRequired();
+            builder.Entity<Instructor>().Property(p => p.Email)
+                .IsRequired();
+
+            builder.Entity<Subject>().ToTable("Subjects");
+            builder.Entity<Subject>().HasKey(p => p.SubjectId);
+            builder.Entity<Subject>().Property(p => p.SubjectId)
+                .IsRequired()
+                .ValueGeneratedOnAdd();
+            builder.Entity<Subject>().Property(p => p.SubjectName)
                 .IsRequired();
         }
     }
