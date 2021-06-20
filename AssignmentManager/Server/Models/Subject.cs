@@ -6,6 +6,6 @@ namespace AssignmentManager.Server.Models
     {
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
-        public ICollection<Instructor> Instructors { get; set; }
+        public IList<Instructor> Instructors { get; set; } = new List<Instructor>();
     }
 }

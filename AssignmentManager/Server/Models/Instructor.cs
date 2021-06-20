@@ -12,6 +12,6 @@ namespace AssignmentManager.Server.Models
        public string Email { get; set; }
        public string Phone { get; set; }
 
-       public ICollection<Subject> Subjects { get; set; }
+       public IList<Subject> Subjects { get; set; } = new List<Subject>();
     }
 }

@@ -1,63 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using AssignmentManager.Server.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using AssignmentManager.Server.Models;
+using AssignmentManager.Server.Persistence.Contexts;
+using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
+using AutoMapper;
 using IdentityModel.Client;
+using AssignmentManager.Server.Extensions;
 
 namespace AssignmentManager.Server.Controllers
 {
-    public class SubjectsController
+    [Route("/api/[controller]")]
+    public class SubjectsController : ControllerBase
     {
         private readonly ISubjectService _subjectService;
-
-        public SubjectsController(ISubjectService subjectService)
+        private readonly IMapper _mapper;
+        
+        public SubjectsController(ISubjectService subjectService, IMapper mapper)
         {
             _subjectService = subjectService;
+            _mapper = mapper;
         }
-        
+
         [HttpGet]
-        public IReadOnlyCollection<Subject> Get()
+        public async Task<IEnumerable<SubjectResource>> GetAllAsync()
         {
-            //TODO: return all existing subjects
-            var result = _subjectService.Get().Result;
-            return result;
-        }
-
-        [HttpGet("{id:int}")]
-        public ActionResult<string> GetById(int id)
-        {
-            //TODO: return subject by id as json
-            throw new NotImplementedException();
-        }
-
-        [HttpGet("{name:string}")]
-        public IReadOnlyCollection<string> GetByName(string name)
-        {
-            //TODO: return all subjects with name as substring
-            throw new NotImplementedException();
+            var subjects = await _subjectService.GetAllSubjects();
+            var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResource>>(subjects);
+            return resources;
         }
         
         [HttpPost]
-        public void Post([FromBody] string value)
-        { 
-            //TODO: add new subject to db
-            throw new NotImplementedException();
-        }
+        public async Task<IActionResult> PostAsync([FromBody] SaveSubjectResource resource)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+            
+            var subject = _mapper.Map<SaveSubjectResource, Subject>(resource);
+            var result = await _subjectService.SaveAsync(subject);
 
-        // PUT api/values/5
-        [HttpPut("{id:int}")]
-        public void Put(int id, [FromBody] string value)
-        {   
-            //TODO: update subject in db
-            throw new NotImplementedException();
-        }
-        
-        [HttpDelete("{id:int}")]
-        public void Delete(int id)
-        {  
-            //TODO: delete subject from db
-            throw new NotImplementedException();
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var subjectResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
+            return Ok(subjectResource);
         }
     }
 }

@@ -5,33 +5,31 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services.Communication;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
 {
-    public class SubjectService : BaseService, ISubjectService
+    public class InstructorService : BaseService,  IInstructorService
     {
-        public SubjectService(AppDbContext context) : base(context)
+        public InstructorService(AppDbContext context) : base(context)
         {
         }
-
-        public Task<List<Subject>> GetAllSubjects()
+        public Task<List<Instructor>> GetAllInstructors()
         {
-            return _context.Subjects.ToListAsync();
+            return _context.Instructors.ToListAsync();
         }
 
-        public async Task<SubjectResponse> SaveAsync(Subject subject)
+        public async Task<InstructorsResponse> SaveAsync(Instructor instructor)
         {
             try
             {
-                await _context.Subjects.AddAsync(subject);
+                await _context.Instructors.AddAsync(instructor);
                 await _context.SaveChangesAsync();
-                return new SubjectResponse(subject);
+                return new InstructorsResponse(instructor);
             }
             catch (Exception er)
             {
-                return new SubjectResponse(er.Message);
+                return new InstructorsResponse(er.Message);
             }
         }
     }
