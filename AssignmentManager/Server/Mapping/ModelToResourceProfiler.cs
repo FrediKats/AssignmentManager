@@ -14,6 +14,9 @@ namespace AssignmentManager.Server.Mapping
             CreateMap<Student, StudentResourceBriefly>();
             CreateMap<Group, GroupResource>();
             CreateMap<Group, GroupResourceBriefly>();
+            CreateMap<Solution, SolutionResourceBriefly>();
+            CreateMap<Solution, SolutionResource>();
+            CreateMap<Assignment, AssignmentResourceBriefly>();
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(
                     opt => opt.StudyTypeName,
