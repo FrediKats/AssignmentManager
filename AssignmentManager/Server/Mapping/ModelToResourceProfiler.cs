@@ -25,7 +25,7 @@ namespace AssignmentManager.Server.Mapping
                     );
             CreateMap<Instructor, InstructorResource>();
             CreateMap<Subject, SubjectResource>();
-
+            CreateMap<InstructorSubject, InstructorSubjectResource>();
         }
     }
 }

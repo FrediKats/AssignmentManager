@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using AssignmentManager.Server.Extensions;
+using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Controllers
 {
@@ -63,19 +63,31 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveInstructorResource resource)
+        public async Task<ActionResult<InstructorResource>> PutAsync(int id, [FromBody] SaveInstructorResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var category = _mapper.Map<SaveInstructorResource, Instructor>(resource);
-            var result = await _instructorService.UpdateAsync(id, category);
+            var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
+            var result = await _instructorService.UpdateAsync(id, instructor);
 
             if (!result.Success)
                 return BadRequest(result.Message);
 
-            var categoryResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
-            return Ok(categoryResource);
+            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
+            return Ok(instructorResource);
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _instructorService.DeleteAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
+            return Ok(instructorResource);
         }
     }
 }
