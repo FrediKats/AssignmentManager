@@ -87,6 +87,8 @@ namespace AssignmentManager.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+            
+            context.Database.EnsureCreated();
 
             app.UseIdentityServer();
             app.UseAuthentication();
