@@ -1,6 +1,5 @@
 ﻿using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Shared;
 using AutoMapper;
 
@@ -26,7 +25,7 @@ namespace AssignmentManager.Server.Mapping
                     );
             CreateMap<Instructor, InstructorResource>();
             CreateMap<Subject, SubjectResource>();
-
+            CreateMap<InstructorSubject, InstructorSubjectResource>();
         }
     }
 }

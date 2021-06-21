@@ -5,11 +5,11 @@ using AssignmentManager.Server.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
 using AutoMapper;
 using IdentityModel.Client;
 using AssignmentManager.Server.Extensions;
+using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Controllers
 {
