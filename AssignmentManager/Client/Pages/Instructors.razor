@@ -10,12 +10,20 @@
 
 <MudGrid>
     <MudItem xs="12">
-        <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary" />
+        <MudTextField 
+                      @bind-Value="Search"
+                      Label="Search"
+                      Variant="Variant.Outlined"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Filled.Search" 
+                      AdornmentColor="Color.Secondary"
+                      DebounceInterval="250"
+                      OnDebounceIntervalElapsed="()=>ParseQuery(Search)"/>
     </MudItem>
     <MudItem xs="4">
         @if (InstructorResources == null)
         {
-            <MudAlert>No Instructors found.</MudAlert>
+            <MudAlert>@Error</MudAlert>
         }
         else
         {
@@ -53,8 +61,11 @@
 
 @code {
     string Search { get; set; }
+    string Error { get; set; }
     InstructorResource[] InstructorResources { get; set; }
     InstructorResource SelectedInstructor { get; set; }
+
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,5 +75,24 @@
     string GetFullName(InstructorResource instructor)
     {
         return $"{instructor.FirstName} {instructor.PatronymicName} {instructor.LastName}";
+    }
+
+    async void ParseQuery(string query)
+    {
+        int id;
+        if (Search.Length == 6 && int.TryParse(query, out id))
+        {
+            InstructorResources = new InstructorResource[]{
+                await Http.GetFromJsonAsync<InstructorResource>($"api/instructors/{id}") };
+        }
+        else if(Search == "")
+        {
+            InstructorResources = await Http.GetFromJsonAsync<InstructorResource[]>("api/instructors");
+        } else
+        {
+            InstructorResources = null;
+            Error = "No Instructors found";
+        }
+        StateHasChanged();
     }
 }
