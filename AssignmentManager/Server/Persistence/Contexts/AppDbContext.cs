@@ -1,4 +1,8 @@
-﻿using AssignmentManager.Server.Models;
+﻿using System;
+using System.Collections.Generic;
+using AssignmentManager.Server.Data;
+using AssignmentManager.Server.Models;
+using AssignmentManager.Shared;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -17,42 +21,20 @@ namespace AssignmentManager.Server.Persistence.Contexts
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Solution> Solutions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Speciality>().ToTable("Specialities");
-            builder.Entity<Speciality>().HasKey(p => p.Id);
-            builder.Entity<Speciality>().Property(p => p.Id)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-            builder.Entity<Speciality>().Property(p => p.EnumStudyType)
-                .IsRequired();
-            builder.Entity<Speciality>().Property(p => p.Code)
-                .IsRequired();
-
-
-            builder.Entity<Group>().ToTable("Groups");
-            builder.Entity<Group>().HasKey(p => p.Id);
-            builder.Entity<Group>().Property(p => p.Id)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-            builder.Entity<Group>().Property(p => p.Name)
-                .IsRequired()
-                .HasMaxLength(10);
-
-            builder.Entity<Student>().ToTable("Students");
-            builder.Entity<Student>().HasKey(p => p.IsuId);
-            builder.Entity<Student>().Property(p => p.IsuId)
-                .IsRequired()
-                .ValueGeneratedNever();
-            builder.Entity<Student>().Property(p => p.Email)
-                .IsRequired();
-            builder.Entity<Student>().Property(p => p.Lastname)
-                .IsRequired();
-            builder.Entity<Student>().Property(p => p.Name)
-                .IsRequired();
+            builder.Entity<Student>().Property(p => p.IsuId).ValueGeneratedNever();
+            
+            builder.Entity<Instructor>().Property(p => p.IsuId).ValueGeneratedNever();
+            
+            DataSeeder.SeedData(builder);
         }
     }
 }
