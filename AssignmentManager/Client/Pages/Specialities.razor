@@ -1,0 +1,65 @@
+﻿@page "/specialities"
+@using MudBlazor
+@using AssignmentManager.Shared
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient _http
+<h3>Instructors</h3>
+<MudGrid>
+    <MudItem xs="12">
+        <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary"/>
+    </MudItem>
+    <MudItem xs="4">
+        <MudPaper>
+            <div class="d-flex flex-column px-4" style="max-height:800px; overflow:scroll;">
+                @if (_specialities == null)
+                {
+                    <p>Loading</p>
+                }
+                else
+                {
+                    <MudList Clickable="true">
+                        @foreach (var card in _specialities)
+                        {
+                            <MudListItem Text="@card.Code" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { selectedCard = card; }"/>
+                        }
+                    </MudList>
+                }
+            </div>
+        </MudPaper>
+    </MudItem>
+    <MudItem xs="8">
+        @if (selectedCard != null)
+        {
+            <MudCard>
+                <MudCardContent>
+                    <MudText Typo="Typo.h5">@selectedCard.Code</MudText>
+                    <MudText Typo="Typo.body1">@selectedCard.StudyTypeName</MudText>
+                    <MudText Typo="Typo.body2" Class="m-1">Number of Groups is 0</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Show Subjects</MudButton>
+                </MudCardActions>
+            </MudCard>
+        }
+    </MudItem>
+</MudGrid>
+
+@code {
+    private string Search { get; set; }
+    private SpecialityResourceBriefly[] _specialities;
+    private SpecialityResourceBriefly selectedCard;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _specialities = await _http.GetFromJsonAsync<SpecialityResourceBriefly[]>("api/specialities");
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+    }
+
+}

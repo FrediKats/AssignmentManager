@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using AssignmentManager.Server.Models;
 
-namespace AssignmentManager.Server.Resources
+namespace AssignmentManager.Shared
 {
     public class SpecialityResource
     {

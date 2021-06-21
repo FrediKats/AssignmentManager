@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
+using AssignmentManager.Shared;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,17 +23,17 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<SpecialityResourceBriefly> GetAllSpecialitiesBriefly()
+        public async Task<IReadOnlyCollection<SpecialityResourceBriefly>> GetAllSpecialitiesBriefly()
         {
-            var specialities = _service.GetAll().Result;
+            var specialities = await _service.GetAll();
             var resources = _mapper.Map<List<Speciality>, List<SpecialityResourceBriefly>>(specialities);
             return resources;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Speciality> GetSpecialityByIdCompletely(int id)
+        public async Task<ActionResult<Speciality>> GetSpecialityByIdCompletely(int id)
         {
-            var speciality = _service.GetById(id).Result;
+            var speciality = await _service.GetById(id);
             if (!speciality.Success)
                 return BadRequest(speciality.Message);
             var resources = _mapper
@@ -45,13 +45,12 @@ namespace AssignmentManager.Server.Controllers
 
         [HttpPost]
         public async Task<ActionResult<SpecialityResourceBriefly>> CreateSpeciality(
-            [FromBody] SaveSpecialityBriefly briefly)
+            [FromBody] SaveSpeciality speciality)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-
-            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
-            var result = await _service.Create(speciality);
+            var tmp = _mapper.Map<SaveSpeciality, Speciality>(speciality);
+            var result = await _service.Create(tmp);
 
             if (!result.Success)
                 return BadRequest(result.Message);
@@ -62,12 +61,12 @@ namespace AssignmentManager.Server.Controllers
 
         [HttpPut("{id}")]
         public async Task<ActionResult<SpecialityResourceBriefly>> UpdateSpeciality(int id,
-            [FromBody] SaveSpecialityBriefly briefly)
+            [FromBody] SaveSpeciality briefly)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var speciality = _mapper.Map<SaveSpecialityBriefly, Speciality>(briefly);
+            var speciality = _mapper.Map<SaveSpeciality, Speciality>(briefly);
             var result = await _service.Update(id, speciality);
 
             if (!result.Success)
