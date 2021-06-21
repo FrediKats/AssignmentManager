@@ -10,6 +10,10 @@ namespace AssignmentManager.Server.Mapping
         {
             CreateMap<SaveSpeciality, Speciality>();
             CreateMap<SaveGroupResource, Group>();
+
+            CreateMap<SaveInstructorResource, Instructor>();
+            CreateMap<SaveSubjectResource, Subject>();
+
             CreateMap<SaveStudentResource, Student>();
         }
     }
