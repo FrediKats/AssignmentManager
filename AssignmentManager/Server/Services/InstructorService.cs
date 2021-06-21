@@ -64,5 +64,25 @@ namespace AssignmentManager.Server.Services
                 return new InstructorsResponse($"An error occurred when updating the instructor: {ex.Message}");
             }
         }
+
+        public async Task<InstructorsResponse> DeleteAsync(int id)
+        {
+            var existingInstructor = await _context.Instructors.FindAsync(id);
+
+            if (existingInstructor == null)
+                return new InstructorsResponse("Category not found.");
+
+            try
+            {
+                _context.Instructors.Remove(existingInstructor);
+                await _context.SaveChangesAsync();
+                return new InstructorsResponse(existingInstructor);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new InstructorsResponse($"An error occurred when deleting the instructor: {ex.Message}");
+            }
+        }
     }
 }

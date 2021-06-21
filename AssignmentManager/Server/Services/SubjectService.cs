@@ -61,5 +61,25 @@ namespace AssignmentManager.Server.Services
                 return new SubjectResponse($"An error occurred when updating the subject: {ex.Message}");
             }
         }
+
+        public async Task<SubjectResponse> DeleteAsync(int id)
+        {
+            var existingSubject = await _context.Subjects.FindAsync(id);
+
+            if (existingSubject == null)
+                return new SubjectResponse("Category not found.");
+
+            try
+            {
+                _context.Subjects.Remove(existingSubject);
+                await _context.SaveChangesAsync();
+                return new SubjectResponse(existingSubject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new SubjectResponse($"An error occurred when deleting the subject: {ex.Message}");
+            }
+        }
     }
 }

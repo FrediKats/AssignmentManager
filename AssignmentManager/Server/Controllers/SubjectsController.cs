@@ -78,5 +78,17 @@ namespace AssignmentManager.Server.Controllers
             var categoryResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
             return Ok(categoryResource);
         }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _subjectService.DeleteAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var subjectResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
+            return Ok(subjectResource);
+        }
     }
 }

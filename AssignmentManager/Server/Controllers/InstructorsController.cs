@@ -78,5 +78,17 @@ namespace AssignmentManager.Server.Controllers
             var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
             return Ok(instructorResource);
         }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id)
+        {
+            var result = await _instructorService.DeleteAsync(id);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
+            return Ok(instructorResource);
+        }
     }
 }

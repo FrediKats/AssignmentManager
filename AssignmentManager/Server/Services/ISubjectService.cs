@@ -12,5 +12,6 @@ namespace AssignmentManager.Server.Services
         Task<SubjectResponse> GetById(int id);
         Task<SubjectResponse> SaveAsync(Subject subject);
         Task<SubjectResponse> UpdateAsync(int id, Subject subject);
+        Task<SubjectResponse> DeleteAsync(int id);
     }
 }
