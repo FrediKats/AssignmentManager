@@ -1,4 +1,8 @@
-﻿using AssignmentManager.Server.Models;
+﻿using System;
+using System.Collections.Generic;
+using AssignmentManager.Server.Data;
+using AssignmentManager.Server.Models;
+using AssignmentManager.Shared;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +21,10 @@ namespace AssignmentManager.Server.Persistence.Contexts
         public DbSet<Speciality> Specialities { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<Student> Students { get; set; }
+        public DbSet<Instructor> Instructors { get; set; }
+        public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Solution> Solutions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -25,6 +33,8 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Student>().Property(p => p.IsuId).ValueGeneratedNever();
             
             builder.Entity<Instructor>().Property(p => p.IsuId).ValueGeneratedNever();
+            
+            DataSeeder.SeedData(builder);
         }
     }
 }
