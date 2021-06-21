@@ -20,7 +20,6 @@ namespace AssignmentManager.Server.Services
         {
             return await _context.Students.ToListAsync();
         }
-
         public async Task<StudentResponse> GetById(int id)
         {
             try

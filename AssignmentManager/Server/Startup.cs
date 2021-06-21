@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
@@ -30,6 +28,7 @@ namespace AssignmentManager.Server
         {
             services.AddDbContext<AppDbContext>(options =>
                 options.UseInMemoryDatabase("in-memory-db"));
+          
             /*services.AddDbContext<AppDbContext>(options => 
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));*/
@@ -57,7 +56,6 @@ namespace AssignmentManager.Server
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "AssigmentManager API", Version = "v1" });
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

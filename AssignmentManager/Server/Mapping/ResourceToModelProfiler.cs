@@ -1,4 +1,4 @@
-﻿using AssignmentManager.Server.Models;
+using AssignmentManager.Server.Models;
 using AssignmentManager.Shared;
 using AutoMapper;
 

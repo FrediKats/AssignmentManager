@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -70,6 +69,7 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
+                //validate input value of EStudyType
                 item.EnumStudyType.ToDescriptionString();
             }
             catch (Exception)
@@ -78,8 +78,6 @@ namespace AssignmentManager.Server.Services
             }
             try
             {
-                //validate input value of EStudyType
-                
                 await _context.Specialities.AddAsync(item);
                 await _context.SaveChangesAsync();
                 return new SpecialityResponse(item);
@@ -138,7 +136,6 @@ namespace AssignmentManager.Server.Services
             {
                 return new SpecialityResponse("Speciality not found");
             }
-
             var groups = existedSpec.Groups;
             List<int?> groupsIds = new List<int?>();
             foreach (var g in groups)
