@@ -1,5 +1,6 @@
 ﻿using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
+using AssignmentManager.Server.Resources;
 using AssignmentManager.Shared;
 using AutoMapper;
 

@@ -51,7 +51,7 @@ namespace AssignmentManager.Server.Services
 
             try
             {
-                _context.Subjects.Update(subject);
+                _context.Subjects.Update(existingSubject);
                 await _context.SaveChangesAsync();
                 return new SubjectResponse(existingSubject);
             }

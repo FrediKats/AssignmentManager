@@ -54,7 +54,7 @@ namespace AssignmentManager.Server.Services
 
             try
             {
-                _context.Instructors.Update(instructor);
+                _context.Instructors.Update(existingInstructor);
                 await _context.SaveChangesAsync();
                 return new InstructorsResponse(existingInstructor);
             }
