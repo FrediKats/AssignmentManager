@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AssignmentManager.Server.Resources
+namespace AssignmentManager.Shared
 {
     public class SaveSubjectResource
     {

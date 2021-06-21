@@ -1,31 +1,47 @@
 ﻿@page "/Instructors"
 @using MudBlazor
-<h3>Instructors</h3>
+@using AssignmentManager.Shared;
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@inject HttpClient Http
+
+<MudText Typo="Typo.h2">Instructors</MudText>
 
 <MudGrid>
     <MudItem xs="12">
         <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary" />
     </MudItem>
     <MudItem xs="4">
-        <MudPaper>
-            <div class="d-flex flex-column px-4" style="max-height:800px; overflow:scroll;">
-                <MudList Clickable="true">
-                    @foreach (var card in InstructorCards)
-                    {
-                        <MudListItem Text="@card.Name" Avatar="@Icons.Material.Filled.Icecream" OnClick="()=> { selectedCard = card; }" />
-                    }
-                </MudList>
-            </div>
-        </MudPaper>
+        @if (InstructorResources == null)
+        {
+            <MudAlert>No Instructors found.</MudAlert>
+        }
+        else
+        {
+            <MudPaper>
+                <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                    <MudList Clickable="true">
+                        @foreach (var instructor in InstructorResources)
+                        {
+                            <MudListItem Text="@GetFullName(instructor)" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { SelectedInstructor = instructor; }" />
+                        }
+                    </MudList>
+                </div>
+            </MudPaper>
+        }
     </MudItem>
     <MudItem xs="8">
-        @if (selectedCard != null)
+        @if (SelectedInstructor != null)
         {
             <MudCard>
                 <MudCardContent>
-                    <MudText Typo="Typo.h5">@selectedCard.Name</MudText>
-                    <MudText Typo="Typo.body1">@selectedCard.Descrtiption</MudText>
-                    <MudText Typo="Typo.body2" Class="m-1">Number of Subjects is @selectedCard.NumberOfSubjects</MudText>
+                    <MudText Typo="Typo.h5">@GetFullName(SelectedInstructor)</MudText>
+                    <MudText Typo="Typo.body1">e-mail: @SelectedInstructor.Email</MudText>
+                    <MudText Typo="Typo.body1">Телефон: @SelectedInstructor.Phone</MudText>
+                    <MudText Typo="Typo.body1">Номер ISU: @SelectedInstructor.IsuId</MudText>
+                    <br />
+                    <MudText Typo="Typo.body2" Class="m-1">Number of Subjects is @SelectedInstructor.Subjects.Count</MudText>
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary">Show Subjects</MudButton>
@@ -36,43 +52,17 @@
 </MudGrid>
 
 @code {
-    public string Search { get; set; }
-    public int Count { get; set; } = 50;
-    private InstructorCard[] _instructorCards;
-    public InstructorCard[] InstructorCards
+    string Search { get; set; }
+    InstructorResource[] InstructorResources { get; set; }
+    InstructorResource SelectedInstructor { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
-        get
-        {
-            if (_instructorCards == null)
-                _instructorCards = GetInstructorCards();
-            return _instructorCards;
-        }
+        InstructorResources = await Http.GetFromJsonAsync<InstructorResource[]>("api/instructors");
     }
 
-    public InstructorCard selectedCard;
-    InstructorCard[] GetInstructorCards()
+    string GetFullName(InstructorResource instructor)
     {
-
-        InstructorCard[] instructorCards = new InstructorCard[Count];
-        for (int i = 0; i < Count; i++)
-        {
-            instructorCards[i] = new InstructorCard
-            {
-                Name = $"Sample Instructor №{i}",
-                Descrtiption = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-                "Duis rutrum porttitor egestas. " +
-                "Suspendisse sagittis ullamcorper eros ac imperdiet. " +
-                "Pellentesque in tempus mi.",
-                NumberOfSubjects = new Random().Next() % 25
-            };
-        }
-        return instructorCards;
-    }
-
-    public class InstructorCard
-    {
-        public String Name { get; set; }
-        public String Descrtiption { get; set; }
-        public int NumberOfSubjects { get; set; }
+        return $"{instructor.FirstName} {instructor.PatronymicName} {instructor.LastName}";
     }
 }

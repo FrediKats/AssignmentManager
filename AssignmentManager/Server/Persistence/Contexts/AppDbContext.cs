@@ -34,7 +34,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
                 .IsRequired();
             builder.Entity<Speciality>().Property(p => p.Code)
                 .IsRequired();
-
+ 
 
             builder.Entity<Group>().ToTable("Groups");
             builder.Entity<Group>().HasKey(p => p.Id);

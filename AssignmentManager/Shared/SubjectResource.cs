@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace AssignmentManager.Server.Resources
+namespace AssignmentManager.Shared
 {
     public class SubjectResource
     {
