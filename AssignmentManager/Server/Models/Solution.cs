@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace AssignmentManager.Server.Models
 {
@@ -10,5 +11,6 @@ namespace AssignmentManager.Server.Models
         public string Feedback { get; set; }
         
         [Required] public Assignment Assignment { get; set; }
+        public virtual IList<Student> Students { get; set; }
     }
 }
