@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
 using AssignmentManager.Server.Services;
+using AssignmentManager.Shared;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,17 +23,17 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<GroupResourceBriefly> GetAllGroupsBriefly()
+        public async Task<IReadOnlyCollection<GroupResourceBriefly>> GetAllGroupsBriefly()
         {
-            var groups = _service.GetAll().Result;
+            var groups = await _service.GetAll();
             var resources = _mapper.Map<List<Group>, List<GroupResourceBriefly>>(groups);
             return resources;
         }
         
         [HttpGet("{id}")]
-        public ActionResult<Group> GetGroupByIdCompletely(int id)
+        public async Task<ActionResult<Group>> GetGroupByIdCompletely(int id)
         {
-            var speciality = _service.GetById(id).Result;
+            var speciality = await _service.GetById(id);
             if (!speciality.Success)
                 return BadRequest(speciality.Message);
             var resources = _mapper

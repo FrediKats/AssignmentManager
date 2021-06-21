@@ -1,5 +1,5 @@
-﻿using AssignmentManager.Server.Models;
-using AssignmentManager.Server.Resources;
+using AssignmentManager.Server.Models;
+using AssignmentManager.Shared;
 using AutoMapper;
 
 namespace AssignmentManager.Server.Mapping
@@ -8,8 +8,9 @@ namespace AssignmentManager.Server.Mapping
     {
         public ResourceToModelProfiler()
         {
-            CreateMap<SaveSpecialityBriefly, Speciality>();
+            CreateMap<SaveSpeciality, Speciality>();
             CreateMap<SaveGroupResource, Group>();
+            CreateMap<SaveStudentResource, Student>();
         }
     }
 }

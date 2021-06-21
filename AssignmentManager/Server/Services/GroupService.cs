@@ -25,8 +25,8 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
-                var currentGroup = _context.Groups.Include(g => g.Speciality)
-                    .First(g => g.Id == id);
+                var currentGroup = await _context.Groups.Include(g => g.Speciality)
+                    .FirstAsync(g => g.Id == id);
                 currentGroup.Students = await _context.Students
                     .Where(g => g.GroupId == id).ToListAsync();
                 return new GroupResponse(currentGroup);
