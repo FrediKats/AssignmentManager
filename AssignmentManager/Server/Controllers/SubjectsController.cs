@@ -28,9 +28,23 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<SubjectResource>> GetAllAsync()
         {
+            Console.WriteLine("get all");
             var subjects = await _subjectService.GetAllSubjects();
             var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResource>>(subjects);
             return resources;
+        }
+        
+        [HttpGet("{id}")]
+        public ActionResult<Subject> GetById(int id)
+        {
+            var subject = _subjectService.GetById(id).Result;
+            Console.WriteLine(subject.Success);
+            if (!subject.Success)
+            {
+                return BadRequest(subject.Message);
+            }
+            var resource = _mapper.Map<Subject, SubjectResource>(subject.Subject);
+            return Ok(resource);
         }
         
         [HttpPost]
@@ -47,6 +61,22 @@ namespace AssignmentManager.Server.Controllers
 
             var subjectResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
             return Ok(subjectResource);
+        }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveSubjectResource resource)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+
+            var category = _mapper.Map<SaveSubjectResource, Subject>(resource);
+            var result = await _subjectService.UpdateAsync(id, category);
+
+            if (!result.Success)
+                return BadRequest(result.Message);
+
+            var categoryResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
+            return Ok(categoryResource);
         }
     }
 }

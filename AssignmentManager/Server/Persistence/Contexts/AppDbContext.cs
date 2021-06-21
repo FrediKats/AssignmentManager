@@ -71,7 +71,7 @@ namespace AssignmentManager.Server.Persistence.Contexts
             builder.Entity<Instructor>().HasData(
                 new Instructor()
                 {
-                    IsuId = 111111, 
+                    IsuId = 111112, 
                     LastName = "Mayatin", 
                     FirstName = "Alexander", 
                     Email = "e@mail.ru"

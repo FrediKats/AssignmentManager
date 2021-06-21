@@ -16,9 +16,14 @@ namespace AssignmentManager.Server.Services
         {
         }
 
-        public Task<List<Subject>> GetAllSubjects()
+        public async Task<List<Subject>> GetAllSubjects()
         {
-            return _context.Subjects.ToListAsync();
+            return await _context.Subjects.ToListAsync();
+        }
+
+        public async Task<SubjectResponse> GetById(int id)
+        {
+            return new SubjectResponse(await _context.Subjects.FindAsync(id));
         }
 
         public async Task<SubjectResponse> SaveAsync(Subject subject)
@@ -32,6 +37,28 @@ namespace AssignmentManager.Server.Services
             catch (Exception er)
             {
                 return new SubjectResponse(er.Message);
+            }
+        }
+
+        public async Task<SubjectResponse> UpdateAsync(int id, Subject subject)
+        {
+            var existingSubject = await _context.Subjects.FindAsync(id);
+
+            if (existingSubject == null)
+                return new SubjectResponse("Subject not found.");
+
+            existingSubject.SubjectName = subject.SubjectName;
+
+            try
+            {
+                _context.Subjects.Update(subject);
+                await _context.SaveChangesAsync();
+                return new SubjectResponse(existingSubject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new SubjectResponse($"An error occurred when updating the subject: {ex.Message}");
             }
         }
     }
