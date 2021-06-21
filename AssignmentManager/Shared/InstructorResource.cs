@@ -11,6 +11,6 @@ namespace AssignmentManager.Shared
         public string Email { get; set; }
         public string Phone { get; set; }
 
-        public IList<SubjectResource> Subjects { get; set; }
+        public IList<int> SubjectIds { get; set; }
     }
 }
