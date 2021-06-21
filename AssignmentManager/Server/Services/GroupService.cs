@@ -39,7 +39,8 @@ namespace AssignmentManager.Server.Services
 
         public async Task<GroupResponse> Create(Group group)
         {
-            int specialityId = group.SpecialityId.HasValue ? group.SpecialityId.Value : -1;
+            //int specialityId = group.SpecialityId.HasValue ? group.SpecialityId.Value : -1;
+            int specialityId = group.SpecialityId;
             if (specialityId > 0) 
             { 
                 var speciality = _context.Specialities.FindAsync(specialityId).Result; 
