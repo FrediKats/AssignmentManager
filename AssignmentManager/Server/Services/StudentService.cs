@@ -21,14 +21,14 @@ namespace AssignmentManager.Server.Services
             return await _context.Students.ToListAsync();
         }
 
-        public StudentResponse GetById(int id)
+        public async Task<StudentResponse> GetById(int id)
         {
             try
             {
-                var currentStudent = _context.Students
+                var currentStudent = await _context.Students
                     .Include(s => s.Group)
                     /*.Include(s => s.Group.Speciality)*/
-                    .First(g => g.IsuId == id);
+                    .FirstAsync(g => g.IsuId == id);
                 return new StudentResponse(currentStudent);
             }
             catch (Exception ex)

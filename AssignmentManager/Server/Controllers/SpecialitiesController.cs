@@ -23,17 +23,17 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<SpecialityResourceBriefly> GetAllSpecialitiesBriefly()
+        public async Task<IReadOnlyCollection<SpecialityResourceBriefly>> GetAllSpecialitiesBriefly()
         {
-            var specialities = _service.GetAll().Result;
+            var specialities = await _service.GetAll();
             var resources = _mapper.Map<List<Speciality>, List<SpecialityResourceBriefly>>(specialities);
             return resources;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Speciality> GetSpecialityByIdCompletely(int id)
+        public async Task<ActionResult<Speciality>> GetSpecialityByIdCompletely(int id)
         {
-            var speciality = _service.GetById(id).Result;
+            var speciality = await _service.GetById(id);
             if (!speciality.Success)
                 return BadRequest(speciality.Message);
             var resources = _mapper

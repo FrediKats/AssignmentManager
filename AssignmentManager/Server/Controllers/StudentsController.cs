@@ -22,17 +22,17 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public IReadOnlyCollection<StudentResourceBriefly> GetAllStudents()
+        public async Task<IReadOnlyCollection<StudentResourceBriefly>> GetAllStudents()
         {
-            var students = _service.GetAll().Result;
+            var students = await _service.GetAll();
             var resources = _mapper.Map<List<Student>, List<StudentResourceBriefly>>(students);
             return resources;
         }
         
         [HttpGet("{id}")]
-        public ActionResult<Group> GetGroupByIdCompletely(int id)
+        public async Task<ActionResult<Group>> GetGroupByIdCompletely(int id)
         {
-            var student = _service.GetById(id);
+            var student = await _service.GetById(id);
             if (!student.Success)
                 return BadRequest(student.Message);
             var resources = _mapper
