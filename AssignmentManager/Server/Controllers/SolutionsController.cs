@@ -53,5 +53,13 @@ namespace AssignmentManager.Server.Controllers
             var result = await _service.Create(solutionResource);
             return Ok(_mapper.Map<Solution, SolutionResource>(result));
         }
+        
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateSolution(int id, [FromBody] SaveSolutionResource solutionResource) {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+            var result = await _service.Update(id, solutionResource);
+            return Ok(_mapper.Map<Solution, SolutionResource>(result));
+        }
     }
 }

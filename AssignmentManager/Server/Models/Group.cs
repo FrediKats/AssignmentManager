@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AssignmentManager.Shared;
 using Newtonsoft.Json;
 
 namespace AssignmentManager.Server.Models

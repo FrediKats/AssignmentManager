@@ -10,7 +10,7 @@ namespace AssignmentManager.Server.Services
         Task<List<Solution>> GetAll();
         Task<Solution> GetById(int id);
         Task<Solution> Create(SaveSolutionResource item);
-        Task<Solution> Update(int id, Solution item);
+        Task<Solution> Update(int id, SaveSolutionResource item);
         Task<Solution> DeleteById(int id);
     }
 }
