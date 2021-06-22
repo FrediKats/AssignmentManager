@@ -70,7 +70,7 @@ namespace AssignmentManager.Server.Services
             var existingInstructor = await _context.Instructors.FindAsync(id);
 
             if (existingInstructor == null)
-                return new InstructorResponse("Category not found.");
+                return new InstructorResponse("Instructor not found.");
 
             try
             {
