@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
 using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
@@ -30,7 +32,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Solution>> GetSolutionByIdCompletely(int id)
+        public async Task<IActionResult> GetSolutionByIdCompletely(int id)
         {
             try
             {
@@ -40,8 +42,16 @@ namespace AssignmentManager.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateSolution([FromBody] SaveSolutionResource solutionResource) {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+            var result = await _service.Create(solutionResource);
+            return Ok(_mapper.Map<Solution, SolutionResource>(result));
         }
     }
 }

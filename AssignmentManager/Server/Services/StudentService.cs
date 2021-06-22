@@ -27,6 +27,7 @@ namespace AssignmentManager.Server.Services
                 var currentStudent = await _context.Students
                     .Include(s => s.Group)
                     /*.Include(s => s.Group.Speciality)*/
+                    .Include(s => s.Solutions)
                     .FirstAsync(g => g.IsuId == id);
                 return new StudentResponse(currentStudent);
             }
@@ -52,6 +53,7 @@ namespace AssignmentManager.Server.Services
                 return new StudentResponse($"An error occurred when created student: {ex.Message}");
             }
         }
+        //TODO: Переделать под solutions
         public async Task<StudentResponse> Update(int id, Student item)
         {
             var existedStudent = await _context.Students
@@ -79,8 +81,8 @@ namespace AssignmentManager.Server.Services
             {
                 return new StudentResponse($"An error occurred when updating the student: {ex.Message}");
             }
-        }
-
+        } 
+        //TODO: Переделать каскадное удаление под solutions
         public async Task<StudentResponse> DeleteById(int id)
         {
             var existedStudent = _context.Students

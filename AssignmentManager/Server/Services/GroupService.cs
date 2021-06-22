@@ -36,7 +36,7 @@ namespace AssignmentManager.Server.Services
                 return new GroupResponse($"An error occurred when getting by id the speciality: {ex.Message}");
             }
         }
-
+        //TODO: написать неявный конструктор для Group из SaveGroupResource
         public async Task<GroupResponse> Create(Group group)
         {
             //int specialityId = group.SpecialityId.HasValue ? group.SpecialityId.Value : -1;

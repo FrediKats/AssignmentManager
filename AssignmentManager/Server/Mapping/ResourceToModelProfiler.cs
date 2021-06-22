@@ -11,6 +11,7 @@ namespace AssignmentManager.Server.Mapping
             CreateMap<SaveSpeciality, Speciality>();
             CreateMap<SaveGroupResource, Group>();
             CreateMap<SaveStudentResource, Student>();
+            CreateMap<SaveSolutionResource, Solution>();
         }
     }
 }
