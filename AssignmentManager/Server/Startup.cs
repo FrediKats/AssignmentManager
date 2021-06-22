@@ -49,6 +49,7 @@ namespace AssignmentManager.Server
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ISolutionService, SolutionService>();
+            services.AddScoped<IAssignmentService, AssignmentService>();
             services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
