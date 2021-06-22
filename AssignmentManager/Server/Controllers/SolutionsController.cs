@@ -50,16 +50,44 @@ namespace AssignmentManager.Server.Controllers
         public async Task<IActionResult> CreateSolution([FromBody] SaveSolutionResource solutionResource) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            var result = await _service.Create(solutionResource);
-            return Ok(_mapper.Map<Solution, SolutionResource>(result));
+            try
+            {
+                var result = await _service.Create(solutionResource);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSolution(int id, [FromBody] SaveSolutionResource solutionResource) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            var result = await _service.Update(id, solutionResource);
-            return Ok(_mapper.Map<Solution, SolutionResource>(result));
+            try
+            {
+                var result = await _service.Update(id, solutionResource);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteSolution(int id)
+        {
+            try
+            {
+                var result = await _service.DeleteById(id);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
