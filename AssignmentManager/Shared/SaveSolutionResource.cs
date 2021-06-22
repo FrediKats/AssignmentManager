@@ -7,5 +7,7 @@ namespace AssignmentManager.Shared
         [Required] public string Content { get; set; }
         [Required] public int AssignmentId { get; set; }
         [Required] public int[] StudentsId { get; set; }
+        public float? Grade { get; set; }
+        public string Feedback { get; set; }
     }
 }

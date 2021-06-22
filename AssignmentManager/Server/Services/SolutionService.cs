@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
@@ -36,29 +37,34 @@ namespace AssignmentManager.Server.Services
         public async Task<Solution> Create(SaveSolutionResource item)
         {
             var solution = (Solution) item;
-            try
+            
+            solution.Students = new List<Student>();
+            foreach (var studentId in item.StudentsId)
             {
-                foreach (var studentId in item.StudentsId)
+                try
                 {
                     var currentStudent = await _context.Students.FindAsync(studentId);
-                    if (currentStudent.Solutions == null)
-                    {
-                        currentStudent.Solutions = new List<Solution>();
-                    }
-                    currentStudent.Solutions.Add(solution);
+                    solution.Students.Add(currentStudent);
                 }
+                catch (Exception)
+                {
+                    throw new Exception($"An error occurred when updating the solution: student with {studentId} is not found");
+                }
+            }
+            try 
+            {
                 solution.Assignment = await _context.Assignments.FindAsync(item.AssignmentId);
                 await _context.Solutions.AddAsync(solution);
                 await _context.SaveChangesAsync();
+                return await GetById(solution.SolutionId);
             }
             catch (Exception ex)
             {
                 throw new Exception($"An error occurred when creating the solution: {ex.Message}");
             }
-            return await GetById(solution.SolutionId);
         }
 
-        public async Task<Solution> Update(int id, Solution item)
+        public async Task<Solution> Update(int id, SaveSolutionResource item)
         {
             var existedSolution = await GetById(id);
             if (existedSolution == null)
@@ -68,11 +74,26 @@ namespace AssignmentManager.Server.Services
             existedSolution.Grade = item.Grade;
             existedSolution.Content = item.Content;
             existedSolution.Feedback = item.Feedback;
+            existedSolution.Students = new List<Student>();
+            foreach (var studentId in item.StudentsId)
+            {
+                try
+                {
+                    var currentStudent = await _context.Students.FindAsync(studentId);
+                    existedSolution.Students.Add(currentStudent);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"An error occurred when updating the solution: student with {studentId} is not found");
+                }
+            }
+
             try
             {
+                existedSolution.Assignment = await _context.Assignments.FindAsync(item.AssignmentId);
                 _context.Solutions.Update(existedSolution);
                 await _context.SaveChangesAsync();
-                return existedSolution;
+                return await GetById(existedSolution.SolutionId);
             }
             catch (Exception ex)
             {
