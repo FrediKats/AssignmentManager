@@ -42,8 +42,29 @@ namespace AssignmentManager.Server.Services
             return assigment;
         }
 
-        public Task<Assignment> Update(int id, Assignment item)
+        public async Task<Assignment> Update(int id, SaveAssignmentResource item)
         {
+            var updateForSolution = (Assignment) item;
+            var existedAssignment = await GetById(id);
+            if (existedAssignment == null)
+            {
+                throw new Exception($"An error occurred when updating the solution: student with {id} is not found");
+            }
+
+            existedAssignment.Deadline = updateForSolution.Deadline;
+            existedAssignment.Description = updateForSolution.Description;
+            existedAssignment.Name = updateForSolution.Name;
+            existedAssignment.Subject = await _context.Subjects.FindAsync(item.SubjectId);
+            try
+            {
+                _context.Assignments.Update(existedAssignment);
+                await _context.SaveChangesAsync();
+                return await GetById(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred when updating the assignment: {ex.Message}");
+            }
             throw new System.NotImplementedException();
         }
 

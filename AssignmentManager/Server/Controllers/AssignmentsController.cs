@@ -61,5 +61,21 @@ namespace AssignmentManager.Server.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAssignment([FromBody] SaveAssignmentResource assignmentResource, int id)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+            try
+            {
+                var assignment = await _service.Update(id, assignmentResource);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
