@@ -110,7 +110,7 @@ namespace AssignmentManager.Server.Services
             }
             try
             {
-                _context.Remove(existedSolution);
+                _context.Solutions.Remove(existedSolution);
                 await _context.SaveChangesAsync();
                 return existedSolution;
             } catch (Exception ex)

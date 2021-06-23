@@ -27,9 +27,9 @@ namespace AssignmentManager.Server.Services
                 .FirstOrDefaultAsync(asgn => asgn.AssignmentId == id);
             if (assignment == null)
             {
-                throw new Exception("An error occurred while getting an assignment: an assignment with id ${id} does not exist");
+                throw new Exception($"An error occurred while getting an assignment: an assignment with id {id} does not exist");
             }
-            
+
             return assignment;
         }
 
@@ -46,10 +46,6 @@ namespace AssignmentManager.Server.Services
         {
             var updateForSolution = (Assignment) item;
             var existedAssignment = await GetById(id);
-            if (existedAssignment == null)
-            {
-                throw new Exception($"An error occurred when updating the solution: student with {id} is not found");
-            }
 
             existedAssignment.Deadline = updateForSolution.Deadline;
             existedAssignment.Description = updateForSolution.Description;
@@ -68,9 +64,18 @@ namespace AssignmentManager.Server.Services
             throw new System.NotImplementedException();
         }
 
-        public Task<Assignment> DeleteById(int id)
+        public async Task<Assignment> DeleteById(int id)
         {
-            throw new System.NotImplementedException();
+            var existedAssignment = await GetById(id);
+            try
+            {
+                _context.Assignments.Remove(existedAssignment);
+                await _context.SaveChangesAsync();
+                return existedAssignment;
+            } catch (Exception ex)
+            {
+                throw new Exception($"An error occurred when deleting the solution: {ex.Message}");
+            }
         }
     }
 }

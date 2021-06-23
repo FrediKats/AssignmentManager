@@ -33,7 +33,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Assignment>> GetAssignmentByIdCompletely(int id)
+        public async Task<IActionResult> GetAssignmentByIdCompletely(int id)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace AssignmentManager.Server.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         }
         
@@ -71,6 +71,20 @@ namespace AssignmentManager.Server.Controllers
             {
                 var assignment = await _service.Update(id, assignmentResource);
                 return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAssignment(int id)
+        {
+            try
+            {
+                var result = await _service.DeleteById(id);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(result));
             }
             catch (Exception ex)
             {
