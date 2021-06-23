@@ -30,11 +30,6 @@ namespace AssignmentManager.Server.Persistence.Contexts
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<Speciality>()
-                .HasMany(e => e.Groups)
-                .WithOne(e => e.Speciality)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Entity<Student>().Property(p => p.IsuId).ValueGeneratedNever();
             
             builder.Entity<Instructor>().Property(p => p.IsuId).ValueGeneratedNever();

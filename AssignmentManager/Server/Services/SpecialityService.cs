@@ -40,10 +40,15 @@ namespace AssignmentManager.Server.Services
         {
             try
             {
-                return await _context.Specialities
+                var speciality = await _context.Specialities
                     .Include(s=> s.Groups)
                     .Include(s => s.Subjects)
                     .FirstOrDefaultAsync(p => p.Id == id);
+                if (speciality == null)
+                {
+                    throw new Exception("Speciality not found");
+                }
+                return speciality;
             }
             catch (Exception ex)
             {
@@ -85,11 +90,6 @@ namespace AssignmentManager.Server.Services
         public async Task<Speciality> Update(int id, SaveSpecialityResource item)
         {
             var existedSpec = await GetById(id);
-            if (existedSpec == null)
-            {
-                throw new Exception("Speciality not found");
-            }
-            
             var speciality = (Speciality) item;
             try
             {
@@ -125,13 +125,14 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> DeleteById(int id)
         {
-            var existedSpec = await GetById(id);
-            if (existedSpec == null)
-            {
-                throw new Exception("Speciality not found");
-            }
+            var existedSpec = await _context.Specialities
+                .Include(s => s.Groups)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            existedSpec.Groups = await _context.Groups
+                    .Include(g => g.Students)
+                    .Where(g => g.Speciality==existedSpec).ToListAsync();
             try
-            {   
+            {
                 _context.Remove(existedSpec);
                 await _context.SaveChangesAsync();
 
@@ -140,37 +141,6 @@ namespace AssignmentManager.Server.Services
             catch (Exception ex)
             {
                 throw new Exception($"An error occurred when deleting the speciality: {ex.Message}");
-            }
-        }
-
-        public async Task<SpecialityResponse> DeleteCascadeById(int id)
-        {
-            var existedSpec = await GetById(id);
-            if (existedSpec == null)
-            {
-                return new SpecialityResponse("Speciality not found");
-            }
-            var groups = existedSpec.Groups;
-            List<int?> groupsIds = new List<int?>();
-            foreach (var g in groups)
-            {
-                groupsIds.Add(g.Id);
-            }
-            try
-            {
-                var studentsToDelete = await _context.Students
-                    .Where(s => groupsIds.Contains(s.GroupId)).ToListAsync();
-                _context.Students.RemoveRange(studentsToDelete);
-                _context.Groups.RemoveRange(groups);
-                _context.Specialities.Remove(existedSpec);
-                await _context.SaveChangesAsync();
-
-                return new SpecialityResponse(existedSpec);
-            }
-            catch (Exception ex)
-            {
-                return new SpecialityResponse(
-                    $"An error occurred when cascade deleting the speciality: {ex.Message}");
             }
         }
     }

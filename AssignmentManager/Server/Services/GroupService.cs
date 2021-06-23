@@ -6,6 +6,7 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services.Communication;
+using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
@@ -21,125 +22,75 @@ namespace AssignmentManager.Server.Services
             return await _context.Groups.ToListAsync();
         }
 
-        public async Task<GroupResponse> GetById(int id)
+        public async Task<Group> GetById(int id)
         {
             try
             {
-                var currentGroup = await _context.Groups.Include(g => g.Speciality)
-                    .FirstAsync(g => g.Id == id);
-                currentGroup.Students = await _context.Students
-                    .Where(g => g.GroupId == id).ToListAsync();
-                return new GroupResponse(currentGroup);
+                var currentGroup = await _context.Groups
+                    .Include(g => g.Speciality)
+                    .Include(g => g.Students)
+                    .FirstOrDefaultAsync(g => g.Id == id);
+                if (currentGroup == null)
+                {
+                    throw new Exception("Group isn't existed");
+                }
+                return currentGroup;
             }
             catch (Exception ex)
             {
-                return new GroupResponse($"An error occurred when getting by id the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when getting by id the group: {ex.Message}");
             }
         }
-        //TODO: написать неявный конструктор для Group из SaveGroupResource
-        public async Task<GroupResponse> Create(Group group)
+        
+        public async Task<Group> Create(Group group)
         {
-            //int specialityId = group.SpecialityId.HasValue ? group.SpecialityId.Value : -1;
-            int specialityId = group.SpecialityId;
-            if (specialityId > 0) 
-            { 
-                var speciality = _context.Specialities.FindAsync(specialityId).Result; 
-                if (speciality == null) 
-                { 
-                    return new GroupResponse($"Speciality with id={specialityId} is not existed"); 
-                }
-                group.Speciality = speciality;
-                speciality.Groups ??= new List<Group>();
-                speciality.Groups.Add(group);
-            }
-            await _context.Groups.AddAsync(group);
-            await _context.SaveChangesAsync();
-            return new GroupResponse(group);
-
-            }
-
-        public async Task<List<Group>> GetById(int? id)
-        {
-            return await _context.Groups
-                .Include(gr => gr.Speciality)
-                .Where(gr => gr.SpecialityId == id).ToListAsync();
-        }
-        public async Task<GroupResponse> Update(int id, Group item)
-        {
-            var existedGroup = await _context.Groups
-                .FindAsync(id);
-            if (existedGroup == null)
+            try
             {
-                return new GroupResponse("Group not found");
+                group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
+                if (group.Speciality == null)
+                {
+                    throw new Exception($"Speciality with id {group.SpecialityId} is not existed");
+                }
+
+                await _context.Groups.AddAsync(group);
+                await _context.SaveChangesAsync();
+                return group;
             }
+            catch (Exception ex)
+            {
+                throw new Exception($"An error occurred when creating the group: {ex.Message}");
+            }
+        }
+        public async Task<Group> Update(int id, Group item)
+        {
+            var existedGroup = await GetById(id);
             existedGroup.Name = item.Name;
             existedGroup.SpecialityId = item.SpecialityId;
             try
             {
-                var existedSpeciality = await _context.Specialities.FindAsync(existedGroup.SpecialityId);
+                existedGroup.Speciality = await _context.Specialities.FindAsync(item.SpecialityId);
                 _context.Groups.Update(existedGroup);
                 await _context.SaveChangesAsync();
-                existedGroup.Speciality = existedSpeciality;
-                return new GroupResponse(existedGroup);
+                return existedGroup;
             }
             catch (Exception ex)
             {
-                return new GroupResponse($"An error occurred when updating the group: {ex.Message}");
+                throw new Exception($"An error occurred when updating the group: {ex.Message}");
             }
         }
 
-        public async Task<GroupResponse> DeleteById(int id)
+        public async Task<Group> DeleteById(int id)
         {
-            var existedGroup = _context.Groups
-                .Include(s=> s.Students)
-                .FirstOrDefault(p => p.Id == id);
-            if (existedGroup == null)
-            {
-                return new GroupResponse("Group not found");
-            }
+            var existedGroup = await GetById(id);
             try
             {
                 _context.Remove(existedGroup);
                 await _context.SaveChangesAsync();
-
-                return new GroupResponse(existedGroup);
+                return existedGroup;
             }
             catch (Exception ex)
             {
-                return new GroupResponse($"An error occurred when deleting the group: {ex.Message}");
-            }
-        }
-        
-        public async Task<GroupResponse> DeleteCascadeById(int id)
-        {
-            var existedGroup = _context.Groups
-                .Include(s => s.Students)
-                .FirstOrDefault(p => p.Id == id);
-            if (existedGroup == null)
-            {
-                return new GroupResponse("Speciality not found");
-            }
-
-            var students = _context.Students.Where(g => g.Group == existedGroup);
-            List<int?> studentIds = new List<int?>();
-            foreach (var g in students)
-            {
-                studentIds.Add(g.IsuId);
-            }
-            try
-            {
-                var studentsToDelete = await _context.Students
-                    .Where(s => studentIds.Contains(s.IsuId)).ToListAsync();
-                _context.Students.RemoveRange(studentsToDelete);
-                _context.Groups.Remove(existedGroup);
-                await _context.SaveChangesAsync();
-
-                return new GroupResponse(existedGroup);
-            }
-            catch (Exception ex)
-            {
-                return new GroupResponse(
-                    $"An error occurred when cascade deleting the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when deleting the group: {ex.Message}");
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Models
 {
@@ -16,9 +17,26 @@ namespace AssignmentManager.Server.Models
         public int GroupId { get; set; }
         [Required] public Group Group { get; set; }
         public virtual IList<Solution> Solutions { get; set; }
+
         public Student()
         {
             Solutions = new List<Solution>();
+        }
+
+        public static implicit operator Student(SaveStudentResource studentResource)
+        {
+            return new Student()
+            {
+                IsuId = studentResource.IsuId,
+                Name = studentResource.Name,
+                MiddleName = studentResource.MiddleName,
+                Lastname = studentResource.LastName,
+                Email = studentResource.Email,
+                Phone = studentResource.Phone,
+                GroupId = studentResource.GroupId,
+                Group = new Group(),
+                Solutions = new List<Solution>()
+            };
         }
     }
 }
