@@ -67,9 +67,10 @@ namespace AssignmentManager.Server.Services
         public async Task<Solution> Update(int id, SaveSolutionResource item)
         {
             var existedSolution = await GetById(id);
-            if (existedSolution == null)
+            var solutionAssignment = await _context.Assignments.FindAsync(item.AssignmentId);
+            if (solutionAssignment == null)
             {
-                throw new Exception($"An error occurred when updating the solution: the solution with {id} is not existed");
+                throw new Exception($"An error occurred when creating the solution: assignment with id {item.AssignmentId} is not existed");
             }
             existedSolution.Grade = item.Grade;
             existedSolution.Content = item.Content;
@@ -82,7 +83,7 @@ namespace AssignmentManager.Server.Services
                     var currentStudent = await _context.Students.FindAsync(studentId);
                     existedSolution.Students.Add(currentStudent);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     throw new Exception($"An error occurred when updating the solution: student with {studentId} is not found");
                 }

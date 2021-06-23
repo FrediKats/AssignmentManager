@@ -61,7 +61,6 @@ namespace AssignmentManager.Server.Services
             {
                 throw new Exception($"An error occurred when updating the assignment: {ex.Message}");
             }
-            throw new System.NotImplementedException();
         }
 
         public async Task<Assignment> DeleteById(int id)

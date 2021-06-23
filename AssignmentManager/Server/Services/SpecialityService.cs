@@ -17,14 +17,6 @@ namespace AssignmentManager.Server.Services
         public SpecialityService(AppDbContext context) : base(context)
         {
         }
-
-        private async Task<Speciality> GetSpecialityWithGroups(int id)
-        {
-            return await _context.Specialities
-                .Include(s=> s.Groups)
-                .FirstOrDefaultAsync(p => p.Id == id);
-        }
-
         private string GetAllEnumValues<T>(T enumType) where T : Type
         {
             var vars = new List<byte>();
@@ -44,94 +36,116 @@ namespace AssignmentManager.Server.Services
             return await _context.Specialities.ToListAsync();
         }
 
-        public async Task<SpecialityResponse> GetById(int id)
+        public async Task<Speciality> GetById(int id)
         {
             try
             {
-                var currentSpeciality = await GetSpecialityWithGroups(id);
-                /*foreach (var gr in currentSpeciality.Groups)
-                {
-                    var studentsInGroup = await _context.Students
-                        .Include(student => student.Group)
-                        .Where(student => student.GroupId == gr.Id)
-                        .ToListAsync();
-                    gr.Students = studentsInGroup;
-                }*/
-                return new SpecialityResponse(currentSpeciality);
+                return await _context.Specialities
+                    .Include(s=> s.Groups)
+                    .Include(s => s.Subjects)
+                    .FirstOrDefaultAsync(p => p.Id == id);
             }
             catch (Exception ex)
             {
-                return new SpecialityResponse($"An error occurred when getting by id the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when getting by id the speciality: {ex.Message}");
             }
             
         }
-        public async Task<SpecialityResponse> Create(Speciality item)
+        public async Task<Speciality> Create(SaveSpecialityResource item)
         {
+            Speciality speciality = (Speciality) item;
             try
             {
-                //validate input value of EStudyType
-                item.EnumStudyType.ToDescriptionString();
+                speciality.EnumStudyType.ToDescriptionString();
             }
             catch (Exception)
             {
-                return new SpecialityResponse($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
+                throw new Exception($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
             }
             try
             {
-                await _context.Specialities.AddAsync(item);
+                foreach (var subjectId in item.SubjectsId)
+                {
+                    var sub = await _context.Subjects.FindAsync(subjectId);
+                    if (sub == null)
+                        throw new Exception(
+                            $"can't find subject with id {subjectId}");
+                    speciality.Subjects.Add(sub);
+                }
+                await _context.Specialities.AddAsync(speciality);
                 await _context.SaveChangesAsync();
-                return new SpecialityResponse(item);
+                return speciality;
             }
             catch (Exception ex)
             {
-                return new SpecialityResponse($"An error occurred when creating the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when creating the speciality: {ex.Message}");
             }
         }
 
-        public async Task<SpecialityResponse> Update(int id, Speciality item)
+        public async Task<Speciality> Update(int id, SaveSpecialityResource item)
         {
-            var existedSpec = await GetSpecialityWithGroups(id);
+            var existedSpec = await GetById(id);
             if (existedSpec == null)
             {
-                return new SpecialityResponse("Speciality not found");
+                throw new Exception("Speciality not found");
             }
-            existedSpec.Code = item.Code;
-            existedSpec.EnumStudyType = item.EnumStudyType;
+            
+            var speciality = (Speciality) item;
+            try
+            {
+                speciality.EnumStudyType.ToDescriptionString();
+            }
+            catch (Exception)
+            {
+                throw new Exception($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
+            }
+            
+            existedSpec.Code = speciality.Code;
+            existedSpec.EnumStudyType = speciality.EnumStudyType;
+            existedSpec.Subjects = new List<Subject>();
+            foreach (var subjectId in item.SubjectsId)
+            {
+                var sub = await _context.Subjects.FindAsync(subjectId);
+                if (sub == null)
+                    throw new Exception(
+                        $"An error occurred when updating the speciality: can't find subject with id {subjectId}");
+                existedSpec.Subjects.Add(sub);
+            }
             try
             {
                 _context.Specialities.Update(existedSpec);
                 await _context.SaveChangesAsync();
-                return new SpecialityResponse(existedSpec);
+                return existedSpec;
             }
             catch (Exception ex)
             {
-                return new SpecialityResponse($"An error occurred when updating the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when updating the speciality: {ex.Message}");
             }
         }
 
-        public async Task<SpecialityResponse> DeleteById(int id)
+        public async Task<Speciality> DeleteById(int id)
         {
-            var existedSpec = await GetSpecialityWithGroups(id);
+            var existedSpec = await GetById(id);
             if (existedSpec == null)
             {
-                return new SpecialityResponse("Speciality not found");
+                throw new Exception("Speciality not found");
             }
             try
-            {
+            {   
                 _context.Remove(existedSpec);
                 await _context.SaveChangesAsync();
 
-                return new SpecialityResponse(existedSpec);
+                return existedSpec;
             }
             catch (Exception ex)
             {
-                return new SpecialityResponse($"An error occurred when deleting the speciality: {ex.Message}");
+                throw new Exception($"An error occurred when deleting the speciality: {ex.Message}");
             }
         }
 
         public async Task<SpecialityResponse> DeleteCascadeById(int id)
         {
-            var existedSpec = await GetSpecialityWithGroups(id);
+            var existedSpec = await GetById(id);
             if (existedSpec == null)
             {
                 return new SpecialityResponse("Speciality not found");

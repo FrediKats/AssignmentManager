@@ -94,7 +94,7 @@ namespace AssignmentManager.Server.Services
             }
             try
             {
-                _context.Remove(existedStudent);
+                _context.Students.Remove(existedStudent);
                 await _context.SaveChangesAsync();
                 return new StudentResponse(existedStudent);
             }
