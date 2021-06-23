@@ -23,10 +23,13 @@ namespace AssignmentManager.Server.Models
 
         public static implicit operator Solution(SaveSolutionResource solutionResource)
         {
+            int asId = 0;
+            if (solutionResource.AssignmentId.HasValue)
+                asId = solutionResource.AssignmentId.Value;
             return new Solution
             {
                 Content = solutionResource.Content,
-                AssignmentId = solutionResource.AssignmentId,
+                AssignmentId = asId,
                 Grade = null,
                 Feedback = String.Empty,
                 Assignment = new Assignment(),

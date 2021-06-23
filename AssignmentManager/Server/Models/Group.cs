@@ -21,10 +21,13 @@ namespace AssignmentManager.Server.Models
 
         public static implicit operator Group(SaveGroupResource groupResource)
         {
+            int asId = 0;
+            if (groupResource.SpecialityId.HasValue)
+                asId = groupResource.SpecialityId.Value;
             return new Group()
             {
                 Name = groupResource.Name,
-                SpecialityId = groupResource.SpecialityId,
+                SpecialityId = asId,
                 Speciality = new Speciality(),
                 Students = new List<Student>()
             };

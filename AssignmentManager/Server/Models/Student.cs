@@ -25,6 +25,9 @@ namespace AssignmentManager.Server.Models
 
         public static implicit operator Student(SaveStudentResource studentResource)
         {
+            int asId = 0;
+            if (studentResource.GroupId.HasValue)
+                asId = studentResource.GroupId.Value;
             return new Student()
             {
                 IsuId = studentResource.IsuId,
@@ -33,7 +36,7 @@ namespace AssignmentManager.Server.Models
                 Lastname = studentResource.LastName,
                 Email = studentResource.Email,
                 Phone = studentResource.Phone,
-                GroupId = studentResource.GroupId,
+                GroupId = asId,
                 Group = new Group(),
                 Solutions = new List<Solution>()
             };

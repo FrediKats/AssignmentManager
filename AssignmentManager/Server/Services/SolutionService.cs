@@ -39,11 +39,13 @@ namespace AssignmentManager.Server.Services
             var solution = (Solution) item;
             
             solution.Students = new List<Student>();
-            foreach (var studentId in item.StudentsId)
+            foreach (var studentId in item.StudentsId.ToHashSet())
             {
                 try
                 {
                     var currentStudent = await _context.Students.FindAsync(studentId);
+                    if (currentStudent == null)
+                        throw new Exception($"can't find student with id {studentId}");
                     solution.Students.Add(currentStudent);
                 }
                 catch (Exception)
@@ -54,6 +56,8 @@ namespace AssignmentManager.Server.Services
             try 
             {
                 solution.Assignment = await _context.Assignments.FindAsync(item.AssignmentId);
+                if (solution.Assignment == null)
+                    throw new Exception($"Assignment with id {solution.AssignmentId} doesn't exist");
                 await _context.Solutions.AddAsync(solution);
                 await _context.SaveChangesAsync();
                 return await GetById(solution.SolutionId);
@@ -76,7 +80,7 @@ namespace AssignmentManager.Server.Services
             existedSolution.Content = item.Content;
             existedSolution.Feedback = item.Feedback;
             existedSolution.Students = new List<Student>();
-            foreach (var studentId in item.StudentsId)
+            foreach (var studentId in item.StudentsId.ToHashSet())
             {
                 var currentStudent = await _context.Students.FindAsync(studentId);
                 if (currentStudent == null) 
