@@ -10,27 +10,35 @@ namespace AssignmentManager.Server.Mapping
         public ModelToResourceProfile()
         {
             CreateMap<Student, StudentResource>();
+            CreateMap<Student, StudentResourceBriefly>();
+            
             CreateMap<Group, GroupResource>();
             CreateMap<Group, GroupResourceBriefly>();
-            CreateMap<Solution, SolutionResourceBriefly>();
-            CreateMap<Solution, SolutionResource>();
-            CreateMap<Assignment, AssignmentResourceBriefly>();
-            CreateMap<Assignment, AssignmentResource>();
-            CreateMap<Subject, SubjectResourceBriefly>();
+            
             CreateMap<Speciality, SpecialityResource>()
                 .ForMember(
                     opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
                         src => src.EnumStudyType.ToDescriptionString())
-                )
+                );
+            CreateMap<Speciality,SpecialityResourceBriefly>()
                 .ForMember(
-                    dist=> dist.EnumStudyType,
+                    opt => opt.StudyTypeName,
                     opt => opt.MapFrom(
-                        src => src.EnumStudyType
-                        )
-                    );
-            CreateMap<Instructor, InstructorResource>();
+                        src => src.EnumStudyType.ToDescriptionString())
+                );
+            
+            CreateMap<Solution, SolutionResourceBriefly>();
+            CreateMap<Solution, SolutionResource>();
+
+            CreateMap<Assignment, AssignmentResourceBriefly>();
+            CreateMap<Assignment, AssignmentResource>();
+            
+            CreateMap<Subject, SubjectResourceBriefly>();
             CreateMap<Subject, SubjectResource>();
+            
+            CreateMap<Instructor, InstructorResource>();
+
             CreateMap<InstructorSubject, InstructorSubjectResource>();
         }
     }
