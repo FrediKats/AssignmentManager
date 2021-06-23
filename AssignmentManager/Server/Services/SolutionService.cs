@@ -78,20 +78,15 @@ namespace AssignmentManager.Server.Services
             existedSolution.Students = new List<Student>();
             foreach (var studentId in item.StudentsId)
             {
-                try
-                {
-                    var currentStudent = await _context.Students.FindAsync(studentId);
-                    existedSolution.Students.Add(currentStudent);
-                }
-                catch (Exception)
-                {
+                var currentStudent = await _context.Students.FindAsync(studentId);
+                if (currentStudent == null) 
                     throw new Exception($"An error occurred when updating the solution: student with {studentId} is not found");
-                }
+                existedSolution.Students.Add(currentStudent);
             }
 
             try
             {
-                existedSolution.Assignment = await _context.Assignments.FindAsync(item.AssignmentId);
+                existedSolution.Assignment = solutionAssignment;
                 _context.Solutions.Update(existedSolution);
                 await _context.SaveChangesAsync();
                 return await GetById(existedSolution.SolutionId);

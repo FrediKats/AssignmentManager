@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
-using AssignmentManager.Server.Services.Communication;
 using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
