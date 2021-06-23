@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
@@ -32,9 +33,13 @@ namespace AssignmentManager.Server.Services
             return assignment;
         }
 
-        public Task<Assignment> Create(Assignment item)
+        public async Task<Assignment> Create(SaveAssignmentResource item)
         {
-            throw new System.NotImplementedException();
+            var assigment = (Assignment) item;
+            assigment.Subject = await _context.Subjects.FindAsync(item.SubjectId);
+            await _context.Assignments.AddAsync(assigment);
+            await _context.SaveChangesAsync();
+            return assigment;
         }
 
         public Task<Assignment> Update(int id, Assignment item)

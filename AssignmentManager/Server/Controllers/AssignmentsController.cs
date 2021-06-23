@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
@@ -43,6 +44,21 @@ namespace AssignmentManager.Server.Controllers
             catch (Exception ex)
             {
                 return BadRequest(ex);
+            }
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateAssignment([FromBody] SaveAssignmentResource assignmentResource) {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
+            try
+            {
+                var assignment = await _service.Create(assignmentResource);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
