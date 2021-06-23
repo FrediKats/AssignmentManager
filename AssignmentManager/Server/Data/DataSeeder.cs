@@ -47,14 +47,18 @@ namespace AssignmentManager.Server.Data
 
             Instructor[] instructors =
             {
-                new Instructor { IsuId = 1337, Email = "instructor@hotmail.com", FirstName = "Boss", LastName = "Big"},
-                new Instructor { IsuId = 1338, Email = "instructor@hotmail.com", FirstName = "Boss", LastName = "Small"}
+                new Instructor { IsuId = 111114, LastName = "Mavrin", FirstName = "Pavel", Email = "e@mail.ru"},
+                new Instructor { IsuId = 111115, LastName = "Priiskalov", FirstName = "Roman", PatronymicName = "Andreevich", Email = "e@mail.ru"},
+                new Instructor { IsuId = 111113, LastName = "Beresnev", FirstName = "Artem", PatronymicName = "Dmitrievich", Email = "e@mail.ru"},
+                new Instructor { IsuId = 111112, LastName = "Mayatin", FirstName = "Alexander", PatronymicName = "Vladimirovich", Email = "e@mail.ru"}
             };
 
             Subject[] subjects =
             {
-                new Subject { SubjectId = 100, Name = "algorithms"},
-                new Subject { SubjectId = 101, Name = "advanced stuff"}
+                new Subject { SubjectId = 1, SubjectName = "OS"},
+                new Subject { SubjectId = 2, SubjectName = "DB"},
+                new Subject { SubjectId = 100, SubjectName = "algorithms"},
+                new Subject { SubjectId = 101, SubjectName = "advanced stuff"}
             };
             
             object[] assignments =

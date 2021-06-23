@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.OpenApi.Models;
 
 namespace AssignmentManager.Server
@@ -50,6 +51,9 @@ namespace AssignmentManager.Server
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<ISolutionService, SolutionService>();
             services.AddScoped<IAssignmentService, AssignmentService>();
+            services.AddScoped<IInstructorService, InstructorService>();
+            services.AddScoped<ISubjectService, SubjectService>();
+            services.AddScoped<IInstructorSubjectService, InstructorSubjectService>();
             services.AddMemoryCache();
             services.AddControllersWithViews();
             services.AddRazorPages();
