@@ -31,7 +31,7 @@
                     <MudList Clickable="true">
                         @foreach (var instructor in InstructorResources)
                         {
-                            <MudListItem Text="@GetFullName(instructor)" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { SelectedInstructor = instructor; ShowSubjects = false; }" />
+                            <MudListItem Text="@GetFullName(instructor)" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { SelectInstructor(instructor.IsuId); }" />
                         }
                     </MudList>
                 </div>
@@ -47,45 +47,39 @@
                     <MudText Typo="Typo.body1">e-mail: @SelectedInstructor.Email</MudText>
                     <MudText Typo="Typo.body1">Телефон: @SelectedInstructor.Phone</MudText>
                     <MudText Typo="Typo.body1">Номер ISU: @SelectedInstructor.IsuId</MudText>
-                    <br />
-                    @if (SelectedInstructor.SubjectIds != null)
-                    {
-                        <MudText Typo="Typo.body2" Class="m-1">Number of Subjects is @SelectedInstructor.SubjectIds.Count</MudText>
-                    }
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => { ShowSubjects = !ShowSubjects; }">Subjects</MudButton>
                 </MudCardActions>
             </MudCard>
-        </MudItem>
-    }
-    @if (ShowSubjects && SelectedInstructor.SubjectIds != null)
-    {
-        <MudItem xs="8">
-            <MudPaper>
-                <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
-                    <MudList Clickable="true">
-                        @foreach (var subjectId in SelectedInstructor.SubjectIds)
-                        {
-                            <MudListItem Text="@GetSubject(subjectId).Result.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
-                        }
-                    </MudList>
-                </div>
-            </MudPaper>
+            @if (ShowSubjects && SelectedInstructor.Subjects != null)
+            {
+                <MudPaper Class="mt-4">
+                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                        <MudList Clickable="false">
+                            @foreach (var subject in SelectedInstructor.Subjects)
+                            {
+                                <MudListItem Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
+                            }
+                        </MudList>
+                    </div>
+                </MudPaper>
+            }
         </MudItem>
     }
 </MudGrid>
 
-@code {
+@code 
+{
     string Search { get; set; }
     string Error { get; set; }
     bool ShowSubjects { get; set; } = false;
-    InstructorResource[] InstructorResources { get; set; }
+    InstructorResourceBriefly[] InstructorResources { get; set; }
     InstructorResource SelectedInstructor { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        InstructorResources = await Http.GetFromJsonAsync<InstructorResource[]>("api/instructors");
+        InstructorResources = await Http.GetFromJsonAsync<InstructorResourceBriefly[]>("api/instructors");
     }
 
     string GetFullName(InstructorResource instructor)
@@ -93,9 +87,9 @@
         return $"{instructor.FirstName} {instructor.PatronymicName} {instructor.LastName}";
     }
 
-    async Task<SubjectResource> GetSubject(int id)
+    string GetFullName(InstructorResourceBriefly instructor)
     {
-        return await Http.GetFromJsonAsync<SubjectResource>($"api/subjects/{id}");
+        return $"{instructor.FirstName} {instructor.PatronymicName} {instructor.LastName}";
     }
 
     async void ParseQuery(string query)
@@ -103,17 +97,31 @@
         int id;
         if (Search.Length == 6 && int.TryParse(query, out id))
         {
-            InstructorResources = new InstructorResource[]{
-                await Http.GetFromJsonAsync<InstructorResource>($"api/instructors/{id}") };
+            InstructorResources = new InstructorResourceBriefly[]{
+                await Http.GetFromJsonAsync<InstructorResourceBriefly>($"api/instructors/{id}") };
         }
-        else if(Search == "")
+        else if (Search == "")
         {
-            InstructorResources = await Http.GetFromJsonAsync<InstructorResource[]>("api/instructors");
-        } else
+            InstructorResources = await Http.GetFromJsonAsync<InstructorResourceBriefly[]>("api/instructors");
+        }
+        else
         {
             InstructorResources = null;
             Error = "No Instructors found";
         }
+        StateHasChanged();
+    }
+
+    void SelectInstructor(int instructorId)
+    {
+        ShowSubjects = false;
+        SelectedInstructor = null;
+        LoadSelected(instructorId);
+    }
+
+    async void LoadSelected(int id)
+    {
+        SelectedInstructor = await Http.GetFromJsonAsync<InstructorResource>($"api/instructors/{id}");
         StateHasChanged();
     }
 }
