@@ -1,10 +1,12 @@
 using System;
+using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -67,7 +69,8 @@ namespace AssignmentManager.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
             IWebHostEnvironment env,
-            AppDbContext context)
+            AppDbContext context,
+            UserManager<ApplicationUser> userManager)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -99,6 +102,8 @@ namespace AssignmentManager.Server
             app.UseIdentityServer();
             app.UseAuthentication();
             app.UseAuthorization();
+
+            DataSeeder.SeedUsers(userManager);
 
             app.UseEndpoints(endpoints =>
             {

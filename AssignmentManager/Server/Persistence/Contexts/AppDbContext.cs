@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Models;

@@ -140,20 +140,16 @@ namespace AssignmentManager.Server.Data
                         je.HasData(solutionsStudents);
                     }
                 );
-            
-            ApplicationUser user = new ApplicationUser
+        }
+
+        public static void SeedUsers(UserManager<ApplicationUser> userManager)
+        {
+            userManager.CreateAsync(new ApplicationUser
             {
-                Id = "932b7349-cc72-4217-9fc5-e421ee27f693",
-                UserName = "BigBoss",
-                Email = "qwer@qwer.qwer",
-                EmailConfirmed = true,
-                PhoneNumber = "88005553535"
-            };
-
-            PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
-            passwordHasher.HashPassword(user, "QWERty.123");
-
-            builder.Entity<ApplicationUser>().HasData(user);
+                UserName = "abc@abc.abc",
+                Email = "abc@abc.abc",
+                EmailConfirmed = true
+            }, "Abc.123");
         }
     }
 }
