@@ -11,7 +11,6 @@ namespace AssignmentManager.Server.Mapping
             CreateMap<SaveInstructorResource, Instructor>();
             CreateMap<SaveSubjectResource, Subject>();
             CreateMap<SaveInstructorSubjectResource, InstructorSubject>();
-
             CreateMap<SaveStudentResource, Student>();
         }
     }

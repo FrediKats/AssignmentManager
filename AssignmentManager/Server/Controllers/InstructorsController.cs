@@ -23,19 +23,19 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<InstructorResource>> GetAllAsync()
+        public async Task<IEnumerable<InstructorResourceBriefly>> GetAllAsync()
         {
             Console.WriteLine("get all");
             var instructors = await _instructorService.GetAllInstructors();
-            var resources = _mapper.Map<IEnumerable<Instructor>, IEnumerable<InstructorResource>>(instructors);
+            var resources = _mapper.Map<IEnumerable<Instructor>, IEnumerable<InstructorResourceBriefly>>(instructors);
             return resources;
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Instructor> GetById(int id)
+        public async Task<ActionResult<Instructor>> GetById(int id)
         {
             Console.WriteLine("get by id");
-            var instructor = _instructorService.GetById(id).Result;
+            var instructor = await _instructorService.GetById(id);
             Console.WriteLine(instructor.Success);
             if (!instructor.Success)
             {

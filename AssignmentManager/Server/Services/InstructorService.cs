@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -21,7 +22,16 @@ namespace AssignmentManager.Server.Services
 
         public async Task<InstructorResponse> GetById(int id)
         {
-            return new InstructorResponse(await _context.Instructors.FindAsync(id));
+            var instructor = await _context.Instructors.FindAsync(id);
+            if (instructor == null)
+                return new InstructorResponse("can't find instructor");
+            instructor.Subjects = new List<Subject>();
+            foreach (var instructorSubject in await _context.InstructorSubjects.ToListAsync())
+            {
+                if (instructorSubject.IsuId == id)
+                    instructor.Subjects.Add(await _context.Subjects.FindAsync(instructorSubject.SubjectId));
+            }
+            return new InstructorResponse(instructor);
         }
 
         public async Task<InstructorResponse> SaveAsync(Instructor instructor)

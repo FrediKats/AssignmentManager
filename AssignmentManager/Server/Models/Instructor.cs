@@ -22,6 +22,6 @@ namespace AssignmentManager.Server.Models
        public string Email { get; set; }
        public string Phone { get; set; }
 
-       //public IList<int> SubjectIds { get; set; } = new List<int>();
+       public virtual IList<Subject> Subjects { get; set; }
     }
 }

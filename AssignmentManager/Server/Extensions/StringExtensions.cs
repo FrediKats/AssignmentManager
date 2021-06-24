@@ -8,13 +8,13 @@ namespace AssignmentManager.Server.Extensions
         public static DateTime ParseToProjectTime(this string parsingSting)
         {
             string[] dateTimeFormats = {"yyyy-MM-dd HH:mm"};
-            DateTime dateTime;
             if (DateTime.TryParseExact(parsingSting,
                 dateTimeFormats,
                 System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.None,
-                out dateTime))
+                out var dateTime))
             {
+                Console.WriteLine("Date time converted: " + dateTime);
                 return dateTime;
             }
             else

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
+using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
@@ -29,6 +30,14 @@ namespace AssignmentManager.Server.Services
                     .FirstOrDefaultAsync(g => g.IsuId == id);
                 if (currentStudent == null)
                     throw new Exception("Student not found");
+                var currentStudentSpeciality = await _context.Specialities
+                    .Include(s => s.Groups)
+                    .Include(s => s.Subjects)
+                    .FirstOrDefaultAsync(s => s.Groups.Contains(currentStudent.Group));
+                foreach (var subject in currentStudentSpeciality.Subjects)
+                {
+                    currentStudent.Subjects.Add(subject);
+                }
                 return currentStudent;
             }
             catch (Exception ex)

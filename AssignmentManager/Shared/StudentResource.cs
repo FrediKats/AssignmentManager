@@ -12,5 +12,7 @@ namespace AssignmentManager.Shared
         public string Phone { get; set; }
         public GroupResourceBriefly Group { get; set; }
         public IList<SolutionResourceBriefly> Solutions { get; set; }
+        public IList<SubjectResourceBriefly> Subjects { get; set; }
+        
     }
 }
