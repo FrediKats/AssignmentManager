@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
@@ -31,65 +32,70 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Speciality>> GetSpecialityByIdCompletely(int id)
+        public async Task<IActionResult> GetSpecialityByIdCompletely(int id)
         {
-            var speciality = await _service.GetById(id);
-            if (!speciality.Success)
-                return BadRequest(speciality.Message);
-            var resources = _mapper
-                .Map<Speciality, SpecialityResource>(
-                    speciality.Speciality
-                );
-            return Ok(resources);
+            try
+            {
+                var speciality = await _service.GetById(id);
+                var resources = _mapper.Map<Speciality, SpecialityResource>(speciality);
+                return Ok(resources);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<SpecialityResourceBriefly>> CreateSpeciality(
-            [FromBody] SaveSpeciality speciality)
+        public async Task<IActionResult> CreateSpeciality(
+            [FromBody] SaveSpecialityResource specialityResource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            var tmp = _mapper.Map<SaveSpeciality, Speciality>(speciality);
-            var result = await _service.Create(tmp);
+            try
+            {
+                var result = await _service.Create(specialityResource);
 
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var specialityRecourse = _mapper.Map<Speciality, SpecialityResourceBriefly>(result.Speciality);
-            return Ok(specialityRecourse);
+                var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result);
+                return Ok(specialityRecourse);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<SpecialityResourceBriefly>> UpdateSpeciality(int id,
-            [FromBody] SaveSpeciality briefly)
+        public async Task<IActionResult> UpdateSpeciality(int id,
+            [FromBody] SaveSpecialityResource briefly)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-
-            var speciality = _mapper.Map<SaveSpeciality, Speciality>(briefly);
-            var result = await _service.Update(id, speciality);
-
-            if (!result.Success)
+            try
             {
-                return BadRequest(result.Message);
+                var result = await _service.Update(id, briefly);
+                var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
+                return Ok(specialityResource);
             }
-
-            var specialityResource = _mapper.Map<Speciality, SpecialityResourceBriefly>(result.Speciality);
-            return Ok(specialityResource);
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<SpecialityResource>> DeleteSpeciality(int id)
+        public async Task<IActionResult> DeleteSpeciality(int id)
         {
-            var result = await _service.DeleteCascadeById(id);
-
-            if (!result.Success)
+            try
             {
-                return BadRequest(result.Message);
+                var result = await _service.DeleteById(id);
+                var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
+                return Ok(specialityResource);
             }
-
-            var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result.Speciality);
-            return  specialityResource;
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 }
 }

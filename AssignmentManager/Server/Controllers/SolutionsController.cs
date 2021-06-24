@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
@@ -6,38 +6,38 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
 using AutoMapper;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
 {
     [Route("/api/[controller]")]
-    public class GroupsController : ControllerBase
+    public class SolutionsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IGroupService _service;
+        private readonly ISolutionService _service;
         
-
-        public GroupsController(IGroupService studentService, IMapper mapper)
+        public SolutionsController(ISolutionService studentService, IMapper mapper)
         {
             _service = studentService;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IReadOnlyCollection<GroupResourceBriefly>> GetAllGroupsBriefly()
+        public async Task<IReadOnlyCollection<SolutionResourceBriefly>> GetAllSolutionsBriefly()
         {
-            var groups = await _service.GetAll();
-            var resources = _mapper.Map<List<Group>, List<GroupResourceBriefly>>(groups);
-            return resources;
+            var solutions = await _service.GetAll();
+                var resources = _mapper.Map<List<Solution>, List<SolutionResourceBriefly>>(solutions);
+                return resources;
         }
-        
+
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetGroupByIdCompletely(int id)
+        public async Task<IActionResult> GetSolutionByIdCompletely(int id)
         {
             try
             {
-                var group = await _service.GetById(id);
-                var resources = _mapper.Map<Group, GroupResource>(group);
+                var solution = await _service.GetById(id);
+                var resources = _mapper.Map<Solution, SolutionResource>(solution);
                 return Ok(resources);
             }
             catch (Exception ex)
@@ -47,15 +47,13 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> CreateGroup([FromBody] SaveGroupResource resource)
-        {
+        public async Task<IActionResult> CreateSolution([FromBody] SaveSolutionResource solutionResource) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             try
             {
-                var result = await _service.Create(resource);
-                var groupResource = _mapper.Map<Group, GroupResource>(result);
-                return Ok(groupResource);
+                var result = await _service.Create(solutionResource);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
             }
             catch (Exception ex)
             {
@@ -64,31 +62,27 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroup(int id,
-            [FromBody] SaveGroupResource resource)
-        {
+        public async Task<IActionResult> UpdateSolution(int id, [FromBody] SaveSolutionResource solutionResource) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             try
             {
-                var result = await _service.Update(id, resource);
-                var specialityResource = _mapper.Map<Group, GroupResourceBriefly>(result);
-                return Ok(specialityResource);
+                var result = await _service.Update(id, solutionResource);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
+        public async Task<IActionResult> DeleteSolution(int id)
         {
             try
             {
                 var result = await _service.DeleteById(id);
-                var specialityResource = _mapper.Map<Group, GroupResource>(result);
-                return Ok(specialityResource);
+                return Ok(_mapper.Map<Solution, SolutionResource>(result));
             }
             catch (Exception ex)
             {

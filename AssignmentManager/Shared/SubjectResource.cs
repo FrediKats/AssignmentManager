@@ -6,6 +6,8 @@ namespace AssignmentManager.Shared
     {
         public int SubjectId { get; set; }
         public string SubjectName { get; set; }
-        public IList<int> InstructorIds { get; set; }
+        public virtual IList<InstructorResourceBriefly> Instructors { get; set; }
+        public virtual IList<AssignmentResourceBriefly> Assignments { get; set; }
+        public virtual IList<SpecialityResourceBriefly> Specialities { get; set; }
     }
 }

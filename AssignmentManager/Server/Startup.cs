@@ -49,6 +49,8 @@ namespace AssignmentManager.Server
             services.AddScoped<ISpecialityService, SpecialityService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ISolutionService, SolutionService>();
+            services.AddScoped<IAssignmentService, AssignmentService>();
             services.AddScoped<IInstructorService, InstructorService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<IInstructorSubjectService, InstructorSubjectService>();
@@ -91,6 +93,8 @@ namespace AssignmentManager.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+            
+            context.Database.EnsureCreated();
 
             app.UseIdentityServer();
             app.UseAuthentication();

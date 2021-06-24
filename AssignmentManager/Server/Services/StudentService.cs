@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
-using AssignmentManager.Server.Services.Communication;
+using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
@@ -20,46 +20,54 @@ namespace AssignmentManager.Server.Services
         {
             return await _context.Students.ToListAsync();
         }
-        public async Task<StudentResponse> GetById(int id)
+        public async Task<Student> GetById(int id)
         {
             try
             {
                 var currentStudent = await _context.Students
                     .Include(s => s.Group)
-                    /*.Include(s => s.Group.Speciality)*/
-                    .FirstAsync(g => g.IsuId == id);
-                return new StudentResponse(currentStudent);
+                    .Include(s => s.Solutions)
+                    .FirstOrDefaultAsync(g => g.IsuId == id);
+                if (currentStudent == null)
+                    throw new Exception("Student not found");
+                var currentStudentSpeciality = await _context.Specialities
+                    .Include(s => s.Groups)
+                    .Include(s => s.Subjects)
+                    .FirstOrDefaultAsync(s => s.Groups.Contains(currentStudent.Group));
+                foreach (var subject in currentStudentSpeciality.Subjects)
+                {
+                    currentStudent.Subjects.Add(subject);
+                }
+                return currentStudent;
             }
             catch (Exception ex)
             {
-                return new StudentResponse($"An error occurred when getting by id the student: {ex.Message}");
+                throw new Exception($"An error occurred when getting by id the student: {ex.Message}");
             }
         }
 
-        public async Task<StudentResponse> Create(Student student)
+        public async Task<Student> Create(Student student)
         {
             try
             {
+                student.Group = await _context.Groups.FindAsync(student.GroupId);
+                if (student.Group == null)
+                {
+                    throw new Exception($"Group with id {student.GroupId} is not existed");
+                }
                 await _context.Students.AddAsync(student);
                 await _context.SaveChangesAsync();
-                var existedGroup = await _context.Groups
-                    .FirstOrDefaultAsync(g => g.Id == student.GroupId);
-                student.Group = existedGroup;
-                return new StudentResponse(student);
+                return student;
             }
             catch (Exception ex)
             {
-                return new StudentResponse($"An error occurred when created student: {ex.Message}");
+                throw new Exception($"An error occurred when created student: {ex.Message}");
             }
         }
-        public async Task<StudentResponse> Update(int id, Student item)
+        
+        public async Task<Student> Update(int id, Student item)
         {
-            var existedStudent = await _context.Students
-                .FindAsync(id);
-            if (existedStudent == null)
-            {
-                return new StudentResponse("Student not found");
-            }
+            var existedStudent = await GetById(id);
             existedStudent.Email = item.Email;
             existedStudent.Lastname = item.Lastname;
             existedStudent.Name = item.Name;
@@ -68,37 +76,33 @@ namespace AssignmentManager.Server.Services
             existedStudent.MiddleName = item.MiddleName;
             try
             {
-                /*var existedGroup = await _context.Groups
-                    .FirstOrDefaultAsync(g => g.Id == existedStudent.GroupId);*/
+                existedStudent.Group = await _context.Groups.FindAsync(item.GroupId);
+                if (existedStudent.Group == null)
+                {
+                    throw new Exception($"Group with id {item.GroupId} is not existed");
+                }
                 _context.Students.Update(existedStudent);
                 await _context.SaveChangesAsync();
-                /*existedStudent.Group = existedGroup;*/
-                return new StudentResponse(existedStudent);
+                return existedStudent;
             }
             catch (Exception ex)
             {
-                return new StudentResponse($"An error occurred when updating the student: {ex.Message}");
+                throw new Exception($"An error occurred when updating the student: {ex.Message}");
             }
         }
-
-        public async Task<StudentResponse> DeleteById(int id)
+        
+        public async Task<Student> DeleteById(int id)
         {
-            var existedStudent = _context.Students
-                .Include(s=> s.Group)
-                .FirstOrDefault(p => p.IsuId == id);
-            if (existedStudent == null)
-            {
-                return new StudentResponse("Student not found");
-            }
+            var existedStudent = await GetById(id);
             try
             {
                 _context.Remove(existedStudent);
                 await _context.SaveChangesAsync();
-                return new StudentResponse(existedStudent);
+                return existedStudent;
             }
             catch (Exception ex)
             {
-                return new StudentResponse($"An error occurred when deleting the student: {ex.Message}");
+                throw new Exception($"An error occurred when deleting the student: {ex.Message}");
             }
         }
     }

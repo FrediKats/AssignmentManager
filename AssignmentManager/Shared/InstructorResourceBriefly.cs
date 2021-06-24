@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace AssignmentManager.Shared
+﻿namespace AssignmentManager.Shared
 {
-    public class InstructorResource
+    public class InstructorResourceBriefly
     {
         public int IsuId { get; set; }
         public string LastName { get; set; }
@@ -10,7 +8,5 @@ namespace AssignmentManager.Shared
         public string PatronymicName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-
-        public IList<SubjectResourceBriefly> Subjects { get; set; }
     }
 }
