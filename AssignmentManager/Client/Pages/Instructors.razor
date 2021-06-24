@@ -1,4 +1,4 @@
-﻿@page "/Instructors"
+﻿@page "/instructors"
 @using MudBlazor
 @using AssignmentManager.Shared;
 @using System.Net.Http
@@ -6,7 +6,7 @@
 @using System.Threading.Tasks
 @inject HttpClient Http
 
-<MudText Typo="Typo.h2">Instructors</MudText>
+<MudText Typo="Typo.h2" Class="pt-4">Instructors</MudText>
 
 <MudGrid>
     <MudItem xs="12">
@@ -19,7 +19,7 @@
                       DebounceInterval="250"
                       OnDebounceIntervalElapsed="()=>ParseQuery(Search)" />
     </MudItem>
-    <MudItem xs="4">
+    <MudItem xs="6">
         @if (InstructorResources == null)
         {
             <MudAlert>@Error</MudAlert>
@@ -40,7 +40,7 @@
     </MudItem>
     @if (SelectedInstructor != null)
     {
-        <MudItem xs="8">
+        <MudItem xs="6">
             <MudCard>
                 <MudCardContent>
                     <MudText Typo="Typo.h5">@GetFullName(SelectedInstructor)</MudText>
@@ -49,22 +49,31 @@
                     <MudText Typo="Typo.body1">Номер ISU: @SelectedInstructor.IsuId</MudText>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => { ShowSubjects = !ShowSubjects; }">Subjects</MudButton>
+                    @if (SelectedInstructor.Subjects != null)
+                    {
+                        <MudExpansionPanel Text="Subjects">
+                            @if(SelectedInstructor.Subjects.Count > 0)
+                            {
+                                <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                                    <MudList Clickable="false">
+                                        @foreach (var subject in SelectedInstructor.Subjects)
+                                        {
+                                            <MudListItem Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
+                                        }
+                                    </MudList>
+                                </div>
+                            }
+                            else
+                            {
+                                <MudAlert Severity="Severity.Info">This Instructor has no subjects</MudAlert>
+                            }
+                            
+                        </MudExpansionPanel>
+                    }
                 </MudCardActions>
             </MudCard>
-            @if (ShowSubjects && SelectedInstructor.Subjects != null)
-            {
-                <MudPaper Class="mt-4">
-                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
-                        <MudList Clickable="false">
-                            @foreach (var subject in SelectedInstructor.Subjects)
-                            {
-                                <MudListItem Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
-                            }
-                        </MudList>
-                    </div>
-                </MudPaper>
-            }
+
+
         </MudItem>
     }
 </MudGrid>
@@ -73,7 +82,6 @@
 {
     string Search { get; set; }
     string Error { get; set; }
-    bool ShowSubjects { get; set; } = false;
     InstructorResourceBriefly[] InstructorResources { get; set; }
     InstructorResource SelectedInstructor { get; set; }
 
@@ -114,7 +122,6 @@
 
     void SelectInstructor(int instructorId)
     {
-        ShowSubjects = false;
         SelectedInstructor = null;
         LoadSelected(instructorId);
     }

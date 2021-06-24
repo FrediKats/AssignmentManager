@@ -4,12 +4,14 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject HttpClient _http
-<h3>Instructors</h3>
+
+<MudText Typo="Typo.h2" Class="pt-4">Specialties</MudText>
+
 <MudGrid>
     <MudItem xs="12">
         <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary"/>
     </MudItem>
-    <MudItem xs="4">
+    <MudItem xs="6">
         <MudPaper>
             <div class="d-flex flex-column px-4" style="max-height:800px; overflow:scroll;">
                 @if (_specialities == null)
@@ -28,7 +30,7 @@
             </div>
         </MudPaper>
     </MudItem>
-    <MudItem xs="8">
+    <MudItem xs="6">
         @if (selectedCard != null)
         {
             <MudCard>
