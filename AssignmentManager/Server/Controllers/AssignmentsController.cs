@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
@@ -6,38 +6,39 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
 {
+    [ApiController]
     [Route("/api/[controller]")]
-    public class GroupsController : ControllerBase
+    public class AssignmentsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IGroupService _service;
-        
+        private readonly IAssignmentService _service;
 
-        public GroupsController(IGroupService studentService, IMapper mapper)
+        public AssignmentsController(IAssignmentService service, IMapper mapper)
         {
-            _service = studentService;
+            _service = service;
             _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IReadOnlyCollection<GroupResourceBriefly>> GetAllGroupsBriefly()
+        public async Task<IReadOnlyCollection<AssignmentResourceBriefly>> GetAllAssignmentsBriefly()
         {
-            var groups = await _service.GetAll();
-            var resources = _mapper.Map<List<Group>, List<GroupResourceBriefly>>(groups);
+            var assignments = await _service.GetAll();
+            var resources = _mapper.Map<List<Assignment>, List<AssignmentResourceBriefly>>(assignments);
             return resources;
         }
-        
+
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetGroupByIdCompletely(int id)
+        public async Task<IActionResult> GetAssignmentByIdCompletely(int id)
         {
             try
             {
-                var group = await _service.GetById(id);
-                var resources = _mapper.Map<Group, GroupResource>(group);
+                var assignment = await _service.GetById(id);
+                var resources = _mapper.Map<Assignment, AssignmentResource>(assignment);
                 return Ok(resources);
             }
             catch (Exception ex)
@@ -47,33 +48,29 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult> CreateGroup([FromBody] SaveGroupResource resource)
-        {
+        public async Task<IActionResult> CreateAssignment([FromBody] SaveAssignmentResource assignmentResource) {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             try
             {
-                var result = await _service.Create(resource);
-                var groupResource = _mapper.Map<Group, GroupResource>(result);
-                return Ok(groupResource);
+                var assignment = await _service.Create(assignmentResource);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        
+
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateGroup(int id,
-            [FromBody] SaveGroupResource resource)
+        public async Task<IActionResult> UpdateAssignment([FromBody] SaveAssignmentResource assignmentResource, int id)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             try
             {
-                var result = await _service.Update(id, resource);
-                var specialityResource = _mapper.Map<Group, GroupResourceBriefly>(result);
-                return Ok(specialityResource);
+                var assignment = await _service.Update(id, assignmentResource);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
             }
             catch (Exception ex)
             {
@@ -82,13 +79,12 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
+        public async Task<IActionResult> DeleteAssignment(int id)
         {
             try
             {
                 var result = await _service.DeleteById(id);
-                var specialityResource = _mapper.Map<Group, GroupResource>(result);
-                return Ok(specialityResource);
+                return Ok(_mapper.Map<Assignment, AssignmentResource>(result));
             }
             catch (Exception ex)
             {

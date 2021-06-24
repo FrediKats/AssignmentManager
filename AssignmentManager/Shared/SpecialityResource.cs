@@ -9,5 +9,6 @@ namespace AssignmentManager.Shared
         public EStudyType EnumStudyType { get; set; }
         public string Code { get; set; }
         public IList<GroupResourceBriefly> Groups { get; set; }
+        public IList<SubjectResourceBriefly> Subjects { get; set; }
     }
 }

@@ -8,7 +8,6 @@ using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
 using AutoMapper;
 using IdentityModel.Client;
-using AssignmentManager.Server.Extensions;
 using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Controllers
@@ -26,11 +25,11 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SubjectResource>> GetAllAsync()
+        public async Task<IEnumerable<SubjectResourceBriefly>> GetAllAsync()
         {
             Console.WriteLine("get all");
             var subjects = await _subjectService.GetAllSubjects();
-            var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResource>>(subjects);
+            var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResourceBriefly>>(subjects);
             return resources;
         }
         
