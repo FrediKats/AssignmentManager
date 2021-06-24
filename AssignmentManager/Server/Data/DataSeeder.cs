@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Shared;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Data
@@ -61,19 +63,12 @@ namespace AssignmentManager.Server.Data
                 new Subject { SubjectId = 101, SubjectName = "advanced stuff"}
             };
 
-            InstructorSubject[] instructorSubjects =
-            {
-                new InstructorSubject { Id = 1, IsuId = 111112, SubjectId = 1},
-                new InstructorSubject { Id = 2, IsuId = 111112, SubjectId = 2},
-
-            };
-            
             object[] assignments =
             {
-                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2077, 11, 11), SubjectId = 100 },
-                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), SubjectId = 100 },
-                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), SubjectId = 101 },
-                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2077, 12, 11), SubjectId = 101 }
+                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2077, 11, 11), SubjectId = 1 },
+                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), SubjectId = 1 },
+                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), SubjectId = 2 },
+                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2077, 12, 11), SubjectId = 2 }
             };
 
             object[] solutions = 
@@ -85,7 +80,32 @@ namespace AssignmentManager.Server.Data
                 new { SolutionId = 104, Content = "github link", AssignmentId = 103 },
                 new { SolutionId = 105, Content = "github link", AssignmentId = 103 },
             };
+            
+            object[] specialitiesSubjects =
+            {
+                new {SpecialitiesId = specs[0].Id, SubjectsSubjectId = subjects[0].SubjectId},
+                new {SpecialitiesId = specs[1].Id, SubjectsSubjectId = subjects[1].SubjectId}
+            };
 
+            object[] solutionsStudents =
+            {
+                //"StudentsIsuId", "SolutionsSolutionId"
+                new { StudentsIsuId = students[0].IsuId, SolutionsSolutionId = 100 },
+                new { StudentsIsuId = students[0].IsuId, SolutionsSolutionId = 101 },
+                new { StudentsIsuId = students[0].IsuId, SolutionsSolutionId = 102 },
+                new { StudentsIsuId = students[1].IsuId, SolutionsSolutionId = 100 },
+                new { StudentsIsuId = students[1].IsuId, SolutionsSolutionId = 101 },
+                new { StudentsIsuId = students[2].IsuId, SolutionsSolutionId = 103 },
+                new { StudentsIsuId = students[3].IsuId, SolutionsSolutionId = 104 },
+                new { StudentsIsuId = students[4].IsuId, SolutionsSolutionId = 105 }
+            };
+            InstructorSubject[] instructorSubjects =
+            {
+                new InstructorSubject { Id = 1, IsuId = 111112, SubjectId = 1},
+                new InstructorSubject { Id = 2, IsuId = 111112, SubjectId = 2},
+
+            };
+            
             builder.Entity<Speciality>().HasData(specs);
             builder.Entity<Group>().HasData(groups);
             builder.Entity<Student>().HasData(students);
@@ -94,6 +114,46 @@ namespace AssignmentManager.Server.Data
             builder.Entity<Assignment>().HasData(assignments);
             builder.Entity<Solution>().HasData(solutions);
             builder.Entity<InstructorSubject>().HasData(instructorSubjects);
+            builder.Entity<Subject>()
+                .HasMany(t => t.Specialities)
+                .WithMany(t => t.Subjects)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SpecialitySubject",
+                    r => r.HasOne<Speciality>().WithMany().HasForeignKey("SpecialitiesId"),
+                    l => l.HasOne<Subject>().WithMany().HasForeignKey("SubjectsSubjectId"),
+                    je =>
+                    {
+                        je.HasKey("SpecialitiesId", "SubjectsSubjectId");
+                        je.HasData(specialitiesSubjects);
+                    }
+                );
+            builder.Entity<Solution>()
+                .HasMany(t => t.Students)
+                .WithMany(t => t.Solutions)
+                .UsingEntity<Dictionary<string, object>>(
+                    "SolutionStudent",
+                    r => r.HasOne<Student>().WithMany().HasForeignKey("StudentsIsuId"),
+                    l => l.HasOne<Solution>().WithMany().HasForeignKey("SolutionsSolutionId"),
+                    je =>
+                    {
+                        je.HasKey("StudentsIsuId", "SolutionsSolutionId");
+                        je.HasData(solutionsStudents);
+                    }
+                );
+            
+            ApplicationUser user = new ApplicationUser
+            {
+                Id = "932b7349-cc72-4217-9fc5-e421ee27f693",
+                UserName = "BigBoss",
+                Email = "qwer@qwer.qwer",
+                EmailConfirmed = true,
+                PhoneNumber = "88005553535"
+            };
+
+            PasswordHasher<ApplicationUser> passwordHasher = new PasswordHasher<ApplicationUser>();
+            passwordHasher.HashPassword(user, "QWERty.123");
+
+            builder.Entity<ApplicationUser>().HasData(user);
         }
     }
 }
