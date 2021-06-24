@@ -60,6 +60,13 @@ namespace AssignmentManager.Server.Data
                 new Subject { SubjectId = 100, SubjectName = "algorithms"},
                 new Subject { SubjectId = 101, SubjectName = "advanced stuff"}
             };
+
+            InstructorSubject[] instructorSubjects =
+            {
+                new InstructorSubject { Id = 1, IsuId = 111112, SubjectId = 1},
+                new InstructorSubject { Id = 2, IsuId = 111112, SubjectId = 2},
+
+            };
             
             object[] assignments =
             {
@@ -86,6 +93,7 @@ namespace AssignmentManager.Server.Data
             builder.Entity<Subject>().HasData(subjects);
             builder.Entity<Assignment>().HasData(assignments);
             builder.Entity<Solution>().HasData(solutions);
+            builder.Entity<InstructorSubject>().HasData(instructorSubjects);
         }
     }
 }
