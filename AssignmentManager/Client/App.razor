@@ -13,14 +13,14 @@
                     }
                     else
                     {
-                        <p>You are not authorized to access this resource.</p>
+                        <MudAlert Severity="Severity.Error" Class="p-16 m-16">You are not authorized to access this resource.</MudAlert>
                     }
                 </NotAuthorized>
             </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
-                <p>Sorry, there's nothing at this address.</p>
+                <MudAlert Severity="Severity.Error" Class="p-16 m-16">Sorry, there's nothing at this address.</MudAlert>
             </LayoutView>
         </NotFound>
     </Router>
