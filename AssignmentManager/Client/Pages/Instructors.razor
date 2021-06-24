@@ -49,7 +49,10 @@
                     <MudText Typo="Typo.body1">Телефон: @SelectedInstructor.Phone</MudText>
                     <MudText Typo="Typo.body1">Номер ISU: @SelectedInstructor.IsuId</MudText>
                     <br />
-                    <MudText Typo="Typo.body2" Class="m-1">Number of Subjects is @SelectedInstructor.Subjects.Count</MudText>
+                    @if (SelectedInstructor.SubjectIds != null)
+                    {
+                        <MudText Typo="Typo.body2" Class="m-1">Number of Subjects is @SelectedInstructor.SubjectIds.Count</MudText>
+                    }
                 </MudCardContent>
                 <MudCardActions>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary">Show Subjects</MudButton>
