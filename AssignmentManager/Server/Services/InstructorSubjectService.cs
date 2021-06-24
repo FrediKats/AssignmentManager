@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -24,19 +25,61 @@ namespace AssignmentManager.Server.Services
             return new InstructorSubjectResponse(await _context.InstructorSubjects.FindAsync(id));
         }
 
-        public async Task<InstructorSubjectResponse> SaveAsync(InstructorSubject instructor)
+        public async Task<InstructorSubjectResponse> SaveAsync(InstructorSubject instructorSubject)
         {
-            throw new System.NotImplementedException();
+            try
+            {
+                await _context.InstructorSubjects.AddAsync(instructorSubject);
+                await _context.SaveChangesAsync();
+                return new InstructorSubjectResponse(instructorSubject);
+            }
+            catch (Exception er)
+            {
+                return new InstructorSubjectResponse(er.Message);
+            }
         }
 
-        public async Task<InstructorSubjectResponse> UpdateAsync(int id, InstructorSubject instructor)
+        public async Task<InstructorSubjectResponse> UpdateAsync(int id, InstructorSubject instructorSubject)
         {
-            throw new System.NotImplementedException();
+            var existingInstructorSubject = await _context.InstructorSubjects.FindAsync(id);
+
+            if (existingInstructorSubject == null)
+                return new InstructorSubjectResponse("InstructorSubject not found.");
+
+            existingInstructorSubject.IsuId = instructorSubject.IsuId;
+            existingInstructorSubject.SubjectId = instructorSubject.SubjectId;
+
+            try
+            {
+                _context.InstructorSubjects.Update(existingInstructorSubject);
+                await _context.SaveChangesAsync();
+                return new InstructorSubjectResponse(existingInstructorSubject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new InstructorSubjectResponse($"An error occurred when updating the instructorSubject: {ex.Message}");
+            }
         }
 
         public async Task<InstructorSubjectResponse> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            var existingInstructorSubject = await _context.InstructorSubjects.FindAsync(id);
+
+            if (existingInstructorSubject == null)
+                return new InstructorSubjectResponse("InstructorSubject not found.");
+
+            try
+            {
+                _context.InstructorSubjects.Remove(existingInstructorSubject);
+                await _context.SaveChangesAsync();
+                return new InstructorSubjectResponse(existingInstructorSubject);
+            }
+            catch (Exception ex)
+            {
+                // Do some logging stuff
+                return new InstructorSubjectResponse($"An error occurred when deleting the instructorSubject: {ex.Message}");
+            }
         }
     }
 }

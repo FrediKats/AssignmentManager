@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
@@ -25,7 +26,6 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<InstructorSubjectResource>> GetAllAsync()
         {
-            Console.WriteLine("get all");
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
                 _mapper.Map<IEnumerable<InstructorSubject>, IEnumerable<InstructorSubjectResource>>(instructorSubjects);
@@ -35,9 +35,7 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet("{id}")]
         public ActionResult<InstructorSubject> GetById(int id)
         {
-            Console.WriteLine("get by id");
             var instructorSubject = _instructorSubjectService.GetById(id).Result;
-            Console.WriteLine(instructorSubject.Success);
             if (!instructorSubject.Success)
             {
                 return BadRequest(instructorSubject.Message);
@@ -46,6 +44,28 @@ namespace AssignmentManager.Server.Controllers
             var resource =
                 _mapper.Map<InstructorSubject, InstructorSubjectResource>(instructorSubject.InstructorSubject);
             return Ok(resource);
+        }
+        
+        [HttpGet("subjects/{IsuId}")]
+        public async Task<IEnumerable<int>> GetAllSubjectsForInstructorAsync(int isuId)
+        {
+            var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
+            var resources =
+                _mapper.Map<IEnumerable<InstructorSubject>, IEnumerable<InstructorSubjectResource>>(instructorSubjects);
+            return resources
+                .Where(q=> q.IsuId == isuId)
+                .Select(q => q.SubjectId);
+        }
+        
+        [HttpGet("instructors/{SubjectId}")]
+        public async Task<IEnumerable<int>> GetAllInstructorsForSubjectAsync(int subjectId)
+        {
+            var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
+            var resources =
+                _mapper.Map<IEnumerable<InstructorSubject>, IEnumerable<InstructorSubjectResource>>(instructorSubjects);
+            return resources
+                .Where(q=> q.SubjectId == subjectId)
+                .Select(q => q.IsuId);
         }
 
         [HttpPost]
