@@ -10,15 +10,14 @@
 
 <MudGrid>
     <MudItem xs="12">
-        <MudTextField 
-                      @bind-Value="Search"
+        <MudTextField @bind-Value="Search"
                       Label="Search"
                       Variant="Variant.Outlined"
                       Adornment="Adornment.End"
-                      AdornmentIcon="@Icons.Filled.Search" 
+                      AdornmentIcon="@Icons.Filled.Search"
                       AdornmentColor="Color.Secondary"
                       DebounceInterval="250"
-                      OnDebounceIntervalElapsed="()=>ParseQuery(Search)"/>
+                      OnDebounceIntervalElapsed="()=>ParseQuery(Search)" />
     </MudItem>
     <MudItem xs="4">
         @if (InstructorResources == null)
@@ -32,16 +31,16 @@
                     <MudList Clickable="true">
                         @foreach (var instructor in InstructorResources)
                         {
-                            <MudListItem Text="@GetFullName(instructor)" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { SelectedInstructor = instructor; }" />
+                            <MudListItem Text="@GetFullName(instructor)" Avatar="@Icons.Material.Filled.Icecream" OnClick="() => { SelectedInstructor = instructor; ShowSubjects = false; }" />
                         }
                     </MudList>
                 </div>
             </MudPaper>
         }
     </MudItem>
-    <MudItem xs="8">
-        @if (SelectedInstructor != null)
-        {
+    @if (SelectedInstructor != null)
+    {
+        <MudItem xs="8">
             <MudCard>
                 <MudCardContent>
                     <MudText Typo="Typo.h5">@GetFullName(SelectedInstructor)</MudText>
@@ -55,20 +54,34 @@
                     }
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary">Show Subjects</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="() => { ShowSubjects = !ShowSubjects; }">Subjects</MudButton>
                 </MudCardActions>
             </MudCard>
-        }
-    </MudItem>
+        </MudItem>
+    }
+    @if (ShowSubjects && SelectedInstructor.SubjectIds != null)
+    {
+        <MudItem xs="8">
+            <MudPaper>
+                <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                    <MudList Clickable="true">
+                        @foreach (var subjectId in SelectedInstructor.SubjectIds)
+                        {
+                            <MudListItem Text="@GetSubject(subjectId).Result.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
+                        }
+                    </MudList>
+                </div>
+            </MudPaper>
+        </MudItem>
+    }
 </MudGrid>
 
 @code {
     string Search { get; set; }
     string Error { get; set; }
+    bool ShowSubjects { get; set; } = false;
     InstructorResource[] InstructorResources { get; set; }
     InstructorResource SelectedInstructor { get; set; }
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,6 +91,11 @@
     string GetFullName(InstructorResource instructor)
     {
         return $"{instructor.FirstName} {instructor.PatronymicName} {instructor.LastName}";
+    }
+
+    async Task<SubjectResource> GetSubject(int id)
+    {
+        return await Http.GetFromJsonAsync<SubjectResource>($"api/subjects/{id}");
     }
 
     async void ParseQuery(string query)
