@@ -1,2 +1,19 @@
 ﻿@page "/"
 @using MudBlazor
+
+<MudAlert Severity="Severity.Success">Admin</MudAlert>
+<MudAlert Severity="Severity.Success">Student</MudAlert>
+<MudAlert Severity="Severity.Success">Instructor</MudAlert>
+
+
+<AuthorizeView Roles="Admin">
+    <MudAlert Severity="Severity.Success">Admin</MudAlert>
+</AuthorizeView>
+
+<AuthorizeView Roles="Student">
+    <MudAlert Severity="Severity.Success">Student</MudAlert>
+</AuthorizeView>
+
+<AuthorizeView Roles="Instructor">
+    <MudAlert Severity="Severity.Success">Instructor</MudAlert>
+</AuthorizeView>
