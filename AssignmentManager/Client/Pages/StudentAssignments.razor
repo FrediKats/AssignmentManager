@@ -76,7 +76,7 @@
 @code 
 {
     public string Search { get; set; } = "";
-    public List<AssignmentResource> AssignmentResources { get; set; }
+    public IList<AssignmentResourceBriefly> AssignmentResources { get; set; }
     public AssignmentResource SelectedAssignment { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -84,20 +84,8 @@
         try
         {
             int studentId = 102; //TODO get id from account
-            StudentResource student = 
-                await Http.GetFromJsonAsync<StudentResource>($"api/students/{studentId}");
-            int? specialityId = student.Group.SpecialityId;
-            SpecialityResource speciality =
-                await Http.GetFromJsonAsync<SpecialityResource>($"/api/Specialities/{specialityId}");
-            var subjIds = speciality.Subjects.Select(q => q.SubjectId);
-            var assignments =
-                await Http.GetFromJsonAsync<AssignmentResource[]>($"/api/Assignments");
-            
-            AssignmentResources = assignments != null 
-                ? assignments
-                    .ToList() 
-                    .Where(q => subjIds.Contains(q.Subject.SubjectId)).ToList()
-                : new List<AssignmentResource>();
+            var studentResource = await Http.GetFromJsonAsync<StudentResource>($"api/students/{studentId}");
+            AssignmentResources = studentResource?.Assignments;
         }
         catch (AccessTokenNotAvailableException ex)
         {
