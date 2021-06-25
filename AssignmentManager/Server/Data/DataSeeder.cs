@@ -150,18 +150,21 @@ namespace AssignmentManager.Server.Data
                 UserName = "abc@abc.abc",
                 Email = "abc@abc.abc",
                 EmailConfirmed = true,
+                IsuId = 102
             };
             var student = new ApplicationUser
             {
                 UserName = "s@tu.dent",
                 Email = "s@tu.dent",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsuId = 102
             };
             var instructor = new ApplicationUser
             {
                 UserName = "in@struc.tor",
                 Email = "in@struc.tor",
-                EmailConfirmed = true
+                EmailConfirmed = true,
+                IsuId = 102
             };
             await userManager.CreateAsync(user, "Abc.123");
             await userManager.CreateAsync(student, "Abc.123");
