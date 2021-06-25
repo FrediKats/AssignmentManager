@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Shared;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Data
@@ -139,6 +140,16 @@ namespace AssignmentManager.Server.Data
                         je.HasData(solutionsStudents);
                     }
                 );
+        }
+
+        public static void SeedUsers(UserManager<ApplicationUser> userManager)
+        {
+            userManager.CreateAsync(new ApplicationUser
+            {
+                UserName = "abc@abc.abc",
+                Email = "abc@abc.abc",
+                EmailConfirmed = true
+            }, "Abc.123");
         }
     }
 }
