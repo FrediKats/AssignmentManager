@@ -109,8 +109,7 @@
         if (Search.Length >= 1)
         {
             int.TryParse(query, out var intQuery);
-            var tmp = new SpecialityResourceBriefly[]{
-                await Http.GetFromJsonAsync<SpecialityResourceBriefly>($"api/specialities") };
+            var tmp = await Http.GetFromJsonAsync<SpecialityResourceBriefly[]>("api/specialities");
             var tmpList = new HashSet<SpecialityResourceBriefly>();
             foreach (var specialityResource in tmp)
             {
