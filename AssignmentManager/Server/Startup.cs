@@ -1,4 +1,6 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
@@ -37,16 +39,29 @@ namespace AssignmentManager.Server
                     Configuration.GetConnectionString("DefaultConnection")));*/
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+            
+            
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            services.AddIdentityServer()
-                .AddApiAuthorization<ApplicationUser, AppDbContext>();
+            //services.AddIdentityServer()
+                //.AddApiAuthorization<ApplicationUser, AppDbContext>();
 
+            
+            
+            services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, AppDbContext>(options => {
+                    options.IdentityResources["openid"].UserClaims.Add("role");
+                    options.ApiResources.Single().UserClaims.Add("role");
+                });
+
+// Need to do this as it maps "role" to ClaimTypes.Role and causes issues
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
+            
             services.AddAuthentication()
                 .AddIdentityServerJwt();
-
 
             services.AddScoped<ISpecialityService, SpecialityService>();
             services.AddScoped<IGroupService, GroupService>();
@@ -70,7 +85,8 @@ namespace AssignmentManager.Server
         public void Configure(IApplicationBuilder app,
             IWebHostEnvironment env,
             AppDbContext context,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c =>
@@ -103,7 +119,7 @@ namespace AssignmentManager.Server
             app.UseAuthentication();
             app.UseAuthorization();
 
-            DataSeeder.SeedUsers(userManager);
+            DataSeeder.SeedUsers(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {
@@ -111,8 +127,6 @@ namespace AssignmentManager.Server
                 endpoints.MapControllers();
                 endpoints.MapFallbackToFile("index.html");
             });
-
-            
         }
     }
 }

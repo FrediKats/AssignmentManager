@@ -6,6 +6,8 @@ using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services.Communication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services

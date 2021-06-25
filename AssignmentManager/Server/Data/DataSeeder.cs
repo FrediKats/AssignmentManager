@@ -113,7 +113,7 @@ namespace AssignmentManager.Server.Data
                 new InstructorSubject { Id = 2, IsuId = 111112, SubjectId = 2},
 
             };
-            
+
             builder.Entity<Speciality>().HasData(specs);
             builder.Entity<Group>().HasData(groups);
             builder.Entity<Student>().HasData(students);
@@ -122,6 +122,7 @@ namespace AssignmentManager.Server.Data
             builder.Entity<Assignment>().HasData(assignments);
             builder.Entity<Solution>().HasData(solutions);
             builder.Entity<InstructorSubject>().HasData(instructorSubjects);
+            
             builder.Entity<Subject>()
                 .HasMany(t => t.Specialities)
                 .WithMany(t => t.Subjects)
@@ -150,21 +151,36 @@ namespace AssignmentManager.Server.Data
                 );
         }
 
-        public static void SeedUsers(UserManager<ApplicationUser> userManager)
+        public static async void SeedUsers(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            userManager.CreateAsync(new ApplicationUser
+            var user = new ApplicationUser
             {
                 UserName = "abc@abc.abc",
                 Email = "abc@abc.abc",
-                EmailConfirmed = true
-            }, "Abc.123");
-            
-            userManager.CreateAsync(new ApplicationUser
+                EmailConfirmed = true,
+            };
+            var student = new ApplicationUser
             {
-                UserName = "1@1.1",
-                Email = "1@1.1",
+                UserName = "s@tu.dent",
+                Email = "s@tu.dent",
                 EmailConfirmed = true
-            }, "12#Qwe");
+            };
+            var instructor = new ApplicationUser
+            {
+                UserName = "in@struc.tor",
+                Email = "in@struc.tor",
+                EmailConfirmed = true
+            };
+            await userManager.CreateAsync(user, "Abc.123");
+            await userManager.CreateAsync(student, "Abc.123");
+            await userManager.CreateAsync(instructor, "Abc.123");
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+            await roleManager.CreateAsync(new IdentityRole("Student"));
+            await roleManager.CreateAsync(new IdentityRole("Instructor"));
+            await userManager.AddToRoleAsync(user, "Admin");
+            await userManager.AddToRoleAsync(student, "Student");
+            await userManager.AddToRoleAsync(instructor, "Instructor");
+            //Console.WriteLine(await userManager.IsInRoleAsync(user, "Student"));
         }
     }
 }

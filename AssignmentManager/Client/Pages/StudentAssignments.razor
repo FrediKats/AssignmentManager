@@ -1,0 +1,88 @@
+﻿@page "/studentAssignments"
+@using MudBlazor
+@using AssignmentManager.Shared
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+
+<MudText Typo="Typo.h4">Student Assignments</MudText>
+<MudText Typo="Typo.body2" Class="pb-4">Here you can see your assignments</MudText>
+<MudGrid>
+    <MudItem xs="12" Class="pb-4">
+        <MudTextField @bind-Value="Search"
+                      Label="Search"
+                      Variant="Variant.Outlined"
+                      Adornment="Adornment.End"
+                      AdornmentIcon="@Icons.Filled.Search"
+                      AdornmentColor="Color.Secondary"
+                      DebounceInterval="250" />
+    </MudItem>
+    @if (AssignmentResources != null)
+    {
+        if (AssignmentResources.Count == 0)
+        {
+            <MudItem xs="12">
+                <MudAlert Severity="Severity.Info">You have no assignments! :)</MudAlert>
+            </MudItem>
+        }
+        else
+        {
+            <MudItem xs="6">
+                <MudPaper>
+                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                        <MudList Clickable="true">
+                            @foreach (var assignment in AssignmentResources)
+                            {
+                                <MudListItem OnClick="() => { SelectAssignment(assignment.AssignmentId); }">
+                                    <ChildContent>
+                                        <MudText>@assignment.Name</MudText>
+                                        <MudText Color="@Color.Info">@assignment.Deadline</MudText>
+                                    </ChildContent>
+                                </MudListItem>
+                            }
+                        </MudList>
+                    </div>
+                </MudPaper>
+            </MudItem>
+        }
+    }
+    else
+    {
+        <MudAlert>We are loading your Assignments</MudAlert>
+    }
+
+    @if (SelectedAssignment != null)
+    {
+        <MudItem xs="6">
+            <MudCard>
+                <MudCardContent>
+                    <MudText Typo="Typo.h5">@SelectedAssignment.Name</MudText>
+                    <MudText Typo="Typo.body2">@SelectedAssignment.Deadline</MudText>
+                    <MudDivider></MudDivider>
+                    <MudText Typo="Typo.body1">@SelectedAssignment.Description</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+    }
+</MudGrid>
+
+@code 
+{
+    public string Search { get; set; } = "";
+    public List<AssignmentResourceBriefly> AssignmentResources { get; set; }
+    public AssignmentResource SelectedAssignment { get; set; }
+
+    /* protected override async Task OnInitializedAsync()
+     {
+         //TODO Здесь можно подтянуть данные сразу
+     }
+    */
+
+    void SelectAssignment(int id)
+    {
+        //TODO Здесь нужно подгрузить SelectedAssignment 
+        StateHasChanged(); //important
+    }
+
+
+}
