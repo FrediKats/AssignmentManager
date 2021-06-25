@@ -25,10 +25,10 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IReadOnlyCollection<AssignmentResourceBriefly>> GetAllAssignmentsBriefly()
+        public async Task<IReadOnlyCollection<AssignmentResource>> GetAllAssignmentsBriefly()
         {
             var assignments = await _service.GetAll();
-            var resources = _mapper.Map<List<Assignment>, List<AssignmentResourceBriefly>>(assignments);
+            var resources = _mapper.Map<List<Assignment>, List<AssignmentResource>>(assignments);
             return resources;
         }
 

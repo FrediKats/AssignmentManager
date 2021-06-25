@@ -16,7 +16,7 @@ namespace AssignmentManager.Server.Services
         
         public async Task<List<Assignment>> GetAll()
         {
-            return await _context.Assignments.ToListAsync();
+            return await _context.Assignments.Include(asgn => asgn.Subject).ToListAsync();
         }
 
         public async Task<Assignment> GetById(int id)
