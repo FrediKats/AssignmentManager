@@ -126,21 +126,21 @@
                 </MudPaper>
             }
             @if (ShowGroups && SelectedSpeciality.Groups.Count != 0)
-                        {
-                            <MudPaper Class="mt-4">
-                                <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
-                                    <MudList Clickable="false">
-                                        <MudListSubheader>
-                                            <MudText Typo="Typo.h5">Groups</MudText>
-                                        </MudListSubheader>
-                                        @foreach (var group in SelectedSpeciality.Groups)
-                                        {
-                                            <MudListItem Text="@group.Name" Avatar="@Icons.Material.Filled.Subject" />
-                                        }
-                                    </MudList>
-                                </div>
-                            </MudPaper>
-                        }
+            {
+                <MudPaper Class="mt-4">
+                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                        <MudList Clickable="false">
+                            <MudListSubheader>
+                                <MudText Typo="Typo.h5">Groups</MudText>
+                            </MudListSubheader>
+                            @foreach (var group in SelectedSpeciality.Groups)
+                            {
+                                <MudListItem Text="@group.Name" Avatar="@Icons.Material.Filled.Subject"/>
+                            }
+                        </MudList>
+                    </div>
+                </MudPaper>
+            }
         </MudItem>
     }
 </MudGrid>

@@ -18,11 +18,13 @@ namespace AssignmentManager.Server.Models
         [Required] public Group Group { get; set; }
         public virtual IList<Solution> Solutions { get; set; }
         public virtual IList<Subject> Subjects { get; set; }
+        public virtual IList<Assignment> Assignments { get; set; }
 
         public Student()
         {
             Solutions = new List<Solution>();
             Subjects = new List<Subject>();
+            Assignments = new List<Assignment>();
         }
 
         public static implicit operator Student(SaveStudentResource studentResource)
@@ -41,7 +43,8 @@ namespace AssignmentManager.Server.Models
                 GroupId = asId,
                 Group = new Group(),
                 Solutions = new List<Solution>(),
-                Subjects = new List<Subject>()
+                Subjects = new List<Subject>(),
+                Assignments = new List<Assignment>()
             };
         }
     }

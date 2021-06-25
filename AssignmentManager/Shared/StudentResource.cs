@@ -13,6 +13,7 @@ namespace AssignmentManager.Shared
         public GroupResourceBriefly Group { get; set; }
         public IList<SolutionResourceBriefly> Solutions { get; set; }
         public IList<SubjectResourceBriefly> Subjects { get; set; }
+        public IList<AssignmentResourceBriefly> Assignments { get; set; }
         
     }
 }
