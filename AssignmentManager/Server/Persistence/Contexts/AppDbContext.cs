@@ -7,6 +7,7 @@ using System.Collections.Immutable;
 using IdentityServer4.EntityFramework.Extensions;
  using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
@@ -67,6 +68,9 @@ namespace AssignmentManager.Server.Persistence.Contexts
                 .IsRequired();
             builder.Entity<InstructorSubject>().Property(p => p.SubjectId)
                 .IsRequired();
+
+            builder.Entity<IdentityRole>().ToTable("IdentityRoles");
+            
             DataSeeder.SeedData(builder);
         }
     }
