@@ -1,10 +1,9 @@
 ﻿@page "/"
 @using MudBlazor
-
-<MudAlert Severity="Severity.Success">Admin</MudAlert>
-<MudAlert Severity="Severity.Success">Student</MudAlert>
-<MudAlert Severity="Severity.Success">Instructor</MudAlert>
-
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@inject AuthenticationStateProvider _authenticationStateProvider
 
 <AuthorizeView Roles="Admin">
     <MudAlert Severity="Severity.Success">Admin</MudAlert>
