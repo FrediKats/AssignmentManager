@@ -16,7 +16,15 @@ namespace AssignmentManager.Server.Data
                 new Speciality
                     {Id = 100, Code = "09.03.02", EnumStudyType = EStudyType.Bach },
                 new Speciality
-                    {Id = 101, Code = "09.03.02", EnumStudyType = EStudyType.Mast }
+                    {Id = 101, Code = "01.07.15", EnumStudyType = EStudyType.Asp },
+                new Speciality
+                    {Id = 102, Code = "09.03.04", EnumStudyType = EStudyType.Doc },
+                new Speciality
+                    {Id = 103, Code = "10.15.01", EnumStudyType = EStudyType.Mast },
+                new Speciality
+                    {Id = 104, Code = "07.03.01", EnumStudyType = EStudyType.Bach },
+                new Speciality
+                    {Id = 105, Code = "80.01.01", EnumStudyType = EStudyType.Asp }
             };
 
             Group[] groups =
@@ -65,10 +73,10 @@ namespace AssignmentManager.Server.Data
 
             object[] assignments =
             {
-                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2077, 11, 11), SubjectId = 1 },
-                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), SubjectId = 1 },
-                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), SubjectId = 2 },
-                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2077, 12, 11), SubjectId = 2 }
+                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2000, 11, 11), Description = "DESC 1", SubjectId = 1 },
+                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), Description = "DESC 2", SubjectId = 1 },
+                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), Description = "DESC 3", SubjectId = 2 },
+                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2000, 12, 11), Description = "DESC 4", SubjectId = 2 }
             };
 
             object[] solutions = 
