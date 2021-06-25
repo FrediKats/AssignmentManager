@@ -4,6 +4,7 @@
 @using System.Net.Http
 @using System.Net.Http.Json
 @using System.Threading.Tasks
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 @inject HttpClient Http
 
 <MudText Typo="Typo.h2">Specialities</MudText>
@@ -43,14 +44,69 @@
         <MudItem xs="8">
             <MudCard>
                 <MudCardContent>
-                    <MudText Typo="Typo.h5">@SelectedSpeciality.Code</MudText>
-                    <MudText Typo="Typo.body1">e-mail: @SelectedSpeciality.StudyTypeName</MudText>
+                    <div class="d-flex">
+                        <MudText Typo="Typo.h5">@SelectedSpeciality.Code</MudText>
+                        <MudText Inline="true" Class="ml-auto">@SelectedSpeciality.StudyTypeName</MudText>
+                    </div>
+                    <MudDivider></MudDivider>
+
                     <MudText Typo="Typo.body1">groups: @SelectedSpeciality.Groups.Count</MudText>
                     <MudText Typo="Typo.body1">subjects: @SelectedSpeciality.Subjects.Count</MudText>
                 </MudCardContent>
                 <MudCardActions>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => { ShowSubjects = !ShowSubjects; }">Subjects</MudButton>
-                    <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="() => { ShowGroups = !ShowGroups; }">Groups</MudButton>
+                    <MudExpansionPanels MultiExpansion="true" Style="width: 100%">
+                    @if (SelectedSpeciality.Subjects != null)
+                    {
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Subjects</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                @if (SelectedSpeciality.Subjects.Count > 0)
+                                {
+                                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                                        <MudList Clickable="true">
+                                            @foreach (var subject in SelectedSpeciality.Subjects)
+                                            {
+                                                var href = "subject/" + subject.SubjectId;
+                                                <MudListItem Href="@href" Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject"/>
+                                            }
+                                        </MudList>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info">This Speciality has no subjects</MudAlert>
+                                }
+                            </ChildContent>
+                        </MudExpansionPanel>
+                    }
+                    @if (SelectedSpeciality.Groups != null)
+                    {
+                        <MudExpansionPanel>
+                            <TitleContent>
+                                <MudText Typo="Typo.h6">Groups</MudText>
+                            </TitleContent>
+                            <ChildContent>
+                                @if (SelectedSpeciality.Subjects.Count > 0)
+                                {
+                                    <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
+                                        <MudList Clickable="false">
+                                            @foreach (var group in SelectedSpeciality.Groups)
+                                            {
+                                                <MudListItem Text="@group.Name" Avatar="@Icons.Material.Filled.Subject"/>
+                                            }
+                                        </MudList>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <MudAlert Severity="Severity.Info">This Speciality has no groups</MudAlert>
+                                }
+                            </ChildContent>
+                        </MudExpansionPanel>
+                                        }
+                    </MudExpansionPanels>
                 </MudCardActions>
             </MudCard>
             @if (ShowSubjects && SelectedSpeciality.Subjects.Count != 0)
@@ -101,7 +157,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        SpecialityResources = await Http.GetFromJsonAsync<SpecialityResourceBriefly[]>("api/specialities");
+        try
+        {
+            SpecialityResources = await Http.GetFromJsonAsync<SpecialityResourceBriefly[]>("api/specialities");
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
     }
 
     async void ParseQuery(string query)

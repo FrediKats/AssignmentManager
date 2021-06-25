@@ -62,10 +62,11 @@
                                 @if (SelectedInstructor.Subjects.Count > 0)
                                 {
                                     <div class="d-flex flex-column px-4" style="max-height:600px; overflow:scroll;">
-                                        <MudList Clickable="false">
+                                        <MudList Clickable="true">
                                             @foreach (var subject in SelectedInstructor.Subjects)
                                             {
-                                                <MudListItem Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
+                                                var href = "subject/" + subject.SubjectId;
+                                                <MudListItem Href="@href" Text="@subject.SubjectName" Avatar="@Icons.Material.Filled.Subject" />
                                             }
                                         </MudList>
                                     </div>

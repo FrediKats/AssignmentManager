@@ -2,6 +2,7 @@
 @using MudBlazor
 @using AssignmentManager.Shared
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject HttpClient Http
 
 <MudText Typo="Typo.h4">Student Assignments</MudText>
 <MudText Typo="Typo.body2" Class="pb-4">Here you can see your assignments</MudText>
@@ -72,11 +73,12 @@
     public List<AssignmentResourceBriefly> AssignmentResources { get; set; }
     public AssignmentResource SelectedAssignment { get; set; }
 
-    /* protected override async Task OnInitializedAsync()
-     {
+    protected override async Task OnInitializedAsync()
+    {
          //TODO Здесь можно подтянуть данные сразу
-     }
-    */
+        AssignmentResources = await Http.GetFromJsonAsync<List<AssignmentResourceBriefly>>("/api/assignments");
+    }
+    
 
     void SelectAssignment(int id)
     {
