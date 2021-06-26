@@ -50,7 +50,7 @@
             _authMessage = $"{user.Identity.Name} is authenticated.";
             _claims = user.Claims;
             _surnameMessage = 
-                $"Surname: {user.FindFirst(c => c.Type == ClaimTypes.Surname)?.Value}";
+                $"Surname: {user.FindFirst(c => c.Type == "IsuId")?.Value}";
         }
         else
         {
