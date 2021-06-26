@@ -1,4 +1,6 @@
-﻿namespace AssignmentManager.Shared
+﻿using System.Collections.Generic;
+
+namespace AssignmentManager.Shared
 {
     public class StudentResource
     {
@@ -8,6 +10,10 @@
         public string Email { get; set; }
         public string MiddleName { get; set; }
         public string Phone { get; set; }
-        public GroupResource Group { get; set; }
+        public GroupResourceBriefly Group { get; set; }
+        public IList<SolutionResourceBriefly> Solutions { get; set; }
+        public IList<SubjectResourceBriefly> Subjects { get; set; }
+        public IList<AssignmentResourceBriefly> Assignments { get; set; }
+        
     }
 }

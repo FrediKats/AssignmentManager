@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
@@ -31,68 +32,36 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<ActionResult<Group>> GetGroupByIdCompletely(int id)
+        public async Task<ActionResult<GroupResource>> GetGroupByIdCompletely(int id)
         {
-            var speciality = await _service.GetById(id);
-            if (!speciality.Success)
-                return BadRequest(speciality.Message);
-            var resources = _mapper
-                .Map<Group, GroupResource>(
-                    speciality.Group
-                );
+            var group = await _service.GetById(id);
+            var resources = _mapper.Map<Group, GroupResource>(group);
             return Ok(resources);
         }
         
         [HttpPost]
-        public async Task<ActionResult> CreateGroup([FromBody] SaveGroupResource resource)
+        public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] SaveGroupResource resource)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-            
-            var group = _mapper.Map<SaveGroupResource, Group>(resource);
-
-            var result = await _service.Create(group);
-
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-
-            var groupResource = _mapper.Map<Group, GroupResource>(result.Group);
+            var result = await _service.Create(resource);
+            var groupResource = _mapper.Map<Group, GroupResource>(result);
             return Ok(groupResource);
         }
         
         [HttpPut("{id}")]
-        public async Task<ActionResult<GroupResourceBriefly>> UpdateGroup(int id,
+        public async Task<ActionResult<GroupResource>> UpdateGroup(int id,
             [FromBody] SaveGroupResource resource)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-
-            var group = _mapper.Map<SaveGroupResource, Group>(resource);
-            var result = await _service.Update(id, group);
-
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-
-            var specialityResource = _mapper.Map<Group, GroupResourceBriefly>(result.Group);
+            var result = await _service.Update(id, resource);
+            var specialityResource = _mapper.Map<Group, GroupResource>(result);
             return Ok(specialityResource);
         }
         
         [HttpDelete("{id}")]
         public async Task<ActionResult<GroupResource>> DeleteGroup(int id)
         {
-            var result = await _service.DeleteCascadeById(id);
-
-            if (!result.Success)
-            {
-                return BadRequest(result.Message);
-            }
-
-            var specialityResource = _mapper.Map<Group, GroupResource>(result.Group);
-            return  specialityResource;
+            var result = await _service.DeleteById(id);
+            var specialityResource = _mapper.Map<Group, GroupResource>(result);
+            return Ok(specialityResource);
         }
     }
 }

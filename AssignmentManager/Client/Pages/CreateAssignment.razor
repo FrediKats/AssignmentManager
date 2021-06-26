@@ -1,0 +1,102 @@
+﻿@page "/createAssignment"
+@using MudBlazor
+@using AssignmentManager.Shared
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using System.Net
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Http
+@using System.Globalization
+@using System.Text
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject HttpClient Http
+
+<MudCard>
+    <MudCardContent>
+        <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudText Typo="Typo.h4">Create Assignments</MudText>
+            <MudText Typo="Typo.body2" Class="pb-1">Here you can create new assignments</MudText>
+            <div class="d-flex my-1 align-content-between">
+                <MudTextField @bind-Value="NameFromForm"
+                              T="string" 
+                              Label="Name" 
+                              Required="true" 
+                              Variant="Variant.Text" 
+                              RequiredError="Name is required!"
+                              Class="mr-4" />
+                <MudDatePicker @bind-Date="DeadlineFromForm"
+                               Label="Deadline" />
+            </div>
+            <MudSelect @bind-Value="SubjectIdFromForm" Label="Subject" Required="true" RequiredError="Subject is required!">
+                @foreach (var subject in subjects)
+                {
+                    <MudSelectItem T="string" Value="@subject.SubjectId.ToString()">@subject.SubjectName</MudSelectItem>
+                }
+            </MudSelect>
+            <MudTextField @bind-Value="DescriptionFromForm" T="string" Label="Description" Variant="Variant.Outlined" Required="true" RequiredError="Description is required!" Lines="10" />
+        </MudForm>
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="() => { OnClick(); }" Class="ml-auto">Create</MudButton>
+    </MudCardActions>
+</MudCard>
+
+<MudCard>
+    <MudText>@NameFromForm</MudText>
+    <MudText>@DeadlineFromForm</MudText>
+    <MudText>@DescriptionFromForm</MudText>
+    <MudText>@SubjectIdFromForm</MudText>
+</MudCard>
+
+@code {
+    string NameFromForm;
+    string DescriptionFromForm;
+    DateTime? DeadlineFromForm = DateTime.Now;
+    string SubjectIdFromForm;
+
+    List<SubjectResourceBriefly> subjects = new List<SubjectResourceBriefly>() {
+        new SubjectResourceBriefly() {SubjectId=101, SubjectName="DB" },
+        new SubjectResourceBriefly() {SubjectId=102, SubjectName="OS" },
+    };
+
+    void OnClick()
+    {
+        SaveAssignmentResource newAssignment = new SaveAssignmentResource
+        {
+            Deadline = DeadlineFromForm?.ToString("yyyy-MM-dd HH:mm"),
+            Description = DescriptionFromForm,
+            Name = NameFromForm,
+            SubjectId = int.Parse(SubjectIdFromForm)
+        };
+        Console.WriteLine(new StringContent(newAssignment.ToString(), Encoding.UTF8, "application/json").ToString());
+        //Http.PostAsync("api/Assignments", new StringContent(newAssignment.ToString(), Encoding.UTF8, "application/json"));
+        Http.PostAsJsonAsync("api/Assignments", newAssignment);
+        DeadlineFromForm = DateTime.Now;
+        NameFromForm = "";
+        DescriptionFromForm = "";
+        StateHasChanged();
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        try
+        {
+            //Console.WriteLine(user.FindFirst(c => c.Type == "IsuId")?.Value);
+            int instructorId = int.Parse(user.FindFirst(c => c.Type == "IsuId")?.Value);
+            InstructorResource instructor = 
+                await Http.GetFromJsonAsync<InstructorResource>($"api/instructors/{instructorId}");
+            subjects = instructor?.Subjects.ToList();
+        }
+        catch (AccessTokenNotAvailableException ex)
+        {
+            ex.Redirect();
+        }
+    }
+
+    bool success;
+    string[] errors = { };
+    
+    
+}

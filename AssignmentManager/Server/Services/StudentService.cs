@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
 using AssignmentManager.Server.Persistence.Contexts;
-using AssignmentManager.Server.Services.Communication;
+using AssignmentManager.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace AssignmentManager.Server.Services
@@ -20,86 +21,75 @@ namespace AssignmentManager.Server.Services
         {
             return await _context.Students.ToListAsync();
         }
-        public async Task<StudentResponse> GetById(int id)
+
+        public async Task<Student> GetById(int id)
         {
-            try
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var currentStudent = await _context.Students
+                .Include(s => s.Group)
+                .Include(s => s.Solutions)
+                .FirstOrDefaultAsync(g => g.IsuId == id);
+            if (currentStudent == null)
+                throw new NullReferenceException(GetErrorString(m, $"student with id {id} is not existed"));
+            var currentStudentSpeciality = await _context.Specialities
+                .Include(s => s.Groups)
+                .Include(s => s.Subjects)
+                .FirstOrDefaultAsync(s => s.Groups.Contains(currentStudent.Group));
+            foreach (var subject in currentStudentSpeciality.Subjects)
             {
-                var currentStudent = await _context.Students
-                    .Include(s => s.Group)
-                    /*.Include(s => s.Group.Speciality)*/
-                    .FirstAsync(g => g.IsuId == id);
-                return new StudentResponse(currentStudent);
+                var assignments = await _context.Assignments
+                    .Include(a => a.Subject)
+                    .Where(a => a.Subject == subject)
+                    .ToListAsync();
+                foreach (var assignment in assignments)
+                {
+                    currentStudent.Assignments.Add(assignment);
+                }
+
+                currentStudent.Subjects.Add(subject);
             }
-            catch (Exception ex)
-            {
-                return new StudentResponse($"An error occurred when getting by id the student: {ex.Message}");
-            }
+
+            return currentStudent;
         }
 
-        public async Task<StudentResponse> Create(Student student)
+        public async Task<Student> Create(Student student)
         {
-            try
+            MethodBase m = MethodBase.GetCurrentMethod();
+            student.Group = await _context.Groups.FindAsync(student.GroupId);
+            if (student.Group == null) 
             {
-                await _context.Students.AddAsync(student);
-                await _context.SaveChangesAsync();
-                var existedGroup = await _context.Groups
-                    .FirstOrDefaultAsync(g => g.Id == student.GroupId);
-                student.Group = existedGroup;
-                return new StudentResponse(student);
+                throw new NullReferenceException(GetErrorString(m,$"group with id {student.GroupId} is not existed"));
             }
-            catch (Exception ex)
-            {
-                return new StudentResponse($"An error occurred when created student: {ex.Message}");
-            }
+            await _context.Students.AddAsync(student);
+            await _context.SaveChangesAsync();
+            return student; 
         }
-        public async Task<StudentResponse> Update(int id, Student item)
+
+        public async Task<Student> Update(int id, Student item)
         {
-            var existedStudent = await _context.Students
-                .FindAsync(id);
-            if (existedStudent == null)
-            {
-                return new StudentResponse("Student not found");
-            }
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var existedStudent = await GetById(id);
             existedStudent.Email = item.Email;
             existedStudent.Lastname = item.Lastname;
             existedStudent.Name = item.Name;
             existedStudent.Phone = item.Phone;
             existedStudent.GroupId = item.GroupId;
             existedStudent.MiddleName = item.MiddleName;
-            try
+            existedStudent.Group = await _context.Groups.FindAsync(item.GroupId); 
+            if (existedStudent.Group == null)
             {
-                /*var existedGroup = await _context.Groups
-                    .FirstOrDefaultAsync(g => g.Id == existedStudent.GroupId);*/
-                _context.Students.Update(existedStudent);
-                await _context.SaveChangesAsync();
-                /*existedStudent.Group = existedGroup;*/
-                return new StudentResponse(existedStudent);
+                throw new NullReferenceException(GetErrorString(m,$"group with id {id} is not existed"));
             }
-            catch (Exception ex)
-            {
-                return new StudentResponse($"An error occurred when updating the student: {ex.Message}");
-            }
+            _context.Students.Update(existedStudent);
+            await _context.SaveChangesAsync();
+            return existedStudent;
         }
-
-        public async Task<StudentResponse> DeleteById(int id)
+        public async Task<Student> DeleteById(int id)
         {
-            var existedStudent = _context.Students
-                .Include(s=> s.Group)
-                .FirstOrDefault(p => p.IsuId == id);
-            if (existedStudent == null)
-            {
-                return new StudentResponse("Student not found");
-            }
-            try
-            {
-                _context.Remove(existedStudent);
-                await _context.SaveChangesAsync();
-                return new StudentResponse(existedStudent);
-            }
-            catch (Exception ex)
-            {
-                return new StudentResponse($"An error occurred when deleting the student: {ex.Message}");
-            }
+            var existedStudent = await GetById(id);
+            _context.Remove(existedStudent);
+            await _context.SaveChangesAsync();
+            return existedStudent;
         }
     }
 }
