@@ -1,6 +1,10 @@
 ﻿<MudNavMenu>
-    <MudNavLink Href="/createAssignment"> Create Assignment </MudNavLink>
-    <MudNavLink Href="/studentAssignments"> Student Assignments </MudNavLink>
+    <AuthorizeView Roles="Instructor">
+        <MudNavLink Href="/createAssignment"> Create Assignment </MudNavLink>
+    </AuthorizeView>
+    <AuthorizeView Roles="Student">
+        <MudNavLink Href="/studentAssignments"> Student Assignments </MudNavLink>
+    </AuthorizeView>
     <MudNavLink Href="/specialities"> Specialities </MudNavLink>
     <MudNavLink Href="/instructors"> Instructors </MudNavLink>
 </MudNavMenu>
