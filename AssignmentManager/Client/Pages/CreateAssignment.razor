@@ -8,15 +8,24 @@
         <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
             <MudText Typo="Typo.h4">Create Assignments</MudText>
             <MudText Typo="Typo.body2" Class="pb-1">Here you can create new assignments</MudText>
-            <MudTextField @bind-Value="Name" T="string" Label="Name" Required="true" Variant="Variant.Outlined" RequiredError="Name is required!" />
-            <MudDatePicker @bind-Date="Deadline" Label="Deadline" />
-            <MudTextField @bind-Value="Description" T="string" Label="Description" Variant="Variant.Outlined" RequiredError="Description is required!" Lines="10" />
-            <MudSelect @bind-Value="SubjectId" T="int" Label="Subject">
+            <div class="d-flex my-1 align-content-between">
+                <MudTextField @bind-Value="Name"
+                              T="string" 
+                              Label="Name" 
+                              Required="true" 
+                              Variant="Variant.Text" 
+                              RequiredError="Name is required!"
+                              Class="mr-4" />
+                <MudDatePicker @bind-Date="Deadline"
+                               Label="Deadline" />
+            </div>
+            <MudSelect @bind-Value="SubjectId" Label="Subject" Required="true" RequiredError="Subject is required!">
                 @foreach (var subject in subjects)
                 {
-                    <MudSelectItem Value="@subject.SubjectId">@subject.SubjectName</MudSelectItem>
+                    <MudSelectItem T="string" Value="@subject.SubjectId.ToString()">@subject.SubjectName</MudSelectItem>
                 }
             </MudSelect>
+            <MudTextField @bind-Value="Description" T="string" Label="Description" Variant="Variant.Outlined" Required="true" RequiredError="Description is required!" Lines="10" />
         </MudForm>
     </MudCardContent>
     <MudCardActions>
@@ -35,7 +44,7 @@
     string Name;
     string Description;
     DateTime? Deadline = DateTime.Now;
-    int SubjectId;
+    string SubjectId;
 
     List<SubjectResource> subjects = new List<SubjectResource>() {
         new SubjectResource() {SubjectId=101, SubjectName="DB" },
