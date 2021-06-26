@@ -5,6 +5,7 @@ using AssignmentManager.Server.Data;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -46,16 +47,17 @@ namespace AssignmentManager.Server
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            //services.AddIdentityServer()
-                //.AddApiAuthorization<ApplicationUser, AppDbContext>();
+            /*services.AddIdentityServer()
+                .AddApiAuthorization<ApplicationUser, AppDbContext>();*/
 
             
-            
+            services.AddScoped<IProfileService, ProfileService>();
             services.AddIdentityServer()
                 .AddApiAuthorization<ApplicationUser, AppDbContext>(options => {
                     options.IdentityResources["openid"].UserClaims.Add("role");
                     options.ApiResources.Single().UserClaims.Add("role");
-                });
+                })
+                .AddProfileService<ProfileService>();
 
 // Need to do this as it maps "role" to ClaimTypes.Role and causes issues
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("role");
@@ -63,6 +65,7 @@ namespace AssignmentManager.Server
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
+            
             services.AddScoped<ISpecialityService, SpecialityService>();
             services.AddScoped<IGroupService, GroupService>();
             services.AddScoped<IStudentService, StudentService>();

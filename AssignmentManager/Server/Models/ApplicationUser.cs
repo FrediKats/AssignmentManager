@@ -4,6 +4,6 @@ namespace AssignmentManager.Server.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public int? IsuId { get; set; }
+        public int IsuId { get; set; }
     }
 }
