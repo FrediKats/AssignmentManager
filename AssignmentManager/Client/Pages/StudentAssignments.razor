@@ -85,9 +85,11 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
         try
         {
-            int studentId = 102; //TODO get id from account
+            int studentId = int.Parse(user.FindFirst(c => c.Type == "IsuId")?.Value); //TODO get id from account
             var studentResource = await Http.GetFromJsonAsync<StudentResource>($"api/students/{studentId}");
             AssignmentResources = studentResource?.Assignments;
         }
