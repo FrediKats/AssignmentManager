@@ -19,6 +19,9 @@
             </MudSelect>
         </MudForm>
     </MudCardContent>
+    <MudCardActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" OnClick="() => { OnClick(); }" Class="ml-auto">Create</MudButton>
+    </MudCardActions>
 </MudCard>
 
 <MudCard>
@@ -38,6 +41,11 @@
         new SubjectResource() {SubjectId=101, SubjectName="DB" },
         new SubjectResource() {SubjectId=102, SubjectName="OS" },
     };
+
+    void OnClick()
+        {
+
+        }
 
     bool success;
     string[] errors = { };
