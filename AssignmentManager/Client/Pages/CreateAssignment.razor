@@ -3,8 +3,42 @@
 @using AssignmentManager.Shared
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
 
-<MudAlert Severity="Severity.Success">Create Assignment</MudAlert>
+<MudCard>
+    <MudCardContent>
+        <MudForm @bind-IsValid="@success" @bind-Errors="@errors">
+            <MudText Typo="Typo.h4">Create Assignments</MudText>
+            <MudText Typo="Typo.body2" Class="pb-1">Here you can create new assignments</MudText>
+            <MudTextField @bind-Value="Name" T="string" Label="Name" Required="true" Variant="Variant.Outlined" RequiredError="Name is required!" />
+            <MudDatePicker @bind-Date="Deadline" Label="Deadline" />
+            <MudTextField @bind-Value="Description" T="string" Label="Description" Variant="Variant.Outlined" RequiredError="Description is required!" Lines="10" />
+            <MudSelect @bind-Value="SubjectId" T="int" Label="Subject">
+                @foreach (var subject in subjects)
+                {
+                    <MudSelectItem Value="@subject.SubjectId">@subject.SubjectName</MudSelectItem>
+                }
+            </MudSelect>
+        </MudForm>
+    </MudCardContent>
+</MudCard>
+
+<MudCard>
+    <MudText>@Name</MudText>
+    <MudText>@Deadline</MudText>
+    <MudText>@Description</MudText>
+    <MudText>@SubjectId</MudText>
+</MudCard>
 
 @code {
+    string Name;
+    string Description;
+    DateTime? Deadline = DateTime.Now;
+    int SubjectId;
 
+    List<SubjectResource> subjects = new List<SubjectResource>() {
+        new SubjectResource() {SubjectId=101, SubjectName="DB" },
+        new SubjectResource() {SubjectId=102, SubjectName="OS" },
+    };
+
+    bool success;
+    string[] errors = { };
 }
