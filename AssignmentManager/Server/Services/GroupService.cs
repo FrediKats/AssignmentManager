@@ -38,6 +38,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Group> Create(Group group)
         {
+            //TODO: https://docs.microsoft.com/ru-ru/dotnet/api/system.runtime.compilerservices.callermembernameattribute?view=net-5.0
             MethodBase m = MethodBase.GetCurrentMethod();
             group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
             if (group.Speciality == null)
@@ -49,6 +50,9 @@ namespace AssignmentManager.Server.Services
             await _context.SaveChangesAsync();
             return group;
         }
+
+
+        //TODO: SaveGroupResource
         public async Task<Group> Update(int id, Group item)
         {
             MethodBase m = MethodBase.GetCurrentMethod();

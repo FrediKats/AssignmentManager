@@ -35,6 +35,19 @@ namespace AssignmentManager.Server.Services
                 .Include(s => s.Groups)
                 .Include(s => s.Subjects)
                 .FirstOrDefaultAsync(s => s.Groups.Contains(currentStudent.Group));
+
+
+
+            _context
+                .Students
+                .Select(s => new StudentResource()
+                {
+                    Name = s.Name,
+                    Subjects = s.Group.Speciality.Subjects.Select()
+                })
+
+            currentStudent.Group.Speciality.Subjects
+
             foreach (var subject in currentStudentSpeciality.Subjects)
             {
                 var assignments = await _context.Assignments
