@@ -31,9 +31,7 @@ namespace AssignmentManager.Server.Models
                 Content = solutionResource.Content,
                 AssignmentId = asId,
                 Grade = null,
-                Feedback = String.Empty,
-                Assignment = new Assignment(),
-                Students = new List<Student>()
+                Feedback = String.Empty
             };
         }
         

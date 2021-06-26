@@ -28,9 +28,7 @@ namespace AssignmentManager.Server.Models
             {
                 Name = assignmentResource.Name,
                 Description = assignmentResource.Description,
-                Deadline = assignmentResource.Deadline.ParseToProjectTime(),
-                Subject = new Subject(),
-                Solutions = new List<Solution>()
+                Deadline = assignmentResource.Deadline.ParseToProjectTime()
             };
         }
     }

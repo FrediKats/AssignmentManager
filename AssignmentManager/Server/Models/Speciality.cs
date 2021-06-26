@@ -34,8 +34,6 @@ namespace AssignmentManager.Server.Models
             {
                 Code = specialityResource.Code,
                 EnumStudyType = byteStudyType,
-                Groups = new List<Group>(),
-                Subjects = new List<Subject>()
             };
         }
     }

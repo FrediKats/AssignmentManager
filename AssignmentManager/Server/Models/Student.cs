@@ -40,11 +40,7 @@ namespace AssignmentManager.Server.Models
                 Lastname = studentResource.LastName,
                 Email = studentResource.Email,
                 Phone = studentResource.Phone,
-                GroupId = asId,
-                Group = new Group(),
-                Solutions = new List<Solution>(),
-                Subjects = new List<Subject>(),
-                Assignments = new List<Assignment>()
+                GroupId = asId
             };
         }
     }

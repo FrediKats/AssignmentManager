@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
@@ -37,26 +38,21 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> GetById(int id)
         {
-            try
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var speciality = await _context.Specialities
+                .Include(s=> s.Groups)
+                .Include(s => s.Subjects)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (speciality == null)
             {
-                var speciality = await _context.Specialities
-                    .Include(s=> s.Groups)
-                    .Include(s => s.Subjects)
-                    .FirstOrDefaultAsync(p => p.Id == id);
-                if (speciality == null)
-                {
-                    throw new Exception("Speciality not found");
-                }
-                return speciality;
+                throw new NullReferenceException(GetErrorString(m,$"speciality with id {id} is not existed"));
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when getting by id the speciality: {ex.Message}");
-            }
-            
+            return speciality;
+
         }
         public async Task<Speciality> Create(SaveSpecialityResource item)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             Speciality speciality = (Speciality) item;
             try
             {
@@ -66,28 +62,21 @@ namespace AssignmentManager.Server.Services
             {
                 throw new Exception($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
             }
-            try
+            foreach (var subjectId in item.SubjectsId)
             {
-                foreach (var subjectId in item.SubjectsId)
-                {
-                    var sub = await _context.Subjects.FindAsync(subjectId);
-                    if (sub == null)
-                        throw new Exception(
-                            $"can't find subject with id {subjectId}");
-                    speciality.Subjects.Add(sub);
-                }
-                await _context.Specialities.AddAsync(speciality);
-                await _context.SaveChangesAsync();
-                return speciality;
+                var sub = await _context.Subjects.FindAsync(subjectId);
+                if (sub == null)
+                    throw new NullReferenceException(GetErrorString(m,$"subject with id {sub.SubjectId} is not existed"));
+                speciality.Subjects.Add(sub);
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when creating the speciality: {ex.Message}");
-            }
+            await _context.Specialities.AddAsync(speciality);
+            await _context.SaveChangesAsync();
+            return speciality;
         }
 
         public async Task<Speciality> Update(int id, SaveSpecialityResource item)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existedSpec = await GetById(id);
             var speciality = (Speciality) item;
             try
@@ -106,20 +95,14 @@ namespace AssignmentManager.Server.Services
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
                 if (sub == null)
-                    throw new Exception(
-                        $"An error occurred when updating the speciality: can't find subject with id {subjectId}");
+                    throw new NullReferenceException(GetErrorString(m,$"subject with id {id} is not existed"));
                 existedSpec.Subjects.Add(sub);
             }
-            try
-            {
-                _context.Specialities.Update(existedSpec);
-                await _context.SaveChangesAsync();
-                return existedSpec;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when updating the speciality: {ex.Message}");
-            }
+            
+            _context.Specialities.Update(existedSpec);
+            await _context.SaveChangesAsync();
+            return existedSpec;
+
         }
 
         public async Task<Speciality> DeleteById(int id)
@@ -128,19 +111,12 @@ namespace AssignmentManager.Server.Services
                 .Include(s => s.Groups)
                 .FirstOrDefaultAsync(p => p.Id == id);
             existedSpec.Groups = await _context.Groups
-                    .Include(g => g.Students)
-                    .Where(g => g.Speciality==existedSpec).ToListAsync();
-            try
-            {
-                _context.Remove(existedSpec);
-                await _context.SaveChangesAsync();
+                .Include(g => g.Students)
+                .Where(g => g.Speciality == existedSpec).ToListAsync();
+            _context.Remove(existedSpec);
+            await _context.SaveChangesAsync();
 
-                return existedSpec;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when deleting the speciality: {ex.Message}");
-            }
+            return existedSpec;
         }
     }
 }

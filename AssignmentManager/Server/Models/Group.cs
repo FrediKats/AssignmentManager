@@ -27,9 +27,7 @@ namespace AssignmentManager.Server.Models
             return new Group()
             {
                 Name = groupResource.Name,
-                SpecialityId = asId,
-                Speciality = new Speciality(),
-                Students = new List<Student>()
+                SpecialityId = asId
             };
         }
     }

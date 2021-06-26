@@ -14,12 +14,11 @@ namespace AssignmentManager.Server.Extensions
                 System.Globalization.DateTimeStyles.None,
                 out var dateTime))
             {
-                Console.WriteLine("Date time converted: " + dateTime);
                 return dateTime;
             }
             else
             {
-                throw new Exception($"Can't convert string {parsingSting} to DateTime. Formats: {String.Join(", ", dateTimeFormats)}");
+                throw new FormatException($"Can't convert string {parsingSting} to DateTime. Formats: {String.Join(", ", dateTimeFormats)}");
             }
         }
     }

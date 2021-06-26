@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -23,74 +24,53 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Group> GetById(int id)
         {
-            try
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var currentGroup = await _context.Groups
+                .Include(g => g.Speciality)
+                .Include(g => g.Students)
+                .FirstOrDefaultAsync(g => g.Id == id); 
+            if (currentGroup == null)
             {
-                var currentGroup = await _context.Groups
-                    .Include(g => g.Speciality)
-                    .Include(g => g.Students)
-                    .FirstOrDefaultAsync(g => g.Id == id);
-                if (currentGroup == null)
-                {
-                    throw new Exception("Group isn't existed");
-                }
-                return currentGroup;
+                throw new NullReferenceException( GetErrorString(m,$"a group with id {id} does not exist"));
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when getting by id the group: {ex.Message}");
-            }
+            return currentGroup;
         }
-        
+
         public async Task<Group> Create(Group group)
         {
-            try
+            MethodBase m = MethodBase.GetCurrentMethod();
+            group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
+            if (group.Speciality == null)
             {
-                group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
-                if (group.Speciality == null)
-                {
-                    throw new Exception($"Speciality with id {group.SpecialityId} is not existed");
-                }
+                throw new NullReferenceException(GetErrorString(m,$"speciality with id {group.SpecialityId} is not existed"));
+            }
 
-                await _context.Groups.AddAsync(group);
-                await _context.SaveChangesAsync();
-                return group;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when creating the group: {ex.Message}");
-            }
+            await _context.Groups.AddAsync(group);
+            await _context.SaveChangesAsync();
+            return group;
         }
         public async Task<Group> Update(int id, Group item)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existedGroup = await GetById(id);
             existedGroup.Name = item.Name;
             existedGroup.SpecialityId = item.SpecialityId;
-            try
+            existedGroup.Speciality = await _context.Specialities.FindAsync(item.SpecialityId);
+            if (existedGroup.Speciality == null)
             {
-                existedGroup.Speciality = await _context.Specialities.FindAsync(item.SpecialityId);
-                _context.Groups.Update(existedGroup);
-                await _context.SaveChangesAsync();
-                return existedGroup;
+                throw new NullReferenceException(GetErrorString(m,$"speciality with id {existedGroup.SpecialityId} is not existed"));
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when updating the group: {ex.Message}");
-            }
+            _context.Groups.Update(existedGroup);
+            await _context.SaveChangesAsync();
+            return existedGroup;
         }
 
         public async Task<Group> DeleteById(int id)
         {
             var existedGroup = await GetById(id);
-            try
-            {
-                _context.Remove(existedGroup);
-                await _context.SaveChangesAsync();
-                return existedGroup;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"An error occurred when deleting the group: {ex.Message}");
-            }
+            _context.Remove(existedGroup);
+            await _context.SaveChangesAsync();
+            return existedGroup;
         }
     }
 }
