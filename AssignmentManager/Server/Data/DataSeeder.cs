@@ -172,7 +172,7 @@ namespace AssignmentManager.Server.Data
                 UserName = "in@struc.tor",
                 Email = "in@struc.tor",
                 EmailConfirmed = true,
-                IsuId = 102
+                IsuId = 111112
             };
             await userManager.CreateAsync(user, "Abc.123");
             await userManager.CreateAsync(student, "Abc.123");
