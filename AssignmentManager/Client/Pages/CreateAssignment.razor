@@ -63,16 +63,14 @@
     {
         SaveAssignmentResource newAssignment = new SaveAssignmentResource
         {
-            Deadline = DeadlineFromForm?.ToString("MM-dd-yyyy HH:mm"),
+            Deadline = DeadlineFromForm?.ToString("yyyy-MM-dd HH:mm"),
             Description = DescriptionFromForm,
             Name = NameFromForm,
             SubjectId = int.Parse(SubjectIdFromForm)
         };
         Console.WriteLine(new StringContent(newAssignment.ToString(), Encoding.UTF8, "application/json").ToString());
-        Http.PostAsync(
-            "api/Assignments", 
-            new StringContent(newAssignment.ToString(), Encoding.UTF8, "application/json")
-            );
+        //Http.PostAsync("api/Assignments", new StringContent(newAssignment.ToString(), Encoding.UTF8, "application/json"));
+        Http.PostAsJsonAsync("api/Assignments", newAssignment);
         DeadlineFromForm = DateTime.Now;
         NameFromForm = "";
         DescriptionFromForm = "";
