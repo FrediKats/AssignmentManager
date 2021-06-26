@@ -2,6 +2,8 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using AssignmentManager.Server.Data;
+
+using AssignmentManager.Server.Middleware;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence.Contexts;
 using AssignmentManager.Server.Services;
@@ -40,8 +42,6 @@ namespace AssignmentManager.Server
                     Configuration.GetConnectionString("DefaultConnection")));*/
 
             services.AddDatabaseDeveloperPageExceptionFilter();
-            
-            
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -97,18 +97,21 @@ namespace AssignmentManager.Server
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
             });
             //context.Database.Migrate();
+            
+            /*app.UseMiddleware<ResponseFormatterMiddleware>();*/
+            app.UseMiddleware<CustomErrorHandlerMiddleware>();
+            
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
                 app.UseWebAssemblyDebugging();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();

@@ -82,6 +82,7 @@
     public string Search { get; set; } = "";
     public IList<AssignmentResourceBriefly> AssignmentResources { get; set; }
     public AssignmentResource SelectedAssignment { get; set; }
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -89,7 +90,7 @@
         var user = authState.User;
         try
         {
-            int studentId = int.Parse(user.FindFirst(c => c.Type == "IsuId")?.Value); //TODO get id from account
+            int studentId = int.Parse(user.FindFirst(c => c.Type == "IsuId")?.Value);
             var studentResource = await Http.GetFromJsonAsync<StudentResource>($"api/students/{studentId}");
             AssignmentResources = studentResource?.Assignments;
         }

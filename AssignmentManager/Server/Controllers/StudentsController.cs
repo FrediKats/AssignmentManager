@@ -33,16 +33,9 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetGroupByIdCompletely(int id)
         {
-            try
-            {
-                var student = await _service.GetById(id);
-                var resources = _mapper.Map<Student, StudentResource>(student);
-                return Ok(resources);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var student = await _service.GetById(id);
+            var resources = _mapper.Map<Student, StudentResource>(student);
+            return Ok(resources);
         }
         
         [HttpPost]
@@ -50,16 +43,9 @@ namespace AssignmentManager.Server.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var result = await _service.Create(resource);
-                var studentResource = _mapper.Map<Student, StudentResource>(result);
-                return Ok(studentResource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.Create(resource);
+            var studentResource = _mapper.Map<Student, StudentResource>(result);
+            return Ok(studentResource);
         }
         
         [HttpPut("{id}")]
@@ -68,31 +54,18 @@ namespace AssignmentManager.Server.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var result = await _service.Update(id, resource);
-                var studentResource = _mapper.Map<Student, StudentResourceBriefly>(result);
-                return Ok(studentResource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            
+            var result = await _service.Update(id, resource);
+            var studentResource = _mapper.Map<Student, StudentResourceBriefly>(result);
+            return Ok(studentResource);
         }
         
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGroup(int id)
         {
-            try
-            {
-                var result = await _service.DeleteById(id);
-                var specialityResource = _mapper.Map<Student, StudentResourceBriefly>(result);
-                return Ok(specialityResource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.DeleteById(id);
+            var specialityResource = _mapper.Map<Student, StudentResourceBriefly>(result);
+            return Ok(specialityResource);
         }
     }
 }

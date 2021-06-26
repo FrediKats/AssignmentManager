@@ -25,71 +25,42 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IReadOnlyCollection<AssignmentResource>> GetAllAssignmentsBriefly()
+        public async Task<IReadOnlyCollection<AssignmentResourceBriefly>> GetAllAssignmentsBriefly()
         {
             var assignments = await _service.GetAll();
-            var resources = _mapper.Map<List<Assignment>, List<AssignmentResource>>(assignments);
+            var resources = _mapper.Map<List<Assignment>, List<AssignmentResourceBriefly>>(assignments);
             return resources;
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAssignmentByIdCompletely(int id)
+        public async Task<ActionResult<AssignmentResource>> GetAssignmentByIdCompletely(int id)
         {
-            try
-            {
-                var assignment = await _service.GetById(id);
-                var resources = _mapper.Map<Assignment, AssignmentResource>(assignment);
-                return Ok(resources);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var assignment = await _service.GetById(id);
+            var resources = _mapper.Map<Assignment, AssignmentResource>(assignment);
+            return Ok(resources);
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateAssignment([FromBody] SaveAssignmentResource assignmentResource) {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var assignment = await _service.Create(assignmentResource);
-                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+        public async Task<ActionResult<AssignmentResource>> CreateAssignment([FromBody] SaveAssignmentResource assignmentResource) {
+            var assignment = await _service.Create(assignmentResource);
+            var resource = _mapper.Map<Assignment, AssignmentResource>(assignment);
+            return Ok(resource);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAssignment([FromBody] SaveAssignmentResource assignmentResource, int id)
+        public async Task<ActionResult<AssignmentResource>> UpdateAssignment([FromBody] SaveAssignmentResource assignmentResource, int id)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var assignment = await _service.Update(id, assignmentResource);
-                return Ok(_mapper.Map<Assignment, AssignmentResource>(assignment));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var assignment = await _service.Update(id, assignmentResource);
+            var resource = _mapper.Map<Assignment, AssignmentResource>(assignment);
+            return Ok(resource);
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAssignment(int id)
+        public async Task<ActionResult<AssignmentResource>> DeleteAssignment(int id)
         {
-            try
-            {
-                var result = await _service.DeleteById(id);
-                return Ok(_mapper.Map<Assignment, AssignmentResource>(result));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.DeleteById(id);
+            var resource = _mapper.Map<Assignment, AssignmentResource>(result);
+            return Ok(resource);
         }
     }
 }
