@@ -53,9 +53,9 @@ namespace AssignmentManager.Server.Services
                                 SubjectName = subject.SubjectName,
                             }).ToList(),
                         Assignments = student.Group.Speciality.Subjects
+                            .Where(u => u.Specialities.Contains(student.Group.Speciality))
                             .SelectMany(sub => sub.Assignments,
                                 (sub, ass) => new {Subject = sub, Assignment = ass})
-                            .Where(u => u.Subject.Specialities.Contains(student.Group.Speciality))
                             .Select(u => new AssignmentResourceBriefly()
                             {
                                 AssignmentId = u.Assignment.AssignmentId,
@@ -88,7 +88,11 @@ namespace AssignmentManager.Server.Services
 
         public async Task<StudentResource> GetById(int id)
         {
-            return await QueryableStudentResource().FirstOrDefaultAsync(a => a.IsuId == id);
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var student = await QueryableStudentResource().FirstOrDefaultAsync(a => a.IsuId == id);
+            if (student == null)
+                throw new NullReferenceException(GetErrorString(m, $"student with id {id} is not existed"));
+            return student;
         }
 
         public async Task<StudentResource> Create(SaveStudentResource saveStudent)
@@ -96,13 +100,14 @@ namespace AssignmentManager.Server.Services
             MethodBase m = MethodBase.GetCurrentMethod();
             var student = new Student(saveStudent);
             student.Group = await _context.Groups.FindAsync(student.GroupId);
-            if (student.Group == null) 
+            if (student.Group == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"group with id {student.GroupId} is not existed"));
+                throw new NullReferenceException(GetErrorString(m, $"group with id {student.GroupId} is not existed"));
             }
+
             await _context.Students.AddAsync(student);
             await _context.SaveChangesAsync();
-            return await GetById(student.IsuId); 
+            return await GetById(student.IsuId);
         }
 
         public async Task<StudentResource> Update(int id, SaveStudentResource item)
@@ -114,22 +119,28 @@ namespace AssignmentManager.Server.Services
             existedStudent.Name = item.Name;
             existedStudent.Phone = item.Phone;
             existedStudent.MiddleName = item.MiddleName;
-            existedStudent.Group = await _context.Groups.FindAsync(item.GroupId); 
+            existedStudent.Group = await _context.Groups.FindAsync(item.GroupId);
             if (existedStudent.Group == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"group with id {id} is not existed"));
+                throw new NullReferenceException(GetErrorString(m, $"group with id {id} is not existed"));
             }
+
             _context.Students.Update(existedStudent);
             await _context.SaveChangesAsync();
             return await GetById(id);
         }
+
         public async Task<StudentResource> DeleteById(int id)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existedStudent = await GetById(id);
-            _context.Students.Remove(await _context.Students
+            var student = await _context.Students
                 .Include(s => s.Solutions)
                 .Include(s => s.Group)
-                .FirstOrDefaultAsync(d => d.IsuId==id));
+                .FirstOrDefaultAsync(d => d.IsuId == id);
+            if (student == null)
+                throw new NullReferenceException(GetErrorString(m, $"student with id {id} is not existed"));
+            _context.Students.Remove(student);
             await _context.SaveChangesAsync();
             return existedStudent;
         }

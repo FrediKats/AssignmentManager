@@ -39,6 +39,8 @@ namespace AssignmentManager.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<StudentResource>> CreateStudent([FromBody] SaveStudentResource resource)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Create(resource);
             return Ok(result);
         }
@@ -47,6 +49,8 @@ namespace AssignmentManager.Server.Controllers
         public async Task<ActionResult<StudentResource>> UpdateStudent(int id,
             [FromBody] SaveStudentResource resource)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
 
             var result = await _service.Update(id, resource);
             return Ok(result);

@@ -27,16 +27,13 @@ namespace AssignmentManager.Server.Models
 
         public Student(SaveStudentResource studentResource)
         {
-            int asId = 0;
-            if (studentResource.GroupId.HasValue)
-                asId = studentResource.GroupId.Value;
-            IsuId = studentResource.IsuId;
+            IsuId = studentResource.IsuId.Value;
             Name = studentResource.Name;
             MiddleName = studentResource.MiddleName;
             Lastname = studentResource.LastName;
             Email = studentResource.Email;
             Phone = studentResource.Phone;
-            GroupId = asId;
+            GroupId = studentResource.GroupId.Value;
         }
     }
 }
