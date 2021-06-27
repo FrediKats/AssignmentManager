@@ -1,12 +1,17 @@
 ﻿using System.ComponentModel;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AssignmentManager.Shared
 {
     public enum EStudyType : byte
     {
-        [Description("бакалавриат")] Bach = 1,
-        [Description("магистратура")] Mast = 2,
-        [Description("аспирантура")] Asp = 3,
-        [Description("докторантура")] Doc = 4
+        //[EnumMember(Value = "Awaiting Approval")]
+        [Description("бакалавриат")] Bachelor = 1,
+        [Description("магистратура")] Master = 2,
+        [Description("аспирантура")] Postgraduate = 3,
+        [Description("докторантура")] Doctorate = 4
+
     }
 }

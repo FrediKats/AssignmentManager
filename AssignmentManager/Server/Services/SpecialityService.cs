@@ -17,20 +17,6 @@ namespace AssignmentManager.Server.Services
         public SpecialityService(AppDbContext context) : base(context)
         {
         }
-        private string GetAllEnumValues<T>(T enumType) where T : Type
-        {
-            var vars = new List<byte>();
-            foreach (var en in Enum.GetValues(enumType))
-            {
-                vars.Add((byte)en);
-            }
-            var enumStudyTypeValues = string
-                .Join(
-                    ',',
-                    vars
-                );
-            return enumStudyTypeValues;
-        }
         public async Task<List<Speciality>> GetAll()
         {
             return await _context.Specialities.ToListAsync();
@@ -53,15 +39,7 @@ namespace AssignmentManager.Server.Services
         public async Task<Speciality> Create(SaveSpecialityResource item)
         {
             MethodBase m = MethodBase.GetCurrentMethod();
-            Speciality speciality = (Speciality) item;
-            try
-            {
-                speciality.EnumStudyType.ToDescriptionString();
-            }
-            catch (Exception)
-            {
-                throw new Exception($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
-            }
+            var speciality = new Speciality(item);
             foreach (var subjectId in item.SubjectsId)
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
@@ -69,6 +47,7 @@ namespace AssignmentManager.Server.Services
                     throw new NullReferenceException(GetErrorString(m,$"subject with id {sub.SubjectId} is not existed"));
                 speciality.Subjects.Add(sub);
             }
+            
             await _context.Specialities.AddAsync(speciality);
             await _context.SaveChangesAsync();
             return speciality;
@@ -78,19 +57,12 @@ namespace AssignmentManager.Server.Services
         {
             MethodBase m = MethodBase.GetCurrentMethod();
             var existedSpec = await GetById(id);
-            var speciality = (Speciality) item;
-            try
-            {
-                speciality.EnumStudyType.ToDescriptionString();
-            }
-            catch (Exception)
-            {
-                throw new Exception($"An error occurred when creating the speciality: enumStudyType hasn't value = {item.EnumStudyType}. enumStudyType values: {GetAllEnumValues(typeof(EStudyType))}");
-            }
+            var speciality = new Speciality(item);
             
             existedSpec.Code = speciality.Code;
-            existedSpec.EnumStudyType = speciality.EnumStudyType;
+            existedSpec.StudyType = speciality.StudyType;
             existedSpec.Subjects = new List<Subject>();
+            
             foreach (var subjectId in item.SubjectsId)
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
@@ -107,9 +79,14 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> DeleteById(int id)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existedSpec = await _context.Specialities
                 .Include(s => s.Groups)
                 .FirstOrDefaultAsync(p => p.Id == id);
+            if (existedSpec == null)
+            {
+                throw new NullReferenceException(GetErrorString(m,$"speciality with id {id} is not existed"));
+            }
             existedSpec.Groups = await _context.Groups
                 .Include(g => g.Students)
                 .Where(g => g.Speciality == existedSpec).ToListAsync();

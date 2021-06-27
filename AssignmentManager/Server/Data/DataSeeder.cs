@@ -14,17 +14,17 @@ namespace AssignmentManager.Server.Data
             Speciality[] specs =
             {
                 new Speciality
-                    {Id = 100, Code = "09.03.02", EnumStudyType = EStudyType.Bach },
+                    {Id = 100, Code = "09.03.02", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 101, Code = "01.07.15", EnumStudyType = EStudyType.Asp },
+                    {Id = 101, Code = "01.07.15", StudyType = EStudyType.Master},
                 new Speciality
-                    {Id = 102, Code = "09.03.04", EnumStudyType = EStudyType.Doc },
+                    {Id = 102, Code = "09.03.04", StudyType = EStudyType.Doctorate },
                 new Speciality
-                    {Id = 103, Code = "10.15.01", EnumStudyType = EStudyType.Mast },
+                    {Id = 103, Code = "10.15.01", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 104, Code = "07.03.01", EnumStudyType = EStudyType.Bach },
+                    {Id = 104, Code = "07.03.01", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 105, Code = "80.01.01", EnumStudyType = EStudyType.Asp }
+                    {Id = 105, Code = "80.01.01", StudyType = EStudyType.Master }
             };
 
             Group[] groups =

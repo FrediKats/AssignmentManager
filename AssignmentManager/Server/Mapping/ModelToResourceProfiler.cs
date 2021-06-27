@@ -14,20 +14,16 @@ namespace AssignmentManager.Server.Mapping
             
             CreateMap<Group, GroupResource>();
             CreateMap<Group, GroupResourceBriefly>();
-            
             CreateMap<Speciality, SpecialityResource>()
-                .ForMember(
-                    opt => opt.StudyTypeName,
+                .ForMember(dest => dest.StudyTypeDescription,
                     opt => opt.MapFrom(
-                        src => src.EnumStudyType.ToDescriptionString())
-                );
-            CreateMap<Speciality,SpecialityResourceBriefly>()
-                .ForMember(
-                    opt => opt.StudyTypeName,
+                        src => src.StudyType.ToDescriptionString()
+                        ));
+            CreateMap<Speciality, SpecialityResourceBriefly>()
+                .ForMember(dest => dest.StudyTypeDescription,
                     opt => opt.MapFrom(
-                        src => src.EnumStudyType.ToDescriptionString())
-                );
-            
+                        src => src.StudyType.ToDescriptionString()
+                    ));;
             CreateMap<Solution, SolutionResourceBriefly>();
             CreateMap<Solution, SolutionResource>();
 

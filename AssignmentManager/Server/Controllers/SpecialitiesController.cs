@@ -52,17 +52,10 @@ namespace AssignmentManager.Server.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var result = await _service.Create(specialityResource);
+            var result = await _service.Create(specialityResource);
 
-                var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result);
-                return Ok(specialityRecourse);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result);
+            return Ok(specialityRecourse);
         }
 
         [HttpPut("{id}")]
