@@ -19,31 +19,24 @@ namespace AssignmentManager.Server.Models
 
         //TODO: rework
         public virtual IList<Solution> Solutions { get; set; }
-        public virtual IList<Subject> Subjects { get; set; }
-        public virtual IList<Assignment> Assignments { get; set; }
 
         public Student()
         {
             Solutions = new List<Solution>();
-            Subjects = new List<Subject>();
-            Assignments = new List<Assignment>();
         }
 
-        public static implicit operator Student(SaveStudentResource studentResource)
+        public Student(SaveStudentResource studentResource)
         {
             int asId = 0;
             if (studentResource.GroupId.HasValue)
                 asId = studentResource.GroupId.Value;
-            return new Student()
-            {
-                IsuId = studentResource.IsuId,
-                Name = studentResource.Name,
-                MiddleName = studentResource.MiddleName,
-                Lastname = studentResource.LastName,
-                Email = studentResource.Email,
-                Phone = studentResource.Phone,
-                GroupId = asId
-            };
+            IsuId = studentResource.IsuId;
+            Name = studentResource.Name;
+            MiddleName = studentResource.MiddleName;
+            Lastname = studentResource.LastName;
+            Email = studentResource.Email;
+            Phone = studentResource.Phone;
+            GroupId = asId;
         }
     }
 }
