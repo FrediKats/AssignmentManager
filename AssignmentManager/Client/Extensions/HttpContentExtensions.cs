@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace AssignmentManager.Client.Extensions
 {
-    public static class HttpResponseMessageExtensions
+    public static class HttpContentExtensions
     {
         public static async Task<object?> ReadJson<T>(this HttpContent client) where T : class
         {
