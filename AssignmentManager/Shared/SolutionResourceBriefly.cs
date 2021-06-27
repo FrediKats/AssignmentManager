@@ -4,7 +4,7 @@
     {
         public int SolutionId { get; set; }
         public string Content { get; set; }
-        public int? Grade { get; set; }
+        public float? Grade { get; set; }
         public string Feedback { get; set; }
     }
 }
