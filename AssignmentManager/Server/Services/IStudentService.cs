@@ -1,15 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
+using AssignmentManager.Shared;
 
 namespace AssignmentManager.Server.Services
 {
     public interface IStudentService
     {
-        Task<List<Student>> GetAll();
-        Task<Student> GetById(int id);
-        Task<Student> Create(Student item);
-        Task<Student> Update(int id, Student item);
-        Task<Student> DeleteById(int id);
+        Task<List<StudentResourceBriefly>> GetAll();
+        Task<StudentResource> GetById(int id);
+        Task<StudentResource> Create(SaveStudentResource item);
+        Task<StudentResource> Update(int id, SaveStudentResource item);
+        Task<StudentResource> DeleteById(int id);
     }
 }

@@ -26,46 +26,41 @@ namespace AssignmentManager.Server.Controllers
         public async Task<IReadOnlyCollection<StudentResourceBriefly>> GetAllStudents()
         {
             var students = await _service.GetAll();
-            var resources = _mapper.Map<List<Student>, List<StudentResourceBriefly>>(students);
-            return resources;
+            return students;
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetGroupByIdCompletely(int id)
+        public async Task<ActionResult<StudentResource>> GetGroupByIdCompletely(int id)
         {
             var student = await _service.GetById(id);
-            var resources = _mapper.Map<Student, StudentResource>(student);
-            return Ok(resources);
+            return Ok(student);
         }
         
         [HttpPost]
-        public async Task<IActionResult> CreateStudent([FromBody] SaveStudentResource resource)
+        public async Task<ActionResult<StudentResource>> CreateStudent([FromBody] SaveStudentResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Create(resource);
-            var studentResource = _mapper.Map<Student, StudentResource>(result);
-            return Ok(studentResource);
+            return Ok(result);
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id,
+        public async Task<ActionResult<StudentResource>> UpdateStudent(int id,
             [FromBody] SaveStudentResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            
+
             var result = await _service.Update(id, resource);
-            var studentResource = _mapper.Map<Student, StudentResourceBriefly>(result);
-            return Ok(studentResource);
+            return Ok(result);
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGroup(int id)
+        public async Task<ActionResult<StudentResource>> DeleteGroup(int id)
         {
             var result = await _service.DeleteById(id);
-            var specialityResource = _mapper.Map<Student, StudentResourceBriefly>(result);
-            return Ok(specialityResource);
+            return Ok(result);
         }
     }
 }
