@@ -8,9 +8,12 @@ namespace AssignmentManager.Server.Models
 {
     public class Speciality
     {
-        [Key] public int Id { get; set; }
-        [Required] public string Code { get; set; }
-        [Required] public EStudyType StudyType { get; set; }
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public string Code { get; set; }
+        [Required]
+        public EStudyType StudyType { get; set; }
         public virtual IList<Group> Groups { get; set; }
         public virtual IList<Subject> Subjects { get; set; }
 
@@ -25,9 +28,7 @@ namespace AssignmentManager.Server.Models
             if (!Enum.IsDefined(typeof(EStudyType), specialityResource.StudyType))
                 throw new ArgumentException($"{specialityResource.StudyType.GetType().Name}: StudyType field must be of Enum type {string.Join(", ",  Enum.GetValues<EStudyType>())}");
             Code = specialityResource.Code;
-            StudyType = specialityResource.StudyType;
-            Groups = new List<Group>();
-            Subjects = new List<Subject>();
+            StudyType = specialityResource.StudyType.Value;
         }
     }
 }

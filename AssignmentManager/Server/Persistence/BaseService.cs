@@ -8,9 +8,9 @@ namespace AssignmentManager.Server.Persistence
     {
         protected readonly AppDbContext _context;
 
-        public string GetErrorString(MethodBase method, string message )
+        public string GetErrorString(string message, [System.Runtime.CompilerServices.CallerMemberName] string method = "")
         {
-            return $"An error occurred while {method.ReflectedType?.Name} in {GetType().Name}: {message}";
+            return $"An error occurred while {method} in {GetType().Name}: {message}";
         }
         public BaseService(AppDbContext context)
         {

@@ -42,6 +42,8 @@ namespace AssignmentManager.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] SaveGroupResource resource)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Create(resource);
             var groupResource = _mapper.Map<Group, GroupResource>(result);
             return Ok(groupResource);
@@ -51,6 +53,8 @@ namespace AssignmentManager.Server.Controllers
         public async Task<ActionResult<GroupResource>> UpdateGroup(int id,
             [FromBody] SaveGroupResource resource)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Update(id, resource);
             var specialityResource = _mapper.Map<Group, GroupResource>(result);
             return Ok(specialityResource);

@@ -9,8 +9,8 @@ namespace AssignmentManager.Server.Services
     {
         Task<List<Group>> GetAll();
         Task<Group> GetById(int id);
-        Task<Group> Create(Group item);
-        Task<Group> Update(int id, Group item);
+        Task<Group> Create(SaveGroupResource item);
+        Task<Group> Update(int id, SaveGroupResource item);
         Task<Group> DeleteById(int id);
     }
 }
