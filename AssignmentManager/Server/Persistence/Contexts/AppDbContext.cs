@@ -38,37 +38,6 @@ namespace AssignmentManager.Server.Persistence.Contexts
             
             builder.Entity<Instructor>().Property(p => p.IsuId).ValueGeneratedNever();
 
-            builder.Entity<Instructor>().ToTable("Instructors");
-            builder.Entity<Instructor>().HasKey(p => p.IsuId);
-            builder.Entity<Instructor>().Property(p => p.IsuId)
-                .IsRequired()
-                .ValueGeneratedNever();
-            builder.Entity<Instructor>().Property(p => p.LastName)
-                .IsRequired();
-            builder.Entity<Instructor>().Property(p => p.FirstName)
-                .IsRequired();
-            builder.Entity<Instructor>().Property(p => p.PatronymicName);
-            builder.Entity<Instructor>().Property(p => p.Email)
-                .IsRequired();
-
-            builder.Entity<Subject>().ToTable("Subjects");
-            builder.Entity<Subject>().HasKey(p => p.SubjectId);
-            builder.Entity<Subject>().Property(p => p.SubjectId)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-            builder.Entity<Subject>().Property(p => p.SubjectName)
-                .IsRequired();
-
-            builder.Entity<InstructorSubject>().ToTable("InstructorSubjects");
-            builder.Entity<InstructorSubject>().HasKey(p => p.Id);
-            builder.Entity<InstructorSubject>().Property(p => p.Id)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-            builder.Entity<InstructorSubject>().Property(p => p.IsuId)
-                .IsRequired();
-            builder.Entity<InstructorSubject>().Property(p => p.SubjectId)
-                .IsRequired();
-
             builder.Entity<IdentityRole>().ToTable("IdentityRoles");
             
             DataSeeder.SeedData(builder);
