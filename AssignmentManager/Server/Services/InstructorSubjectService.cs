@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Persistence;
@@ -20,31 +21,29 @@ namespace AssignmentManager.Server.Services
             return await _context.InstructorSubjects.ToListAsync();
         }
 
-        public async Task<InstructorSubjectResponse> GetById(int id)
+        public async Task<InstructorSubject> GetById(int id)
         {
-            return new InstructorSubjectResponse(await _context.InstructorSubjects.FindAsync(id));
+            MethodBase m = MethodBase.GetCurrentMethod();
+            var instructorSubject = await _context.InstructorSubjects.FindAsync(id);
+            if (instructorSubject == null)
+                throw new NullReferenceException(GetErrorString(m, $"instructorsubject with id {id} is not existed"));
+            return instructorSubject;
         }
 
-        public async Task<InstructorSubjectResponse> AddAsync(InstructorSubject instructorSubject)
+        public async Task<InstructorSubject> AddAsync(InstructorSubject instructorSubject)
         {
-            try
-            {
-                await _context.InstructorSubjects.AddAsync(instructorSubject);
-                await _context.SaveChangesAsync();
-                return new InstructorSubjectResponse(instructorSubject);
-            }
-            catch (Exception er)
-            {
-                return new InstructorSubjectResponse(er.Message);
-            }
+            await _context.InstructorSubjects.AddAsync(instructorSubject);
+            await _context.SaveChangesAsync();
+            return await GetById(instructorSubject.Id);
         }
 
-        public async Task<InstructorSubjectResponse> UpdateAsync(int id, InstructorSubject instructorSubject)
+        public async Task<InstructorSubject> UpdateAsync(int id, InstructorSubject instructorSubject)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existingInstructorSubject = await _context.InstructorSubjects.FindAsync(id);
 
             if (existingInstructorSubject == null)
-                return new InstructorSubjectResponse("InstructorSubject not found.");
+                throw new NullReferenceException(GetErrorString(m, $"instructorsubject with id {id} is not existed"));
 
             existingInstructorSubject.IsuId = instructorSubject.IsuId;
             existingInstructorSubject.SubjectId = instructorSubject.SubjectId;
@@ -53,32 +52,33 @@ namespace AssignmentManager.Server.Services
             {
                 _context.InstructorSubjects.Update(existingInstructorSubject);
                 await _context.SaveChangesAsync();
-                return new InstructorSubjectResponse(existingInstructorSubject);
+                return await GetById(id);
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new InstructorSubjectResponse($"An error occurred when updating the instructorSubject: {ex.Message}");
+                throw new AggregateException($"An error occurred when updating the instructorSubject: {ex.Message}");
             }
         }
 
-        public async Task<InstructorSubjectResponse> DeleteAsync(int id)
+        public async Task<InstructorSubject> DeleteAsync(int id)
         {
+            MethodBase m = MethodBase.GetCurrentMethod();
             var existingInstructorSubject = await _context.InstructorSubjects.FindAsync(id);
 
             if (existingInstructorSubject == null)
-                return new InstructorSubjectResponse("InstructorSubject not found.");
+                throw new NullReferenceException(GetErrorString(m, $"instructorsubject with id {id} is not existed"));
 
             try
             {
                 _context.InstructorSubjects.Remove(existingInstructorSubject);
                 await _context.SaveChangesAsync();
-                return new InstructorSubjectResponse(existingInstructorSubject);
+                return existingInstructorSubject;
             }
             catch (Exception ex)
             {
                 // Do some logging stuff
-                return new InstructorSubjectResponse($"An error occurred when deleting the instructorSubject: {ex.Message}");
+                throw new AggregateException($"An error occurred when deleting the instructorSubject: {ex.Message}");
             }
         }
     }

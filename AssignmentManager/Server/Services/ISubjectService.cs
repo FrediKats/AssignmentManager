@@ -9,9 +9,9 @@ namespace AssignmentManager.Server.Services
     public interface ISubjectService
     {
         Task<List<Subject>> GetAllSubjects();
-        Task<SubjectResponse> GetById(int id);
-        Task<SubjectResponse> AddAsync(Subject subject);
-        Task<SubjectResponse> UpdateAsync(int id, Subject subject);
-        Task<SubjectResponse> DeleteAsync(int id);
+        Task<Subject> GetById(int id);
+        Task<Subject> AddAsync(Subject subject);
+        Task<Subject> UpdateAsync(int id, Subject subject);
+        Task<Subject> DeleteAsync(int id);
     }
 }
