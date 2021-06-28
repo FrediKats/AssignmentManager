@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
 {
+    [ApiController]
     [Route("/api/[controller]")]
     public class SolutionsController : ControllerBase
     {
@@ -41,16 +42,12 @@ namespace AssignmentManager.Server.Controllers
         
         [HttpPost]
         public async Task<IActionResult> CreateSolution([FromBody] SaveSolutionResource solutionResource) {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Create(solutionResource);
             return Ok(_mapper.Map<Solution, SolutionResource>(result));
         }
         
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSolution(int id, [FromBody] SaveSolutionResource solutionResource) {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
             var result = await _service.Update(id, solutionResource);
             return Ok(_mapper.Map<Solution, SolutionResource>(result));
         }
