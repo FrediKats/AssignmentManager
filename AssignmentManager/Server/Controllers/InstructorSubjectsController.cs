@@ -24,7 +24,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<InstructorSubjectResource>> GetAllAsync()
+        public async Task<IEnumerable<InstructorSubjectResource>> GetAllInstructorSubjects()
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -33,7 +33,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<InstructorSubject> GetById(int id)
+        public ActionResult<InstructorSubject> GetInstructorSubjectById(int id)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpGet("subjects/{IsuId}")]
-        public async Task<IEnumerable<int>> GetAllSubjectsForInstructorAsync(int isuId)
+        public async Task<IEnumerable<int>> GetAllSubjectsForInstructor(int isuId)
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -60,7 +60,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpGet("instructors/{SubjectId}")]
-        public async Task<IEnumerable<int>> GetAllInstructorsForSubjectAsync(int subjectId)
+        public async Task<IEnumerable<int>> GetAllInstructorsForSubject(int subjectId)
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -71,7 +71,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveInstructorSubjectResource resource)
+        public async Task<IActionResult> PostInstructorSubject([FromBody] SaveInstructorSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -90,7 +90,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<InstructorSubjectResource>> PutAsync(int id,
+        public async Task<ActionResult<InstructorSubjectResource>> PutInstructorSubject(int id,
             [FromBody] SaveInstructorSubjectResource resource)
         {
             if (!ModelState.IsValid)
@@ -111,7 +111,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteInstructorSubject(int id)
         {
             try
             {

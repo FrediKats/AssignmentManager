@@ -25,7 +25,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SubjectResourceBriefly>> GetAllAsync()
+        public async Task<IEnumerable<SubjectResourceBriefly>> GetAllSubjects()
         {
             var subjects = await _subjectService.GetAllSubjects();
             var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResourceBriefly>>(subjects);
@@ -33,7 +33,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpGet("{id}")]
-        public ActionResult<Subject> GetById(int id)
+        public ActionResult<Subject> GetSubjectById(int id)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveSubjectResource resource)
+        public async Task<IActionResult> PostSubject([FromBody] SaveSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -67,7 +67,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveSubjectResource resource)
+        public async Task<IActionResult> PutSubject(int id, [FromBody] SaveSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -86,7 +86,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteSubject(int id)
         {
             try
             {

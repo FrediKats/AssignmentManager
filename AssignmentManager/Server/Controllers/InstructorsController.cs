@@ -23,7 +23,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<InstructorResourceBriefly>> GetAllAsync()
+        public async Task<IEnumerable<InstructorResourceBriefly>> GetAllInstructors()
         {
             var instructors = await _instructorService.GetAllInstructors();
             var resources = _mapper.Map<IEnumerable<Instructor>, IEnumerable<InstructorResourceBriefly>>(instructors);
@@ -31,7 +31,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Instructor>> GetById(int id)
+        public async Task<ActionResult<Instructor>> GetInstructorById(int id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveInstructorResource resource)
+        public async Task<IActionResult> PostInstructor([FromBody] SaveInstructorResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -64,7 +64,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpPut("{id}")]
-        public async Task<ActionResult<InstructorResource>> PutAsync(int id, [FromBody] SaveInstructorResource resource)
+        public async Task<ActionResult<InstructorResource>> PutInstructor(int id, [FromBody] SaveInstructorResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
@@ -83,7 +83,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteInstructor(int id)
         {
             try
             {
