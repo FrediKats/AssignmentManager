@@ -144,7 +144,7 @@ else
             RequestMessage = await Http.GetAsync($"api/subjects/{Id}");
             if (RequestMessage.IsSuccessStatusCode)
             {
-                CurrentSubject = await RequestMessage.Content.ReadJson<SubjectResource>() as SubjectResource;
+                CurrentSubject = await RequestMessage.Content.ReadJson<SubjectResource>();
             }
         }
         catch (AccessTokenNotAvailableException exception)
