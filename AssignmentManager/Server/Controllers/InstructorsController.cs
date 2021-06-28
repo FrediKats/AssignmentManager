@@ -25,7 +25,6 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet]
         public async Task<IEnumerable<InstructorResourceBriefly>> GetAllAsync()
         {
-            Console.WriteLine("get all");
             var instructors = await _instructorService.GetAllInstructors();
             var resources = _mapper.Map<IEnumerable<Instructor>, IEnumerable<InstructorResourceBriefly>>(instructors);
             return resources;
@@ -34,15 +33,16 @@ namespace AssignmentManager.Server.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Instructor>> GetById(int id)
         {
-            Console.WriteLine("get by id");
-            var instructor = await _instructorService.GetById(id);
-            Console.WriteLine(instructor.Success);
-            if (!instructor.Success)
+            try
             {
-                return BadRequest(instructor.Message);
+                var instructor = await _instructorService.GetById(id);
+                var resource = _mapper.Map<Instructor, InstructorResource>(instructor);
+                return Ok(resource);
             }
-            var resource = _mapper.Map<Instructor, InstructorResource>(instructor.Instructor);
-            return Ok(resource);
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
@@ -50,15 +50,17 @@ namespace AssignmentManager.Server.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-            
-            var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
-            var result = await _instructorService.AddAsync(instructor);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
-            return Ok(instructorResource);
+            try
+            {
+                var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
+                var result = await _instructorService.AddAsync(instructor);
+                var instructorResource = _mapper.Map<Instructor, InstructorResource>(result);
+                return Ok(instructorResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpPut("{id}")]
@@ -67,26 +69,32 @@ namespace AssignmentManager.Server.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
-            var result = await _instructorService.UpdateAsync(id, instructor);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
-            return Ok(instructorResource);
+            try
+            {
+                var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
+                var result = await _instructorService.UpdateAsync(id, instructor);
+                var instructorResource = _mapper.Map<Instructor, InstructorResource>(result);
+                return Ok(instructorResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {
-            var result = await _instructorService.DeleteAsync(id);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorResource = _mapper.Map<Instructor, InstructorResource>(result.Instructor);
-            return Ok(instructorResource);
+            try
+            {
+                var result = await _instructorService.DeleteAsync(id);
+                var instructorResource = _mapper.Map<Instructor, InstructorResource>(result);
+                return Ok(instructorResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
