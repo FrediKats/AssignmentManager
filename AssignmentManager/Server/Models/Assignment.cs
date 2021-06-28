@@ -14,7 +14,10 @@ namespace AssignmentManager.Server.Models
         public string Description { get; set; }
         [Required] public DateTime Deadline { get; set; }
         
+        
+        public int SubjectId { get; set; }
         [Required] public Subject Subject { get; set; }
+        
         public virtual IList<Solution> Solutions { get; set; }
 
         public Assignment()
@@ -22,15 +25,12 @@ namespace AssignmentManager.Server.Models
             Solutions = new List<Solution>();
         }
         
-        //TODO: rewrite to explicit
-        public static implicit operator Assignment(SaveAssignmentResource assignmentResource)
+        public Assignment(SaveAssignmentResource assignmentResource)
         {
-            return new Assignment
-            {
-                Name = assignmentResource.Name,
-                Description = assignmentResource.Description,
-                Deadline = assignmentResource.Deadline.ParseToProjectTime()
-            };
+            Name = assignmentResource.Name;
+            SubjectId = assignmentResource.SubjectId.Value;
+            Description = assignmentResource.Description;
+            Deadline = assignmentResource.Deadline.ParseToProjectTime();
         }
     }
 }

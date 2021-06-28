@@ -18,18 +18,11 @@ namespace AssignmentManager.Server.Models
         {
             Students = new List<Student>();
         }
-
-        //TODO: rewrite to explicit
-        public static implicit operator Group(SaveGroupResource groupResource)
+        
+        public Group(SaveGroupResource groupResource)
         {
-            int asId = 0;
-            if (groupResource.SpecialityId.HasValue)
-                asId = groupResource.SpecialityId.Value;
-            return new Group()
-            {
-                Name = groupResource.Name,
-                SpecialityId = asId
-            };
+            Name = groupResource.Name;
+            SpecialityId = groupResource.SpecialityId.Value;
         }
     }
 }

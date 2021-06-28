@@ -71,12 +71,12 @@ namespace AssignmentManager.Server.Data
                 new Subject { SubjectId = 101, SubjectName = "advanced stuff"}
             };
 
-            object[] assignments =
+            Assignment[] assignments =
             {
-                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2000, 11, 11), Description = "DESC 1", SubjectId = 1 },
-                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), Description = "DESC 2", SubjectId = 1 },
-                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), Description = "DESC 3", SubjectId = 2 },
-                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2000, 12, 11), Description = "DESC 4", SubjectId = 2 }
+                new Assignment() { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2000, 11, 11), Description = "DESC 1", SubjectId = 1 },
+                new Assignment() { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), Description = "DESC 2", SubjectId = 1 },
+                new Assignment() { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), Description = "DESC 3", SubjectId = 2 },
+                new Assignment() { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2000, 12, 11), Description = "DESC 4", SubjectId = 2 }
             };
 
             object[] solutions = 

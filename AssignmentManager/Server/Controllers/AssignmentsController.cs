@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
@@ -42,6 +40,8 @@ namespace AssignmentManager.Server.Controllers
         
         [HttpPost]
         public async Task<ActionResult<AssignmentResource>> CreateAssignment([FromBody] SaveAssignmentResource assignmentResource) {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
             var assignment = await _service.Create(assignmentResource);
             var resource = _mapper.Map<Assignment, AssignmentResource>(assignment);
             return Ok(resource);
@@ -50,6 +50,8 @@ namespace AssignmentManager.Server.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult<AssignmentResource>> UpdateAssignment([FromBody] SaveAssignmentResource assignmentResource, int id)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState.GetErrorMessage());
             var assignment = await _service.Update(id, assignmentResource);
             var resource = _mapper.Map<Assignment, AssignmentResource>(assignment);
             return Ok(resource);

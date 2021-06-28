@@ -25,9 +25,7 @@ namespace AssignmentManager.Server.Models
             if (!Enum.IsDefined(typeof(EStudyType), specialityResource.StudyType))
                 throw new ArgumentException($"{specialityResource.StudyType.GetType().Name}: StudyType field must be of Enum type {string.Join(", ",  Enum.GetValues<EStudyType>())}");
             Code = specialityResource.Code;
-            StudyType = specialityResource.StudyType;
-            Groups = new List<Group>();
-            Subjects = new List<Subject>();
+            StudyType = specialityResource.StudyType.Value;
         }
     }
 }

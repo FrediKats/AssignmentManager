@@ -38,6 +38,7 @@ namespace AssignmentManager.Server.Services
         public async Task<Speciality> Create(SaveSpecialityResource item)
         {
             var speciality = new Speciality(item);
+            speciality.Subjects ??= new List<Subject>();
             foreach (var subjectId in item.SubjectsId)
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
@@ -58,10 +59,10 @@ namespace AssignmentManager.Server.Services
             
             existedSpec.Code = speciality.Code;
             existedSpec.StudyType = speciality.StudyType;
-            existedSpec.Subjects = new List<Subject>();
-            
+            speciality.Subjects = new List<Subject>();
             foreach (var subjectId in item.SubjectsId)
             {
+                
                 var sub = await _context.Subjects.FindAsync(subjectId);
                 if (sub == null)
                     throw new NullReferenceException(GetErrorString($"subject with id {id} is not existed"));

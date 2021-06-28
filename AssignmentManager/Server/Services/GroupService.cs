@@ -35,8 +35,9 @@ namespace AssignmentManager.Server.Services
             return currentGroup;
         }
 
-        public async Task<Group> Create(Group group)
+        public async Task<Group> Create(SaveGroupResource groupResource)
         {
+            Group group = new Group(groupResource);
             group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
             if (group.Speciality == null)
             {
@@ -50,11 +51,11 @@ namespace AssignmentManager.Server.Services
 
 
         //TODO: SaveGroupResource
-        public async Task<Group> Update(int id, Group item)
+        public async Task<Group> Update(int id, SaveGroupResource item)
         {
             var existedGroup = await GetById(id);
             existedGroup.Name = item.Name;
-            existedGroup.SpecialityId = item.SpecialityId;
+            existedGroup.SpecialityId = item.SpecialityId.Value;
             existedGroup.Speciality = await _context.Specialities.FindAsync(item.SpecialityId);
             if (existedGroup.Speciality == null)
             {

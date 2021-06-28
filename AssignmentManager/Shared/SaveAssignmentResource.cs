@@ -10,6 +10,6 @@ namespace AssignmentManager.Shared
         [Required] public string Description { get; set; }
         [Required] public string Deadline { get; set; }
         
-        public int SubjectId { get; set; }
+        [Required] public int? SubjectId { get; set; }
     }
 }

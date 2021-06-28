@@ -37,7 +37,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Solution> Create(SaveSolutionResource item)
         {
-            var solution = (Solution) item;
+            var solution = new Solution(item);
             solution.Students = new List<Student>();
             foreach (var studentId in item.StudentsId.ToHashSet())
             {

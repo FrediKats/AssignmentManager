@@ -37,7 +37,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Assignment> Create(SaveAssignmentResource item)
         {
-            var assigment = (Assignment) item;
+            var assigment = new Assignment(item);
             assigment.Subject = await _context.Subjects.FindAsync(item.SubjectId);
             if (assigment.Subject == null)
                 throw new NullReferenceException(GetErrorString($"a subject with {item.SubjectId} is not existed"));
@@ -48,7 +48,7 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Assignment> Update(int id, SaveAssignmentResource item)
         {
-            var updateForSolution = (Assignment) item;
+            var updateForSolution = new Assignment(item);
             var existedAssignment = await GetById(id);
             existedAssignment.Deadline = updateForSolution.Deadline;
             existedAssignment.Description = updateForSolution.Description;

@@ -21,20 +21,12 @@ namespace AssignmentManager.Server.Models
             Students = new List<Student>();
         }
         
-        //TODO: rewrite to explicit
-        public static implicit operator Solution(SaveSolutionResource solutionResource)
+        public Solution(SaveSolutionResource solutionResource)
         {
-            int asId = 0;
-            if (solutionResource.AssignmentId.HasValue)
-                asId = solutionResource.AssignmentId.Value;
-            return new Solution
-            {
-                Content = solutionResource.Content,
-                AssignmentId = asId,
-                Grade = null,
-                Feedback = String.Empty
-            };
+            Content = solutionResource.Content;
+            AssignmentId = solutionResource.AssignmentId.Value;
+            Grade = null;
+            Feedback = String.Empty;
         }
-        
     }
 }
