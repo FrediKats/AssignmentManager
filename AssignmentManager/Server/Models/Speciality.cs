@@ -23,7 +23,7 @@ namespace AssignmentManager.Server.Models
         public Speciality(SaveSpecialityResource specialityResource)
         {
             if (!Enum.IsDefined(typeof(EStudyType), specialityResource.StudyType))
-                throw new ArgumentException($"EnumerationValue must be of Enum type {string.Join(", ",  Enum.GetValues<EStudyType>())}");
+                throw new ArgumentException($"{specialityResource.StudyType.GetType().Name}: StudyType field must be of Enum type {string.Join(", ",  Enum.GetValues<EStudyType>())}");
             Code = specialityResource.Code;
             StudyType = specialityResource.StudyType;
             Groups = new List<Group>();
