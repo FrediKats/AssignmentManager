@@ -16,8 +16,7 @@ namespace AssignmentManager.Server.Models
 
         public int GroupId { get; set; }
         [Required] public Group Group { get; set; }
-
-        //TODO: rework
+        
         public virtual IList<Solution> Solutions { get; set; }
 
         public Student()

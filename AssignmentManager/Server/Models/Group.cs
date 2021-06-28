@@ -19,6 +19,7 @@ namespace AssignmentManager.Server.Models
             Students = new List<Student>();
         }
 
+        //TODO: rewrite to explicit
         public static implicit operator Group(SaveGroupResource groupResource)
         {
             int asId = 0;

@@ -24,26 +24,23 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Group> GetById(int id)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var currentGroup = await _context.Groups
                 .Include(g => g.Speciality)
                 .Include(g => g.Students)
                 .FirstOrDefaultAsync(g => g.Id == id); 
             if (currentGroup == null)
             {
-                throw new NullReferenceException( GetErrorString(m,$"a group with id {id} does not exist"));
+                throw new NullReferenceException( GetErrorString($"a group with id {id} does not exist"));
             }
             return currentGroup;
         }
 
         public async Task<Group> Create(Group group)
         {
-            //TODO: https://docs.microsoft.com/ru-ru/dotnet/api/system.runtime.compilerservices.callermembernameattribute?view=net-5.0
-            MethodBase m = MethodBase.GetCurrentMethod();
             group.Speciality = await _context.Specialities.FindAsync(group.SpecialityId);
             if (group.Speciality == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"speciality with id {group.SpecialityId} is not existed"));
+                throw new NullReferenceException(GetErrorString($"speciality with id {group.SpecialityId} is not existed"));
             }
 
             await _context.Groups.AddAsync(group);
@@ -55,14 +52,13 @@ namespace AssignmentManager.Server.Services
         //TODO: SaveGroupResource
         public async Task<Group> Update(int id, Group item)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var existedGroup = await GetById(id);
             existedGroup.Name = item.Name;
             existedGroup.SpecialityId = item.SpecialityId;
             existedGroup.Speciality = await _context.Specialities.FindAsync(item.SpecialityId);
             if (existedGroup.Speciality == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"speciality with id {existedGroup.SpecialityId} is not existed"));
+                throw new NullReferenceException(GetErrorString($"speciality with id {existedGroup.SpecialityId} is not existed"));
             }
             _context.Groups.Update(existedGroup);
             await _context.SaveChangesAsync();

@@ -22,6 +22,7 @@ namespace AssignmentManager.Server.Models
             Solutions = new List<Solution>();
         }
         
+        //TODO: rewrite to explicit
         public static implicit operator Assignment(SaveAssignmentResource assignmentResource)
         {
             return new Assignment

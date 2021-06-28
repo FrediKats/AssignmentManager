@@ -24,27 +24,25 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> GetById(int id)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var speciality = await _context.Specialities
                 .Include(s=> s.Groups)
                 .Include(s => s.Subjects)
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (speciality == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"speciality with id {id} is not existed"));
+                throw new NullReferenceException(GetErrorString($"speciality with id {id} is not existed"));
             }
             return speciality;
 
         }
         public async Task<Speciality> Create(SaveSpecialityResource item)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var speciality = new Speciality(item);
             foreach (var subjectId in item.SubjectsId)
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
                 if (sub == null)
-                    throw new NullReferenceException(GetErrorString(m,$"subject with id {sub.SubjectId} is not existed"));
+                    throw new NullReferenceException(GetErrorString($"subject with id {sub.SubjectId} is not existed"));
                 speciality.Subjects.Add(sub);
             }
             
@@ -55,7 +53,6 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> Update(int id, SaveSpecialityResource item)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var existedSpec = await GetById(id);
             var speciality = new Speciality(item);
             
@@ -67,7 +64,7 @@ namespace AssignmentManager.Server.Services
             {
                 var sub = await _context.Subjects.FindAsync(subjectId);
                 if (sub == null)
-                    throw new NullReferenceException(GetErrorString(m,$"subject with id {id} is not existed"));
+                    throw new NullReferenceException(GetErrorString($"subject with id {id} is not existed"));
                 existedSpec.Subjects.Add(sub);
             }
             
@@ -79,13 +76,12 @@ namespace AssignmentManager.Server.Services
 
         public async Task<Speciality> DeleteById(int id)
         {
-            MethodBase m = MethodBase.GetCurrentMethod();
             var existedSpec = await _context.Specialities
                 .Include(s => s.Groups)
                 .FirstOrDefaultAsync(p => p.Id == id);
             if (existedSpec == null)
             {
-                throw new NullReferenceException(GetErrorString(m,$"speciality with id {id} is not existed"));
+                throw new NullReferenceException(GetErrorString($"speciality with id {id} is not existed"));
             }
             existedSpec.Groups = await _context.Groups
                 .Include(g => g.Students)
