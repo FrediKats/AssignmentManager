@@ -7,15 +7,20 @@ namespace AssignmentManager.Server.Models
 {
     public class Student
     {
-        [Key] public int IsuId { get; set; }
-        [Required] public string Name { get; set; }
+        [Key] 
+        public int IsuId { get; set; }
+        [Required] 
+        public string Name { get; set; }
         public string MiddleName { get; set; }
-        [Required] public string Lastname { get; set; }
-        [Required] public string Email { get; set; }
+        [Required] 
+        public string Lastname { get; set; }
+        [Required] 
+        public string Email { get; set; }
         public string Phone { get; set; }
 
         public int GroupId { get; set; }
-        [Required] public Group Group { get; set; }
+        [Required] 
+        public Group Group { get; set; }
 
         //TODO: rework
         public virtual IList<Solution> Solutions { get; set; }

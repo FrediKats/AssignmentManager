@@ -25,7 +25,7 @@ namespace AssignmentManager.Server.Services
             return new InstructorSubjectResponse(await _context.InstructorSubjects.FindAsync(id));
         }
 
-        public async Task<InstructorSubjectResponse> SaveAsync(InstructorSubject instructorSubject)
+        public async Task<InstructorSubjectResponse> AddAsync(InstructorSubject instructorSubject)
         {
             try
             {

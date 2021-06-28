@@ -39,7 +39,7 @@ namespace AssignmentManager.Server.Services
             return new SubjectResponse(subject);
         }
 
-        public async Task<SubjectResponse> SaveAsync(Subject subject)
+        public async Task<SubjectResponse> AddAsync(Subject subject)
         {
             try
             {

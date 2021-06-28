@@ -52,7 +52,7 @@ namespace AssignmentManager.Server.Controllers
                 return BadRequest(ModelState.GetErrorMessage());
             
             var instructor = _mapper.Map<SaveInstructorResource, Instructor>(resource);
-            var result = await _instructorService.SaveAsync(instructor);
+            var result = await _instructorService.AddAsync(instructor);
 
             if (!result.Success)
                 return BadRequest(result.Message);

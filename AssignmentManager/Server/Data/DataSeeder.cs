@@ -169,7 +169,9 @@ namespace AssignmentManager.Server.Data
             };
             var instructor = new ApplicationUser
             {
-                UserName = "in@struc.tor",
+                UserName = "" +
+                           "in@struc.tor" +
+                           "",
                 Email = "in@struc.tor",
                 EmailConfirmed = true,
                 IsuId = 111112

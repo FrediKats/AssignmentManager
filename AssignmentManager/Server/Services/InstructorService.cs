@@ -36,7 +36,7 @@ namespace AssignmentManager.Server.Services
             return new InstructorResponse(instructor);
         }
 
-        public async Task<InstructorResponse> SaveAsync(Instructor instructor)
+        public async Task<InstructorResponse> AddAsync(Instructor instructor)
         {
             try
             {

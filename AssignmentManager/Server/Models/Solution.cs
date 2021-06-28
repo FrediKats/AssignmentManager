@@ -7,13 +7,16 @@ namespace AssignmentManager.Server.Models
 {
     public class Solution
     {
-        [Key] public int SolutionId { get; set; }
-        [Required] public string Content { get; set; }
+        [Key] 
+        public int SolutionId { get; set; }
+        [Required] 
+        public string Content { get; set; }
         public float? Grade { get; set; }
         public string Feedback { get; set; }
         
         public int AssignmentId { get; set; }
-        [Required] public Assignment Assignment { get; set; }
+        [Required] 
+        public Assignment Assignment { get; set; }
         public virtual IList<Student> Students { get; set; }
 
         public Solution()

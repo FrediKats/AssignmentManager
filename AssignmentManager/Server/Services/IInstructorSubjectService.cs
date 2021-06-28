@@ -9,7 +9,7 @@ namespace AssignmentManager.Server.Services
     {
         Task<List<InstructorSubject>> GetAllInstructorSubjects();
         Task<InstructorSubjectResponse> GetById(int id);
-        Task<InstructorSubjectResponse> SaveAsync(InstructorSubject instructor);
+        Task<InstructorSubjectResponse> AddAsync(InstructorSubject instructor);
         Task<InstructorSubjectResponse> UpdateAsync(int id, InstructorSubject instructor);
         Task<InstructorSubjectResponse> DeleteAsync(int id);
     }

@@ -75,7 +75,7 @@ namespace AssignmentManager.Server.Controllers
                 return BadRequest(ModelState.GetErrorMessage());
 
             var instructorSubject = _mapper.Map<SaveInstructorSubjectResource, InstructorSubject>(resource);
-            var result = await _instructorSubjectService.SaveAsync(instructorSubject);
+            var result = await _instructorSubjectService.AddAsync(instructorSubject);
 
             if (!result.Success)
                 return BadRequest(result.Message);
