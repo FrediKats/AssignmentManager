@@ -36,6 +36,7 @@ namespace AssignmentManager.Server.Middleware
  
             return context.Response.WriteAsync(new ExceptionInfo()
             {
+                ExceptionName = exception.GetType().Name,
                 StatusCode = context.Response.StatusCode,
                 Message = exception.Message
             }.ToString());
@@ -48,6 +49,8 @@ namespace AssignmentManager.Server.Middleware
                 case NullReferenceException _:
                     return HttpStatusCode.NotFound;
                 case FormatException _:
+                    return HttpStatusCode.BadRequest;
+                case ArgumentException _:
                     return HttpStatusCode.BadRequest;
                 case ValidationException _:
                     return HttpStatusCode.BadRequest;

@@ -5,9 +5,9 @@ namespace AssignmentManager.Server.Models
 {
     public class Subject
     {
-        [Key] 
+        [Key]
         public int SubjectId { get; set; }
-        [Required] 
+        [Required]
         public string SubjectName { get; set; }
         
         public virtual IList<Instructor> Instructors { get; set; }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AssignmentManager.Server.Extensions;
 using AssignmentManager.Server.Models;
 using AssignmentManager.Server.Services;
 using AssignmentManager.Shared;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers

@@ -1,6 +1,7 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Text.Json.Serialization;
 using AssignmentManager.Server.Data;
 
 using AssignmentManager.Server.Middleware;
@@ -18,6 +19,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore.InMemory;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace AssignmentManager.Server
 {
@@ -42,6 +45,14 @@ namespace AssignmentManager.Server
                     Configuration.GetConnectionString("DefaultConnection")));*/
 
             services.AddDatabaseDeveloperPageExceptionFilter();
+            //Сериализатор enum-ов в JSON
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.Formatting = Formatting.Indented;
+            });
 
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -98,7 +109,6 @@ namespace AssignmentManager.Server
             });
             //context.Database.Migrate();
             
-            /*app.UseMiddleware<ResponseFormatterMiddleware>();*/
             app.UseMiddleware<CustomErrorHandlerMiddleware>();
             
             if (env.IsDevelopment())

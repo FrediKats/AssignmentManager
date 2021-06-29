@@ -7,22 +7,22 @@ namespace AssignmentManager.Server.Models
 {
     public class Student
     {
-        [Key] 
+        [Key]
         public int IsuId { get; set; }
-        [Required] 
+        [Required]
         public string Name { get; set; }
         public string MiddleName { get; set; }
-        [Required] 
+        [Required]
         public string Lastname { get; set; }
-        [Required] 
+        [Required]
         public string Email { get; set; }
         public string Phone { get; set; }
 
         public int GroupId { get; set; }
-        [Required] 
+        [Required]
         public Group Group { get; set; }
+        
 
-        //TODO: rework
         public virtual IList<Solution> Solutions { get; set; }
 
         public Student()

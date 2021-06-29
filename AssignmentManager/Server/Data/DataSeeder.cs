@@ -14,17 +14,17 @@ namespace AssignmentManager.Server.Data
             Speciality[] specs =
             {
                 new Speciality
-                    {Id = 100, Code = "09.03.02", EnumStudyType = EStudyType.Bach },
+                    {Id = 100, Code = "09.03.02", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 101, Code = "01.07.15", EnumStudyType = EStudyType.Asp },
+                    {Id = 101, Code = "01.07.15", StudyType = EStudyType.Master},
                 new Speciality
-                    {Id = 102, Code = "09.03.04", EnumStudyType = EStudyType.Doc },
+                    {Id = 102, Code = "09.03.04", StudyType = EStudyType.Doctorate },
                 new Speciality
-                    {Id = 103, Code = "10.15.01", EnumStudyType = EStudyType.Mast },
+                    {Id = 103, Code = "10.15.01", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 104, Code = "07.03.01", EnumStudyType = EStudyType.Bach },
+                    {Id = 104, Code = "07.03.01", StudyType = EStudyType.Bachelor },
                 new Speciality
-                    {Id = 105, Code = "80.01.01", EnumStudyType = EStudyType.Asp }
+                    {Id = 105, Code = "80.01.01", StudyType = EStudyType.Master }
             };
 
             Group[] groups =
@@ -71,12 +71,12 @@ namespace AssignmentManager.Server.Data
                 new Subject { SubjectId = 101, SubjectName = "advanced stuff"}
             };
 
-            object[] assignments =
+            Assignment[] assignments =
             {
-                new { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2000, 11, 11), Description = "DESC 1", SubjectId = 1 },
-                new { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), Description = "DESC 2", SubjectId = 1 },
-                new { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), Description = "DESC 3", SubjectId = 2 },
-                new { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2000, 12, 11), Description = "DESC 4", SubjectId = 2 }
+                new Assignment() { AssignmentId = 100, Name = "implement bubble sort", Deadline = new DateTime(2000, 11, 11), Description = "DESC 1", SubjectId = 1 },
+                new Assignment() { AssignmentId = 101, Name = "implement merge sort", Deadline = new DateTime(2077, 12, 11), Description = "DESC 2", SubjectId = 1 },
+                new Assignment() { AssignmentId = 102, Name = "get a job", Deadline = new DateTime(2077, 11, 11), Description = "DESC 3", SubjectId = 2 },
+                new Assignment() { AssignmentId = 103, Name = "do work", Deadline = new DateTime(2000, 12, 11), Description = "DESC 4", SubjectId = 2 }
             };
 
             object[] solutions = 

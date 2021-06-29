@@ -32,70 +32,37 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSpecialityByIdCompletely(int id)
+        public async Task<ActionResult<SpecialityResource>> GetSpecialityByIdCompletely(int id)
         {
-            try
-            {
-                var speciality = await _service.GetById(id);
-                var resources = _mapper.Map<Speciality, SpecialityResource>(speciality);
-                return Ok(resources);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var speciality = await _service.GetById(id);
+            var resources = _mapper.Map<Speciality, SpecialityResource>(speciality);
+            return Ok(resources);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSpeciality(
+        public async Task<ActionResult<SpecialityResource>> CreateSpeciality(
             [FromBody] SaveSpecialityResource specialityResource)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var result = await _service.Create(specialityResource);
-
-                var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result);
-                return Ok(specialityRecourse);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.Create(specialityResource);
+            var specialityRecourse = _mapper.Map<Speciality, SpecialityResource>(result);
+            return Ok(specialityRecourse);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSpeciality(int id,
+        public async Task<ActionResult<SpecialityResource>> UpdateSpeciality(int id,
             [FromBody] SaveSpecialityResource briefly)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState.GetErrorMessage());
-            try
-            {
-                var result = await _service.Update(id, briefly);
-                var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
-                return Ok(specialityResource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.Update(id, briefly);
+            var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
+            return Ok(specialityResource);
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSpeciality(int id)
+        public async Task<ActionResult<SpecialityResource>> DeleteSpeciality(int id)
         {
-            try
-            {
-                var result = await _service.DeleteById(id);
-                var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
-                return Ok(specialityResource);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var result = await _service.DeleteById(id);
+            var specialityResource = _mapper.Map<Speciality, SpecialityResource>(result);
+            return Ok(specialityResource);
         }
 }
 }

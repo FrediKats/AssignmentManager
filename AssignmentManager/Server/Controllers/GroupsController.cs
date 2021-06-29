@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AssignmentManager.Server.Controllers
 {
+    [ApiController]
     [Route("/api/[controller]")]
     public class GroupsController : ControllerBase
     {
