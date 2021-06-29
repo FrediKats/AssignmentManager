@@ -8,9 +8,9 @@ namespace AssignmentManager.Server.Services
     public interface IInstructorSubjectService
     {
         Task<List<InstructorSubject>> GetAllInstructorSubjects();
-        Task<InstructorSubjectResponse> GetById(int id);
-        Task<InstructorSubjectResponse> SaveAsync(InstructorSubject instructor);
-        Task<InstructorSubjectResponse> UpdateAsync(int id, InstructorSubject instructor);
-        Task<InstructorSubjectResponse> DeleteAsync(int id);
+        Task<InstructorSubject> GetById(int id);
+        Task<InstructorSubject> AddAsync(InstructorSubject instructor);
+        Task<InstructorSubject> UpdateAsync(int id, InstructorSubject instructor);
+        Task<InstructorSubject> DeleteAsync(int id);
     }
 }

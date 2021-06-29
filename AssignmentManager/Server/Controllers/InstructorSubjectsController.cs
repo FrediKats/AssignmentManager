@@ -24,7 +24,7 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<InstructorSubjectResource>> GetAllAsync()
+        public async Task<IEnumerable<InstructorSubjectResource>> GetAllInstructorSubjects()
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -33,21 +33,23 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet("{id}")]
-        public ActionResult<InstructorSubject> GetById(int id)
+        public ActionResult<InstructorSubject> GetInstructorSubjectById(int id)
         {
-            var instructorSubject = _instructorSubjectService.GetById(id).Result;
-            if (!instructorSubject.Success)
+            try
             {
-                return BadRequest(instructorSubject.Message);
+                var instructorSubject = _instructorSubjectService.GetById(id).Result;
+                var resource =
+                    _mapper.Map<InstructorSubject, InstructorSubjectResource>(instructorSubject);
+                return Ok(resource);
             }
-
-            var resource =
-                _mapper.Map<InstructorSubject, InstructorSubjectResource>(instructorSubject.InstructorSubject);
-            return Ok(resource);
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpGet("subjects/{IsuId}")]
-        public async Task<IEnumerable<int>> GetAllSubjectsForInstructorAsync(int isuId)
+        public async Task<IEnumerable<int>> GetAllSubjectsForInstructor(int isuId)
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -58,7 +60,7 @@ namespace AssignmentManager.Server.Controllers
         }
         
         [HttpGet("instructors/{SubjectId}")]
-        public async Task<IEnumerable<int>> GetAllInstructorsForSubjectAsync(int subjectId)
+        public async Task<IEnumerable<int>> GetAllInstructorsForSubject(int subjectId)
         {
             var instructorSubjects = await _instructorSubjectService.GetAllInstructorSubjects();
             var resources =
@@ -69,51 +71,59 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveInstructorSubjectResource resource)
+        public async Task<IActionResult> PostInstructorSubject([FromBody] SaveInstructorSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
-
-            var instructorSubject = _mapper.Map<SaveInstructorSubjectResource, InstructorSubject>(resource);
-            var result = await _instructorSubjectService.SaveAsync(instructorSubject);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorSubjectResource =
-                _mapper.Map<InstructorSubject, InstructorSubjectResource>(result.InstructorSubject);
-            return Ok(instructorSubjectResource);
+            try
+            {
+                var instructorSubject = _mapper.Map<SaveInstructorSubjectResource, InstructorSubject>(resource);
+                var result = await _instructorSubjectService.AddAsync(instructorSubject);
+                var instructorSubjectResource =
+                    _mapper.Map<InstructorSubject, InstructorSubjectResource>(result);
+                return Ok(instructorSubjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<InstructorSubjectResource>> PutAsync(int id,
+        public async Task<ActionResult<InstructorSubjectResource>> PutInstructorSubject(int id,
             [FromBody] SaveInstructorSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var instructorSubject = _mapper.Map<SaveInstructorSubjectResource, InstructorSubject>(resource);
-            var result = await _instructorSubjectService.UpdateAsync(id, instructorSubject);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorSubjectResource =
-                _mapper.Map<InstructorSubject, InstructorSubjectResource>(result.InstructorSubject);
-            return Ok(instructorSubjectResource);
+            try
+            {
+                var instructorSubject = _mapper.Map<SaveInstructorSubjectResource, InstructorSubject>(resource);
+                var result = await _instructorSubjectService.UpdateAsync(id, instructorSubject);
+                var instructorSubjectResource =
+                    _mapper.Map<InstructorSubject, InstructorSubjectResource>(result);
+                return Ok(instructorSubjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteInstructorSubject(int id)
         {
-            var result = await _instructorSubjectService.DeleteAsync(id);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var instructorSubjectResource =
-                _mapper.Map<InstructorSubject, InstructorSubjectResource>(result.InstructorSubject);
-            return Ok(instructorSubjectResource);
+            try
+            {
+                var result = await _instructorSubjectService.DeleteAsync(id);
+                var instructorSubjectResource =
+                    _mapper.Map<InstructorSubject, InstructorSubjectResource>(result);
+                return Ok(instructorSubjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

@@ -25,69 +25,79 @@ namespace AssignmentManager.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<SubjectResourceBriefly>> GetAllAsync()
+        public async Task<IEnumerable<SubjectResourceBriefly>> GetAllSubjects()
         {
-            Console.WriteLine("get all");
             var subjects = await _subjectService.GetAllSubjects();
             var resources = _mapper.Map<IEnumerable<Subject>, IEnumerable<SubjectResourceBriefly>>(subjects);
             return resources;
         }
         
         [HttpGet("{id}")]
-        public ActionResult<Subject> GetById(int id)
+        public ActionResult<Subject> GetSubjectById(int id)
         {
-            var subject = _subjectService.GetById(id).Result;
-            Console.WriteLine(subject.Success);
-            if (!subject.Success)
+            try
             {
-                return BadRequest(subject.Message);
+                var subject = _subjectService.GetById(id).Result;
+                var resource = _mapper.Map<Subject, SubjectResource>(subject);
+                return Ok(resource);
             }
-            var resource = _mapper.Map<Subject, SubjectResource>(subject.Subject);
-            return Ok(resource);
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpPost]
-        public async Task<IActionResult> PostAsync([FromBody] SaveSubjectResource resource)
+        public async Task<IActionResult> PostSubject([FromBody] SaveSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
             
-            var subject = _mapper.Map<SaveSubjectResource, Subject>(resource);
-            var result = await _subjectService.SaveAsync(subject);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var subjectResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
-            return Ok(subjectResource);
+            try
+            {
+                var subject = _mapper.Map<SaveSubjectResource, Subject>(resource);
+                var result = await _subjectService.AddAsync(subject);
+                var subjectResource = _mapper.Map<Subject, SubjectResource>(result);
+                return Ok(subjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAsync(int id, [FromBody] SaveSubjectResource resource)
+        public async Task<IActionResult> PutSubject(int id, [FromBody] SaveSubjectResource resource)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState.GetErrorMessage());
 
-            var category = _mapper.Map<SaveSubjectResource, Subject>(resource);
-            var result = await _subjectService.UpdateAsync(id, category);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var categoryResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
-            return Ok(categoryResource);
+            try
+            {
+                var subject = _mapper.Map<SaveSubjectResource, Subject>(resource);
+                var result = await _subjectService.UpdateAsync(id, subject);
+                var subjectResource = _mapper.Map<Subject, SubjectResource>(result);
+                return Ok(subjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(int id)
+        public async Task<IActionResult> DeleteSubject(int id)
         {
-            var result = await _subjectService.DeleteAsync(id);
-
-            if (!result.Success)
-                return BadRequest(result.Message);
-
-            var subjectResource = _mapper.Map<Subject, SubjectResource>(result.Subject);
-            return Ok(subjectResource);
+            try
+            {
+                var result = await _subjectService.DeleteAsync(id);
+                var subjectResource = _mapper.Map<Subject, SubjectResource>(result);
+                return Ok(subjectResource);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }
